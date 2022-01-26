@@ -1,0 +1,21 @@
+header{
+  background-color: $theme-bg!important;
+  color:$primary!important;
+}
+
+.nav-icon i{
+  color: $primary!important;
+  cursor: pointer;
+}
+
+a{
+  color:$primary!important;
+  &:hover{
+    border-bottom: 1px solid $primary;
+  }
+}
+
+button{
+  background-color: $primary!important;
+  color: $theme-bg !important;
+}

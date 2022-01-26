@@ -1,0 +1,16 @@
+*{
+  list-style: none;
+  a{
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+#app {
+  background-color: $theme-bg;
+}
+
+.xyCenter{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
