@@ -1,19 +1,13 @@
 <template>
   <swiper ref="mySwiper" :options="swiperOptions">
     <swiper-slide>
-      <img
-        src="https://miro.medium.com/max/1200/1*bsukUGpEQQQLwXqewNDRfw.jpeg"
-      />
+      <img src="https://miro.medium.com/max/1200/1*bsukUGpEQQQLwXqewNDRfw.jpeg" />
     </swiper-slide>
     <swiper-slide>
-      <img
-        src="https://miro.medium.com/max/1200/1*bsukUGpEQQQLwXqewNDRfw.jpeg"
-      />
+      <img src="https://miro.medium.com/max/1200/1*bsukUGpEQQQLwXqewNDRfw.jpeg" />
     </swiper-slide>
     <swiper-slide>
-      <img
-        src="https://t.kfs.io/upload_images/106426/1126-_____-__tcrc___banner--01_original.jpg"
-      />
+      <img src="https://t.kfs.io/upload_images/106426/1126-_____-__tcrc___banner--01_original.jpg" />
     </swiper-slide>
     <swiper-slide>
       <img
@@ -22,20 +16,12 @@
     </swiper-slide>
 
     <div class="swiper-pagination" slot="pagination"></div>
+    <div class="swiper-button-next" slot="button-next"></div>
+    <div class="swiper-button-prev" slot="button-prev"></div>
   </swiper>
 </template>
 
 <style lang="scss">
-.swiper-container{
-  margin-top: 70px;
-  width: 100vw;
-  height: 600px;
-  img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
 </style>
 
 <script>
@@ -49,7 +35,7 @@ export default {
         },
         loop: true,
         autoplay: {
-          delay: 2500,
+          delay: 8000,
           disableOnInteraction: false
         },
         navigation: {
@@ -65,7 +51,7 @@ export default {
       return this.$refs.mySwiper.$swiper
     }
   },
-  mounted () {
+  mountd () {
     console.log('Current Swiper instance object', this.swiper)
     this.swiper.slideTo(3, 1000, false)
   }

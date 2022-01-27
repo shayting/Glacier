@@ -5,6 +5,9 @@
     cursor: pointer;
   }
 }
+body::-webkit-scrollbar {
+  display: none;
+}
 // scrollbar 克制
 /* width */
 ::-webkit-scrollbar {
@@ -13,7 +16,7 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: $theme-bg;
 }
 
 /* Handle */
@@ -37,4 +40,8 @@
 
 .test{
   color: white;
+}
+
+.theme-bg{
+  color:#111314;
 }
