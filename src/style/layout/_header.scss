@@ -1,21 +1,42 @@
 header{
   background-color: $theme-bg!important;
   color:$primary!important;
-}
-
-.nav-icon i{
-  color: $primary!important;
-  cursor: pointer;
-}
-
-a{
-  color:$primary!important;
-  &:hover{
-    border-bottom: 1px solid $primary;
+  .nav-icon i{
+    color: $primary!important;
+    cursor: pointer;
+  }
+  
+  a{
+    color:$primary!important;
+  }
+  
+  button{
+    background-color: $primary!important;
+    color: $theme-bg !important;
   }
 }
 
-button{
-  background-color: $primary!important;
-  color: $theme-bg !important;
+.input-style {
+  width: 200px;
+  height: 100%;
+  background-color:rgba(255,255,255,0.5);
+  border-radius: 4px;
+  outline: none;
+  padding: 2px 5px;
+}
+
+header li {
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: 0% 50%;
+    width: 50%;
+  }
+  &::after {
+    display: block;
+    content: "";
+    transform-origin: 100% 50%;
+    transform: scaleX(0);
+    transition: transform 250ms ease-in-out;
+    border-bottom: 2px solid $primary;
+  }
 }
