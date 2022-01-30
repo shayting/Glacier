@@ -26,17 +26,19 @@
             <input type="text" placeholder="search" class="input-style" />
           </div>
           <v-icon class="mx-2">mdi-magnify</v-icon>
-          <v-btn elevation="1" class="mx-2 theme-bg loginBtn">
-            <router-link to="/login">登入/註冊</router-link>
-          </v-btn>
-          <v-icon class="mx-2 hamburger" @click.stop="drawer = !drawer">mdi-menu</v-icon>
+          <router-link to="/login">
+            <v-btn elevation="1" class="mx-2 theme-bg loginBtn">登入/註冊</v-btn>
+          </router-link>
+          <v-icon class="mx-2 hamburger d-md-none" @click.stop="drawer = !drawer">mdi-menu</v-icon>
         </div>
       </v-container>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary dark>
       <v-list-item>
         <v-list-item-avatar>
-          <v-img src="https://www.discoverdogs.org.uk/wp-content/uploads/2021/09/Pepper-BorderCollie-RachelOates-18.jpg"></v-img>
+          <v-img
+            src="https://www.discoverdogs.org.uk/wp-content/uploads/2021/09/Pepper-BorderCollie-RachelOates-18.jpg"
+          ></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>User</v-list-item-title>

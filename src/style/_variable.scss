@@ -1,2 +1,33 @@
-$theme-bg:#111314;
-$primary:#d7f3f5;
+// color
+$theme-bg: #111314;
+$primary: #d7f3f5;
+
+//  font-size
+.fs-20 {
+  font-size: 20px;
+}
+.fs-24 {
+  font-size: 24px;
+}
+
+// utility
+.xyCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-btn {
+  background: $primary!important;
+  color: $theme-bg!important;
+}
+.test {
+  color: white;
+}
+
+.theme-bg {
+  color: #111314;
+}
+
+.lg-container {
+  padding: 0 3vw;
+}

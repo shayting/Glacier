@@ -5,43 +5,28 @@
     cursor: pointer;
   }
 }
-body::-webkit-scrollbar {
-  display: none;
+#app {
+  background-color: $theme-bg;
 }
+// body::-webkit-scrollbar {
+//   display: none;
+// }
 // scrollbar 克制
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
 }
-
 /* Track */
 ::-webkit-scrollbar-track {
   background: $theme-bg;
 }
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
-
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-#app {
-  background-color: $theme-bg;
-}
 
-.xyCenter{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.test{
-  color: white;
-}
-
-.theme-bg{
-  color:#111314;
-}

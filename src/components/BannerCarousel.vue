@@ -21,9 +21,6 @@
   </swiper>
 </template>
 
-<style lang="scss">
-</style>
-
 <script>
 export default {
   name: 'carrousel',
@@ -31,7 +28,8 @@ export default {
     return {
       swiperOptions: {
         pagination: {
-          el: '.swiper-pagination'
+          el: '.swiper-pagination',
+          clickable: true
         },
         loop: true,
         autoplay: {
