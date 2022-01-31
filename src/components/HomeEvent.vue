@@ -2,7 +2,7 @@
   <v-container class="my-12">
     <div class="fs-24 text-center white--text">近期活動</div>
     <swiper class="swiper" :options="swiperOption" style="width: 100%;">
-      <swiper-slide v-for="item in items" :key="item.title" class="xyCenter">
+      <swiper-slide v-for="(item,index) in items" :key="index" class="xyCenter">
         <v-card class="mx-auto" width="500">
           <v-img
             class="align-end"

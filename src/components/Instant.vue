@@ -2,7 +2,7 @@
   <div class="instantRank my-12 d-flex flex-column justify-center">
     <ul>
       <li class="py-4 fs-20">即時熱門</li>
-      <li v-for="(item, index) in music" :key="item.name" class="d-flex align-center">
+      <li v-for="(item, index) in music" :key="index" class="d-flex align-center">
         <div class="instantNum">{{ index + 1 }}</div>
         <img src="https://f4.bcbits.com/img/a0976633149_10.jpg" />
         <div class="ms-2 me-auto">{{ item.name }}</div>
