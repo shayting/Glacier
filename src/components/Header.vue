@@ -26,9 +26,10 @@
             <input type="text" placeholder="search" class="input-style" />
           </div>
           <v-icon class="mx-2">mdi-magnify</v-icon>
-          <router-link to="/login">
+          <router-link v-if="!user.isLogin" to="/login">
             <v-btn elevation="1" class="mx-2 theme-bg loginBtn">登入/註冊</v-btn>
           </router-link>
+          <v-btn v-if="user.isLogin" elevation="1" class="mx-2 theme-bg loginBtn" @click="logout">登出</v-btn>
           <v-icon class="mx-2 hamburger d-md-none" @click.stop="drawer = !drawer">mdi-menu</v-icon>
         </div>
       </v-container>
@@ -68,6 +69,17 @@ export default {
         { title: 'Home', icon: 'mdi-view-dashboard' },
         { title: 'About', icon: 'mdi-forum' }
       ]
+    }
+  },
+  // 已寫成mixin
+  // computed: {
+  //   user () {
+  //     return this.$store.getters['user/user']
+  //   }
+  // },
+  methods: {
+    logout () {
+      this.$store.dispatch('user/logout')
     }
   }
 }

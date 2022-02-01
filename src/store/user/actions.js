@@ -1,0 +1,50 @@
+// actions 執行非同步的動作
+import { api } from '@/plugins/axios.js'
+import swal from 'sweetalert2'
+import router from '@/router'
+export const login = async ({ commit }, form) => {
+  try {
+    const { data } = await api.post('/users/login', form)
+    // commit同個module mutation的login
+    commit('login', data.result)
+    router.push('/')
+    swal.fire({
+      icon: 'success',
+      title: '成功',
+      text: '登入成功',
+      confirmButtonColor: '#4DB6AC'
+    })
+  } catch (error) {
+    swal.fire({
+      icon: 'error',
+      title: '失敗',
+      text: error.response.data.message,
+      confirmButtonColor: '#4DB6AC'
+    })
+  }
+}
+
+export const logout = async ({ commit, state }) => {
+  try {
+    await api.delete('users/logout', {
+      headers: {
+        authorization: 'Bearer ' + state.token
+      }
+    })
+    commit('logout')
+    router.push('/')
+    swal.fire({
+      icon: 'success',
+      title: '成功',
+      text: '登出成功',
+      confirmButtonColor: '#4DB6AC'
+    })
+  } catch (error) {
+    swal.fire({
+      icon: 'error',
+      title: '失敗',
+      text: error.response.data.message,
+      confirmButtonColor: '#4DB6AC'
+    })
+  }
+}

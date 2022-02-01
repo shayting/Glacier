@@ -3,9 +3,11 @@ import App from './views/App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
+import './plugins/axios.js'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Vuelidate from 'vuelidate'
 import VueSweetalert2 from 'vue-sweetalert2'
+import mixin from './mixin.js'
 
 import 'swiper/css/swiper.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
@@ -15,6 +17,7 @@ Vue.config.productionTip = false
 Vue.use(VueAwesomeSwiper)
 Vue.use(Vuelidate)
 Vue.use(VueSweetalert2)
+Vue.mixin(mixin)
 
 new Vue({
   router,

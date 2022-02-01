@@ -11,10 +11,12 @@
     "serve-linux": "export SET NODE_OPTIONS=--openssl-legacy-provider; vue-cli-service serve"
   },
   "dependencies": {
+    "axios": "^0.25.0",
     "core-js": "^3.6.5",
     "swiper": "^5.4.5",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.1",
+    "vue-axios": "^3.4.0",
     "vue-router": "^3.2.0",
     "vue-sweetalert2": "^5.0.2",
     "vuelidate": "^0.7.7",
