@@ -16,3 +16,13 @@ export const logout = (state, data) => {
   state.role = 0
   state.email = ''
 }
+
+export const getUserInfo = (state, data) => {
+  state.account = data.account
+  state.role = data.role
+  state.email = data.email
+}
+
+export const extend = (state, data) => {
+  state.token = data
+}

@@ -11,6 +11,9 @@ export default {
   name: 'App',
   data: () => ({
     //
-  })
+  }),
+  async created () {
+    this.$store.dispatch('user/getUserInfo')
+  }
 }
 </script>

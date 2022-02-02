@@ -7,5 +7,3 @@ export const user = (state) => {
     ...state
   }
 }
-
-// this.$store.getters['user/user'].isLogin

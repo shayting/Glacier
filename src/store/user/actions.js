@@ -1,4 +1,4 @@
-// actions 執行非同步的動作
+// actions 執行非同步的function
 import { api } from '@/plugins/axios.js'
 import swal from 'sweetalert2'
 import router from '@/router'
@@ -46,5 +46,19 @@ export const logout = async ({ commit, state }) => {
       text: error.response.data.message,
       confirmButtonColor: '#4DB6AC'
     })
+  }
+}
+
+export const getUserInfo = async ({ commit, state }) => {
+  if (state.token.length === 0) return
+  try {
+    const { data } = await api.get('/users/me', {
+      headers: {
+        authorization: 'Bearer ' + state.token
+      }
+    })
+    commit('getUserInfo', data.result)
+  } catch (error) {
+    commit('logout')
   }
 }
