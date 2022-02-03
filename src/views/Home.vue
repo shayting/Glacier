@@ -1,9 +1,9 @@
 <template>
   <div>
     <BannerCarousel></BannerCarousel>
-    <v-container>
+    <div class="my-container">
       <v-row>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="4" class="px-4">
           <DaySong></DaySong>
         </v-col>
         <v-col cols="12" md="8">
@@ -22,7 +22,7 @@
           <HomeEvent></HomeEvent>
         </v-col>
       </v-row>
-    </v-container>
+    </div>
   </div>
 </template>
 

@@ -1,9 +1,11 @@
 <template>
   <div>
-    <v-app-bar fixed height="60">
-      <v-container class="d-flex justify-space-between">
+    <v-app-bar fixed height="60" class="px-0">
+      <div class="d-flex justify-space-between my-container">
         <div class="logo xyCenter">
-          <router-link to="/">Glacier</router-link>
+          <router-link to="/">
+            <v-img width="35" src="@/assets/image/glacier-logo.png"></v-img>
+          </router-link>
         </div>
         <div class="menu xyCenter d-none d-md-flex">
           <ul class="menu-list d-flex px-2">
@@ -29,10 +31,21 @@
           <router-link v-if="!user.isLogin" to="/login">
             <v-btn elevation="1" class="mx-2 theme-bg loginBtn">登入/註冊</v-btn>
           </router-link>
-          <v-btn v-if="user.isLogin" elevation="1" class="mx-2 theme-bg loginBtn" @click="logout">登出</v-btn>
+          <div v-if="user.isLogin && user.role === 0">
+            <v-btn elevation="1" class="mx-2 theme-bg loginBtn" @click="logout">登出</v-btn>
+            <router-link to="/back/member">
+              <v-btn elevation="1" class="mx-2">個人頁面</v-btn>
+            </router-link>
+          </div>
+          <div v-if="user.isLogin && user.role === 1">
+            <v-btn elevation="1" class="mx-2 theme-bg loginBtn" @click="logout">登出</v-btn>
+            <router-link to="/back/admin">
+              <v-btn elevation="1" class="mx-2">管理員後台</v-btn>
+            </router-link>
+          </div>
           <v-icon class="mx-2 hamburger d-md-none" @click.stop="drawer = !drawer">mdi-menu</v-icon>
         </div>
-      </v-container>
+      </div>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary dark>
       <v-list-item>

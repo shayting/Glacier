@@ -16,6 +16,22 @@ $primary: #d7f3f5;
   align-items: center;
   justify-content: center;
 }
+
+// 自訂容器
+.my-container{
+  margin: 0;
+  width: 100%;
+  padding:0 16px;
+  @include md {
+    padding: 0 5%;
+  }
+  @include lg{
+    padding: 0 10%;
+  }
+  @include xl {
+    padding: 0 15%;
+  }
+}
 .theme-btn {
   background: $primary!important;
   color: $theme-bg!important;
@@ -30,8 +46,4 @@ $primary: #d7f3f5;
 
 .theme-bg {
   color: #111314;
-}
-
-.lg-container {
-  padding: 0 3vw;
 }

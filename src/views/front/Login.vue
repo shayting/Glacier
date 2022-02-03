@@ -1,5 +1,5 @@
 <template>
-  <v-container class="log-container xyCenter">
+  <div class="log-container xyCenter my-container">
     <v-row class="xyCenter">
       <v-col cols="12" lg="8">
         <v-card outlined>
@@ -102,7 +102,7 @@
                   <div class="xyCenter flex-column">
                     <h3 class="text-center my-10">已經註冊過了？</h3>
                     <v-card-actions class="xyCenter">
-                      <v-btn outlined rounded width="100" color="blue-gray" @click="step++">登入</v-btn>
+                      <v-btn outlined rounded width="100" color="blue-gray" @click="step--">登入</v-btn>
                     </v-card-actions>
                   </div>
                 </v-col>
@@ -112,7 +112,7 @@
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 <style scoped>
 .change-form {
@@ -143,7 +143,7 @@ export default {
     }
   },
   data: () => ({
-    step: 0,
+    step: 1,
     registerForm: {
       account: '',
       password: '',
@@ -207,9 +207,11 @@ export default {
   watch: {
     step (value) {
       if (value === 1) {
+        console.log(this.step)
         this.$router.replace({ params: { action: 'login' } }).catch(() => {})
         this.$v.registerForm.$reset()
       } else {
+        console.log(this.step)
         this.$router.replace({ params: { action: 'register' } }).catch(() => {})
         this.$v.loginForm.$reset()
       }
