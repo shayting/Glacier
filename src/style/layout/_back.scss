@@ -1,0 +1,14 @@
+#back{
+  margin-top: 60px;
+  header a{
+    color:white;
+    display: inline-block;
+    line-height: 64px;
+  }
+  .back-item:hover a{
+    color:$theme-bg;
+  }
+  .back-item:hover{
+    background-color: $primary;
+  }
+}

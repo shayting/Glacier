@@ -85,26 +85,25 @@ const routes = [
   },
   {
     path: '/back',
-    name: 'Back',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "Back" */ '../views/Back.vue'),
     children: [
       {
-        path: 'member',
-        name: 'Member',
+        path: 'aboutme',
+        name: 'About',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Member" */ '../views/back/Member.vue'),
+          import(/* webpackChunkName: "About" */ '../views/back/About.vue'),
         meta: {
           title: '個人檔案'
         }
       },
       {
-        path: 'member/mytracks',
+        path: 'mytracks',
         name: 'Mytracks',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -116,7 +115,7 @@ const routes = [
         }
       },
       {
-        path: 'member/mylikes',
+        path: 'mylikes',
         name: 'Mylikes',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -128,7 +127,7 @@ const routes = [
         }
       },
       {
-        path: 'member/myevents',
+        path: 'myevents',
         name: 'Myevents',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -140,7 +139,7 @@ const routes = [
         }
       },
       {
-        path: 'member/myplaylists',
+        path: 'myplaylists',
         name: 'Myplaylists',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
