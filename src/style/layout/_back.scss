@@ -9,6 +9,8 @@
     color:$theme-bg;
   }
   .back-item:hover{
+    transition: .5s;
     background-color: $primary;
   }
 }
+

@@ -5,7 +5,10 @@
       <li v-for="(item, index) in music" :key="index" class="d-flex align-center">
         <div class="instantNum">{{ index + 1 }}</div>
         <img src="https://f4.bcbits.com/img/a0976633149_10.jpg" />
-        <div class="ms-2 me-auto">{{ item.name }}</div>
+        <div class="me-auto">
+          <div class="ms-2">{{ item.name }}</div>
+          <div class="ms-2 text-body-2">{{ item.artist }}</div>
+        </div>
         <div class="d-flex align-center">
           <v-btn icon>
             <v-icon x-large>mdi-play-circle</v-icon>
@@ -64,34 +67,44 @@ export default {
     return {
       music: [
         {
-          name: '浴室'
+          name: '浴室',
+          artist: 'Deca joins'
         },
         {
-          name: '海浪'
+          name: '海浪',
+          artist: 'Deca joins'
         },
         {
-          name: '花'
+          name: '花',
+          artist: 'Hello Nico'
         },
         {
-          name: '模樣'
+          name: '模樣',
+          artist: '張懸'
         },
         {
-          name: '捲煙'
+          name: '捲煙',
+          artist: '美秀集團'
         },
         {
-          name: '擋一根'
+          name: '擋一根',
+          artist: '美秀集團'
         },
         {
-          name: '大風吹'
+          name: '大風吹',
+          artist: '草東沒有派對'
         },
         {
-          name: '爛泥'
+          name: '爛泥',
+          artist: '草東沒有派對'
         },
         {
-          name: '玫瑰色的你'
+          name: '玫瑰色的你',
+          artist: '張懸'
         },
         {
-          name: '關於我愛你'
+          name: '關於我愛你',
+          artist: '張懸'
         }
       ]
     }

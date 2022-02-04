@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import '../../node_modules/swiper/css/swiper.css'
 export default {
   name: 'carrousel',
   data () {
@@ -43,6 +45,10 @@ export default {
         // Some Swiper option/callback...
       }
     }
+  },
+  components: {
+    Swiper,
+    SwiperSlide
   },
   computed: {
     swiper () {
