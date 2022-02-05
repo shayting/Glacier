@@ -21,7 +21,7 @@
                 v-on="on"
                 v-bind="attrs"
               >
-                <v-icon left>mdi-upload</v-icon>上傳音樂
+                <v-icon left>mdi-cloud-upload</v-icon>上傳音樂
               </v-btn>
             </template>
             <v-card>
@@ -96,13 +96,13 @@
       </v-card-text>
       <v-card-text class="px-16">
         <v-row>
-          <v-col cols="4" v-for="(track, index) in myTracks" :key="index">
-            <v-card class="d-flex px-2 py-4">
-              <div class="xyCenter me-auto">
-                <v-img :src="track.cover" width="50" />
-                <div class="ms-3 text-h6">{{ track.title }}</div>
+          <v-col cols="3" v-for="(track, index) in myTracks" :key="index">
+            <v-card class="px-4 py-4">
+              <div class="">
+                <v-img :src="track.cover" width="100%" />
+                <div class="text-h6 my-2">{{ track.title }}</div>
               </div>
-              <div class="xyCenter">
+              <div class="d-flex justify-end">
                 <v-btn class="theme-btn">編輯</v-btn>
                 <v-btn color="secondary ms-2">刪除</v-btn>
               </div>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="header">
     <v-app-bar fixed height="60" class="px-0">
       <div class="d-flex justify-space-between my-container">
         <div class="logo xyCenter">
@@ -51,7 +51,7 @@
       <v-list-item>
         <v-list-item-avatar>
           <v-img
-            src="https://www.discoverdogs.org.uk/wp-content/uploads/2021/09/Pepper-BorderCollie-RachelOates-18.jpg"
+            src="https://source.boringavatars.com/beam/Shay"
           ></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
@@ -59,14 +59,16 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <v-list dense>
+      <v-list>
         <v-list-item v-for="item in items" :key="item.title" link>
+        <router-link :to="item.router" class="d-flex">
           <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon color="#d7f3f5">{{ item.icon }}</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
+        </router-link>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -79,8 +81,11 @@ export default {
     return {
       drawer: null,
       items: [
-        { title: 'Home', icon: 'mdi-view-dashboard' },
-        { title: 'About', icon: 'mdi-forum' }
+        { title: '個人頁面', icon: 'mdi-account-box', router: '/back/aboutMe' },
+        { title: '發現', icon: 'mdi-music-box-multiple', router: '/discover' },
+        { title: '排行榜', icon: 'mdi-crown', router: '/ranks' },
+        { title: '歌單', icon: 'mdi-playlist-music', router: '/playlists' },
+        { title: '表演活動', icon: 'mdi-calendar', router: '/events' }
       ]
     }
   },

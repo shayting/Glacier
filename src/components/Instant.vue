@@ -11,7 +11,7 @@
         </div>
         <div class="d-flex align-center">
           <v-btn icon>
-            <v-icon x-large>mdi-play-circle</v-icon>
+            <v-icon medium>mdi-play-circle</v-icon>
           </v-btn>
           <v-btn icon>
             <v-icon medium>mdi-cards-heart-outline</v-icon>

@@ -3,7 +3,10 @@
     <div class="fs-24 text-center white--text">近期活動</div>
     <swiper class="swiper" :options="swiperOption" style="width: 100%;">
       <swiper-slide v-for="(item,index) in items" :key="index" class="xyCenter">
-        <v-card class="mx-auto" width="500">
+        <v-card class="mx-auto" width="500" style="position: relative;">
+          <v-btn icon absolute top right style="z-index: 100;">
+            <v-icon color="white" medium>mdi-bookmark-outline</v-icon>
+          </v-btn>
           <v-img
             class="align-end"
             height="300px"
@@ -19,9 +22,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn class="theme-btn" text>更多資訊</v-btn>
-
-            <v-btn class="theme-btn" text>點我收藏</v-btn>
+            <v-btn absolute bottom right class="theme-btn" text elevation="2">更多資訊</v-btn>
           </v-card-actions>
         </v-card>
       </swiper-slide>

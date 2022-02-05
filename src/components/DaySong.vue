@@ -11,15 +11,15 @@
     <v-card-title>浴室</v-card-title>
     <v-card-subtitle>Deca joins</v-card-subtitle>
     <v-divider class="mx-4"></v-divider>
-    <v-card-actions class="pa-4">
+    <v-card-actions class="pa-4 d-flex align-center">
       <v-btn icon>
-        <v-icon x-large>mdi-play-circle</v-icon>
+        <v-icon>mdi-play-circle</v-icon>
       </v-btn>
       <v-btn icon>
-        <v-icon medium>mdi-cards-heart-outline</v-icon>
+        <v-icon>mdi-cards-heart-outline</v-icon>
       </v-btn>
       <v-btn icon>
-        <v-icon medium>mdi-plus</v-icon>
+        <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
