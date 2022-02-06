@@ -29,18 +29,18 @@
           </div>
           <v-icon class="mx-2">mdi-magnify</v-icon>
           <router-link v-if="!user.isLogin" to="/login">
-            <v-btn elevation="1" class="mx-2 theme-bg loginBtn">登入/註冊</v-btn>
+            <v-btn elevation="1" class="ms-4 theme-bg loginBtn">登入/註冊</v-btn>
           </router-link>
           <div v-if="user.isLogin && user.role === 0">
-            <v-btn elevation="1" class="mx-2 theme-bg loginBtn" @click="logout">登出</v-btn>
+            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">登出</v-btn>
             <router-link to="/back/aboutme">
-              <v-btn elevation="1" class="mx-2">個人頁面</v-btn>
+              <v-btn elevation="1" class="ms-4">個人頁面</v-btn>
             </router-link>
           </div>
           <div v-if="user.isLogin && user.role === 1">
-            <v-btn elevation="1" class="mx-2 theme-bg loginBtn" @click="logout">登出</v-btn>
+            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">登出</v-btn>
             <router-link to="/back/admin">
-              <v-btn elevation="1" class="mx-2">管理員後台</v-btn>
+              <v-btn elevation="1" class="ms-4">管理員後台</v-btn>
             </router-link>
           </div>
           <v-icon class="mx-2 hamburger d-md-none" @click.stop="drawer = !drawer">mdi-menu</v-icon>

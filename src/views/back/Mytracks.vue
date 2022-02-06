@@ -4,7 +4,7 @@
       elevation="2"
       min-height="500"
       color="secondary"
-      class="white--text py-10"
+      class="white--text py-10 mb-100"
       style="position: relative;"
     >
       <v-card-title class="mb-10 px-16 text-h4">我的音樂</v-card-title>
