@@ -7,7 +7,7 @@
       class="white--text py-10 mb-100"
       style="position: relative;"
     >
-      <v-card-title class="mb-10 px-16 text-h4">我的音樂</v-card-title>
+      <v-card-title class="mb-10 px-16 text-h4 py-">我的音樂</v-card-title>
       <v-card-text class="white--text px-16 text-body-1">
         <div>
           <v-dialog width="1000" v-model="dialog">
@@ -98,7 +98,7 @@
         <v-row>
           <v-col cols="3" v-for="(track, index) in myTracks" :key="index">
             <v-card class="px-4 py-4">
-              <div class="">
+              <div class>
                 <v-img :src="track.cover" width="100%" />
                 <div class="text-h6 my-2">{{ track.title }}</div>
               </div>
@@ -133,13 +133,13 @@ export default {
         { cover: 'https://source.boringavatars.com/marble/4/?square', title: '秦皇島' },
         { cover: 'https://source.boringavatars.com/marble/5/?square', title: '殺死石家莊的人' },
         { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' }
+        { cover: 'https://source.boringavatars.com/marble/7/?square', title: '海' },
+        { cover: 'https://source.boringavatars.com/marble/8/?square', title: '海' },
+        { cover: 'https://source.boringavatars.com/marble/9/?square', title: '海' },
+        { cover: 'https://source.boringavatars.com/marble/10/?square', title: '海' },
+        { cover: 'https://source.boringavatars.com/marble/11/?square', title: '海' },
+        { cover: 'https://source.boringavatars.com/marble/12/?square', title: '海' },
+        { cover: 'https://source.boringavatars.com/marble/13/?square', title: '海' }
       ]
     }
   }

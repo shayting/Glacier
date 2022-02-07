@@ -4,6 +4,9 @@
     text-decoration: none;
     cursor: pointer;
   }
+  ul{
+    padding-left: 0!important;
+  }
 }
 #app {
   background-color: $theme-bg;

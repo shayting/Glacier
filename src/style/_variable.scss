@@ -17,19 +17,23 @@ $primary: #d7f3f5;
   justify-content: center;
 }
 
-.mb-100{
-  margin-bottom: 100px;
+.mb-100 {
+  margin-bottom: 100px!important;
+}
+
+.mt-100 {
+  margin-top: 100px!important;
 }
 
 // 自訂容器
-.my-container{
+.my-container {
   margin: 0;
   width: 100%;
-  padding:0 16px;
+  padding: 0 16px;
   @include md {
     padding: 0 5%;
   }
-  @include lg{
+  @include lg {
     padding: 0 10%;
   }
   @include xl {
@@ -37,15 +41,15 @@ $primary: #d7f3f5;
   }
 }
 .theme-btn {
-  background: $primary!important;
-  color: $theme-bg!important;
+  background: $primary !important;
+  color: $theme-bg !important;
 }
 
-.primary-bg{
-  background: $primary!important;
+.primary-bg {
+  background: $primary !important;
 }
-.primary-text{
-  color: $primary!important;
+.primary-text {
+  color: $primary !important;
 }
 .test {
   color: white;
