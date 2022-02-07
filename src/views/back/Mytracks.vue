@@ -36,6 +36,7 @@
                       allow-multiple="false"
                       accepted-file-types="image/jpeg, image/png"
                       imageResizeTargetWidth="100"
+                      v-model="form.cover"
                     />
                   </v-col>
                   <v-col cols="6">
@@ -44,6 +45,7 @@
                       label-idle="上傳音樂"
                       allow-multiple="false"
                       accepted-file-types="image/jpeg, image/png"
+                      v-model="form.file"
                     />
                   </v-col>
                 </v-row>
@@ -56,13 +58,13 @@
                       <v-row class="text-body-1 align-center">
                         <v-col cols="3">歌名</v-col>
                         <v-col cols="9">
-                          <v-text-field clearable></v-text-field>
+                          <v-text-field clearable v-model="form.title"></v-text-field>
                         </v-col>
                       </v-row>
                       <v-row class="text-body-1">
                         <v-col cols="3">簡介</v-col>
                         <v-col cols="9">
-                          <v-textarea outlined></v-textarea>
+                          <v-textarea outlined v-model="form.description"></v-textarea>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -70,13 +72,13 @@
                       <v-row class="text-body-1 align-center">
                         <v-col cols="3">類型</v-col>
                         <v-col cols="9">
-                          <v-select v-model="select" :items="items" item-text="type"></v-select>
+                          <v-select v-model="form.type" :items="items" item-text="type"></v-select>
                         </v-col>
                       </v-row>
                       <v-row class="text-body-1">
                         <v-col cols="3">歌詞</v-col>
                         <v-col cols="9">
-                          <v-textarea outlined></v-textarea>
+                          <v-textarea outlined v-model="form.lyric"></v-textarea>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -117,6 +119,16 @@
 export default {
   data () {
     return {
+      form: {
+        title: '',
+        private: false,
+        type: '',
+        descripttion: '',
+        lyrics: '',
+        cover: null,
+        file: null,
+        _id: ''
+      },
       dialog: false,
       select: { type: 'Rock' },
       items: [

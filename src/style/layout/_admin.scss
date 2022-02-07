@@ -1,0 +1,21 @@
+#admin{
+  .admin-tabs{
+    li{
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover{
+        background: $primary;
+      }
+      &:hover a{
+        color: $theme-bg;
+      }
+    }
+    a{
+      font-size: 20px;
+      color:white;
+      display: block;
+    }
+  }
+}

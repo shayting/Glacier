@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Front from '../views/Front.vue'
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -16,7 +17,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
+          import(/* webpackChunkName: "home" */ '../views/Home.vue'),
         meta: {
           title: 'Glacier'
         }
@@ -28,7 +29,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Discover" */ '../views/front/Discover.vue'),
+          import(/* webpackChunkName: "discover" */ '../views/front/Discover.vue'),
         meta: {
           title: '發現'
         }
@@ -40,7 +41,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Ranks" */ '../views/front/Ranks.vue'),
+          import(/* webpackChunkName: "ranks" */ '../views/front/Ranks.vue'),
         meta: {
           title: '排行榜'
         }
@@ -52,7 +53,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Playlists" */ '../views/front/Playlists.vue'),
+          import(/* webpackChunkName: "playlists" */ '../views/front/Playlists.vue'),
         meta: {
           title: '歌單'
         }
@@ -64,7 +65,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Events" */ '../views/front/Events.vue'),
+          import(/* webpackChunkName: "events" */ '../views/front/Events.vue'),
         meta: {
           title: '演出活動'
         }
@@ -76,7 +77,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Login" */ '../views/front/Login.vue'),
+          import(/* webpackChunkName: "login" */ '../views/front/Login.vue'),
         meta: {
           title: '登入/註冊'
         }
@@ -88,7 +89,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "Back" */ '../views/Back.vue'),
+    component: () => import(/* webpackChunkName: "back" */ '../views/Back.vue'),
     children: [
       {
         path: 'aboutme',
@@ -97,7 +98,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "About" */ '../views/back/About.vue'),
+          import(/* webpackChunkName: "about" */ '../views/back/About.vue'),
         meta: {
           title: '個人檔案'
         }
@@ -109,7 +110,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Mytracks" */ '../views/back/Mytracks.vue'),
+          import(/* webpackChunkName: "mytracks" */ '../views/back/Mytracks.vue'),
         meta: {
           title: '我的音樂'
         }
@@ -121,7 +122,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Mylikes" */ '../views/back/Mylikes.vue'),
+          import(/* webpackChunkName: "mylikes" */ '../views/back/Mylikes.vue'),
         meta: {
           title: '我的喜歡'
         }
@@ -133,7 +134,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Myevents" */ '../views/back/Myevents.vue'),
+          import(/* webpackChunkName: "myevents" */ '../views/back/Myevents.vue'),
         meta: {
           title: '我的活動'
         }
@@ -145,7 +146,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Myevents" */ '../views/back/Myplaylists.vue'),
+          import(/* webpackChunkName: "myplaylists" */ '../views/back/Myplaylists.vue'),
         meta: {
           title: '我的歌單'
         }
@@ -157,10 +158,64 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "Admin" */ '../views/back/Admin.vue'),
-        meta: {
-          title: '管理員後台'
-        }
+          import(/* webpackChunkName: "admin" */ '../views/back/Admin.vue'),
+        children: [
+          {
+            path: '',
+            name: 'AdminHome',
+            component: () =>
+              import(/* webpackChunkName: "admin" */ '../views/back/AdminHome.vue'),
+            meta: {
+              login: true,
+              admin: true,
+              title: '管理員後台'
+            }
+          },
+          {
+            path: 'accounts',
+            name: 'AdminAccounts',
+            component: () =>
+              import(/* webpackChunkName: "admin" */ '../views/back/AdminAccounts.vue'),
+            meta: {
+              login: true,
+              admin: true,
+              title: '會員管理'
+            }
+          },
+          {
+            path: 'songs',
+            name: 'AdminSongs',
+            component: () =>
+              import(/* webpackChunkName: "admin" */ '../views/back/AdminSongs.vue'),
+            meta: {
+              login: true,
+              admin: true,
+              title: '音樂管理'
+            }
+          },
+          {
+            path: 'events',
+            name: 'AdminEvents',
+            component: () =>
+              import(/* webpackChunkName: "admin" */ '../views/back/AdminEvents.vue'),
+            meta: {
+              login: true,
+              admin: true,
+              title: '活動管理'
+            }
+          },
+          {
+            path: 'playlists',
+            name: 'AdminPlaylists',
+            component: () =>
+              import(/* webpackChunkName: "admin" */ '../views/back/AdminPlaylists.vue'),
+            meta: {
+              login: true,
+              admin: true,
+              title: '歌單管理'
+            }
+          }
+        ]
       }
     ]
   }
@@ -168,6 +223,21 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+// 路由守衛
+router.beforeEach((to, from, next) => {
+  const user = store.getters['user/user']
+  // 如果要去的地方要登入，但使用者尚未登入=>導向登入頁
+  if (to.meta.login && !user.isLogin) {
+    next('/login')
+  // 如果要去的地方meta裡面admin是true，但user不是admin=>導向首頁
+  } else if (to.meta.admin && !user.isAdmin) {
+    next('/')
+  } else {
+    // 要去哪就去哪
+    next()
+  }
 })
 
 router.afterEach((to, from) => {
