@@ -10,7 +10,7 @@
       <v-card-title class="mb-10 px-16 text-h4 py-">我的音樂</v-card-title>
       <v-card-text class="white--text px-16 text-body-1">
         <div>
-          <v-dialog width="1000" v-model="dialog">
+          <v-dialog width="1000" v-model="dialog" persistent>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="theme-btn mt-10 me-12"
@@ -33,7 +33,7 @@
                   <v-col cols="6">
                     <file-pond
                       name="cover"
-                      label-idle="上傳封面"
+                      label-idle="點擊或拖曳上傳封面"
                       allow-multiple="false"
                       accepted-file-types="image/jpeg, image/png"
                       imageResizeTargetWidth="100"
@@ -43,10 +43,10 @@
                   <v-col cols="6">
                     <file-pond
                       name="track"
-                      label-idle="上傳音樂"
+                      label-idle="點擊或拖曳上傳音樂"
                       allow-multiple="false"
                       accepted-file-types="audio/mpeg"
-                      v-model="form.file"
+                      @updatefiles="getFileFiles($event)"
                     />
                   </v-col>
                 </v-row>
@@ -86,7 +86,7 @@
                         <v-col cols="3">歌詞</v-col>
                         <v-col cols="9">
                           <v-textarea outlined v-model="form.lyric"></v-textarea>
-                          <v-switch v-model=" stateSwitch" label="私人"></v-switch>
+                          <v-switch v-model="stateSwitch" label="私人"></v-switch>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -95,8 +95,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="submitModal" type="submit" :disabled="!valid || modalSubmitting">Save</v-btn>
-                <v-btn color="secondary" text @click="resetForm">Cancel</v-btn>
+                <v-btn color="secondary" text @click="resetForm">取消</v-btn>
+                <v-btn color="success" text @click="submitModal" type="submit" :disabled="!valid || modalSubmitting">新增</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -106,7 +106,7 @@
       </v-card-text>
       <v-card-text class="px-16">
         <v-row>
-          <v-col cols="3" v-for="(track, index) in myTracks" :key="index">
+          <v-col cols="3" v-for="(track, index) in tracks" :key="index">
             <v-card class="px-4 py-4">
               <div class>
                 <v-img :src="track.cover" width="100%" />
@@ -135,14 +135,14 @@ export default {
       modalSubmitting: false,
       tracks: [],
       form: {
-        artist: '',
         title: '',
         private: false,
         type: '',
-        descripttion: '',
-        lyrics: '',
+        description: '',
+        lyric: '',
         cover: null,
-        file: [],
+        file: null,
+        uploadDate: Date.now(),
         _id: ''
       },
       stateSwitch: false,
@@ -176,18 +176,23 @@ export default {
     getCoverFiles (event) {
       this.form.cover = event[0].file
     },
-    async submitModal (event) {
-      event.preventDefault()
-      if (this.form.cover === [] || this.form.file === [] || !this.valid) {
+    getFileFiles (event) {
+      this.form.file = event[0].file
+    },
+    async submitModal () {
+      if (this.form.cover === null || this.form.file === null || !this.valid) {
         return
       }
       // 停用送出按鈕
       this.modalSubmitting = true
+      // 建立formdata物件
       const fd = new FormData()
       for (const key in this.form) {
-        fd.append(key, this.form[key])
+        if (key !== '_id') {
+          // 把資料塞進formdata中
+          fd.append(key, this.form[key])
+        }
       }
-
       try {
         const { data } = await this.api.post('/tracks', fd, {
           headers: {
@@ -196,6 +201,11 @@ export default {
         })
         this.tracks.push(data.result)
         this.dialog = false
+        this.$swal({
+          icon: 'success',
+          title: '成功',
+          text: '新增成功'
+        })
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -205,10 +215,8 @@ export default {
       }
       this.modalSubmitting = false
     },
-    resetForm (event) {
+    resetForm () {
       if (this.modalSubmitting) {
-        // 傳送表單中 避免MODAL被關掉
-        event.preventDefault()
         return
       }
       this.form = {
@@ -220,9 +228,27 @@ export default {
         lyric: '',
         cover: null,
         file: null,
+        date: '',
         _id: ''
       }
       this.$refs.form.resetValidation()
+      this.dialog = false
+    }
+  },
+  async created () {
+    try {
+      const { data } = await this.api.get('/tracks', {
+        headers: {
+          authorization: 'Bearer ' + this.user.token
+        }
+      })
+      this.tracks = data.result
+    } catch (error) {
+      this.$swal({
+        icon: 'error',
+        title: '錯誤',
+        text: '取得音樂失敗'
+      })
     }
   }
 }
