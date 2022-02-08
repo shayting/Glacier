@@ -115,16 +115,7 @@ export default {
         { cover: 'https://source.boringavatars.com/marble/1/?square', title: '大風吹' },
         { cover: 'https://source.boringavatars.com/marble/2/?square', title: '污堵' },
         { cover: 'https://source.boringavatars.com/marble/3/?square', title: '花' },
-        { cover: 'https://source.boringavatars.com/marble/4/?square', title: '秦皇島' },
-        { cover: 'https://source.boringavatars.com/marble/5/?square', title: '殺死石家莊的人' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' }
+        { cover: 'https://source.boringavatars.com/marble/4/?square', title: '秦皇島' }
       ]
     }
   }

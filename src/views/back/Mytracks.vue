@@ -24,6 +24,7 @@
                 <v-icon left>mdi-cloud-upload</v-icon>上傳音樂
               </v-btn>
             </template>
+            <!-- 新增表單 -->
             <v-card>
               <v-card-title>新增音樂</v-card-title>
               <v-divider></v-divider>
@@ -36,7 +37,7 @@
                       allow-multiple="false"
                       accepted-file-types="image/jpeg, image/png"
                       imageResizeTargetWidth="100"
-                      v-model="form.cover"
+                      @updatefiles="getCoverFiles($event)"
                     />
                   </v-col>
                   <v-col cols="6">
@@ -44,21 +45,20 @@
                       name="track"
                       label-idle="上傳音樂"
                       allow-multiple="false"
-                      accepted-file-types="image/jpeg, image/png"
+                      accepted-file-types="audio/mpeg"
                       v-model="form.file"
                     />
                   </v-col>
                 </v-row>
               </v-card-text>
-
               <v-card-text class="my-5">
-                <v-form class="px-10">
+                <v-form class="px-10" v-model="valid" ref="form">
                   <v-row>
                     <v-col cols="6">
                       <v-row class="text-body-1 align-center">
                         <v-col cols="3">歌名</v-col>
                         <v-col cols="9">
-                          <v-text-field clearable v-model="form.title"></v-text-field>
+                          <v-text-field clearable v-model="form.title" required :rules="uploadRule"></v-text-field>
                         </v-col>
                       </v-row>
                       <v-row class="text-body-1">
@@ -72,13 +72,21 @@
                       <v-row class="text-body-1 align-center">
                         <v-col cols="3">類型</v-col>
                         <v-col cols="9">
-                          <v-select v-model="form.type" :items="items" item-text="type"></v-select>
+                          <v-select
+                            v-model="form.type"
+                            :items="items"
+                            item-text="type"
+                            required
+                            :rules="uploadRule"
+                            placeholder="請選擇類型"
+                          ></v-select>
                         </v-col>
                       </v-row>
                       <v-row class="text-body-1">
                         <v-col cols="3">歌詞</v-col>
                         <v-col cols="9">
                           <v-textarea outlined v-model="form.lyric"></v-textarea>
+                          <v-switch v-model=" stateSwitch" label="私人"></v-switch>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -87,8 +95,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="dialog = false" type="submit">Save</v-btn>
-                <v-btn color="secondary" text @click="dialog = false">Cancel</v-btn>
+                <v-btn color="primary" text @click="submitModal" type="submit" :disabled="!valid || modalSubmitting">Save</v-btn>
+                <v-btn color="secondary" text @click="resetForm">Cancel</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -116,27 +124,43 @@
   </div>
 </template>
 <script>
+
 export default {
   data () {
     return {
+      valid: true,
+      uploadRule: [
+        v => !!v || '必填欄位'
+      ],
+      modalSubmitting: false,
+      tracks: [],
       form: {
+        artist: '',
         title: '',
         private: false,
         type: '',
         descripttion: '',
         lyrics: '',
         cover: null,
-        file: null,
+        file: [],
         _id: ''
       },
+      stateSwitch: false,
       dialog: false,
-      select: { type: 'Rock' },
       items: [
-        { type: 'Folk' },
-        { type: 'Rap' },
-        { type: 'Metal' },
+        { type: 'Rock' },
+        { type: 'Hip hop / Rap' },
+        { type: 'Electronic' },
         { type: 'Pop' },
-        { type: 'Post rock' }
+        { type: 'Folk' },
+        { type: 'Alternative' },
+        { type: 'Post rock' },
+        { type: 'Metal' },
+        { type: 'Punk' },
+        { type: 'Reggae / Funk' },
+        { type: 'Classic' },
+        { type: 'Blues' },
+        { type: 'Jazz' }
       ],
       myTracks: [
         { cover: 'https://source.boringavatars.com/marble/1/?square', title: '大風吹' },
@@ -144,15 +168,61 @@ export default {
         { cover: 'https://source.boringavatars.com/marble/3/?square', title: '花' },
         { cover: 'https://source.boringavatars.com/marble/4/?square', title: '秦皇島' },
         { cover: 'https://source.boringavatars.com/marble/5/?square', title: '殺死石家莊的人' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/7/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/8/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/9/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/10/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/11/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/12/?square', title: '海' },
-        { cover: 'https://source.boringavatars.com/marble/13/?square', title: '海' }
+        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' }
       ]
+    }
+  },
+  methods: {
+    getCoverFiles (event) {
+      this.form.cover = event[0].file
+    },
+    async submitModal (event) {
+      event.preventDefault()
+      if (this.form.cover === [] || this.form.file === [] || !this.valid) {
+        return
+      }
+      // 停用送出按鈕
+      this.modalSubmitting = true
+      const fd = new FormData()
+      for (const key in this.form) {
+        fd.append(key, this.form[key])
+      }
+
+      try {
+        const { data } = await this.api.post('/tracks', fd, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        this.tracks.push(data.result)
+        this.dialog = false
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+      this.modalSubmitting = false
+    },
+    resetForm (event) {
+      if (this.modalSubmitting) {
+        // 傳送表單中 避免MODAL被關掉
+        event.preventDefault()
+        return
+      }
+      this.form = {
+        artist: this.user.account,
+        title: '',
+        private: false,
+        type: '',
+        description: '',
+        lyric: '',
+        cover: null,
+        file: null,
+        _id: ''
+      }
+      this.$refs.form.resetValidation()
     }
   }
 }
