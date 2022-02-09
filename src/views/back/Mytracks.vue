@@ -101,27 +101,25 @@
                   text
                   @click="submitModal"
                   type="submit"
-                  :disabled="!valid || modalSubmitting || form.cover === null || form.file === null"
-                >新增</v-btn>
+                  :disabled="!valid || modalSubmitting"
+                >{{form._id.length > 0 ? '更新':'新增'}}</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <div class="ma-10 text-h3"></div>
-          <div class="mx-10"></div>
         </div>
       </v-card-text>
       <v-card-text class="px-16">
         <v-row>
           <v-col cols="3" v-for="(track, index) in tracks" :key="index">
             <v-card class="px-4 py-4">
-              <v-chip small class="ma-2">{{ track.private? '不公開': '公開'}}</v-chip>
+              <v-chip small>{{ track.private? '不公開': '公開'}}</v-chip>
               <div class>
                 <v-img :src="track.cover" width="100%" />
                 <div class="text-h6 my-2">{{ track.title }}</div>
               </div>
               <div class="d-flex justify-end">
                 <v-btn class="theme-btn" @click="editTrack(index)">編輯</v-btn>
-                <v-btn color="secondary ms-2">刪除</v-btn>
+                <v-btn @click="deleteTrack(track._id)" color="secondary ms-2">刪除</v-btn>
               </div>
             </v-card>
           </v-col>
@@ -219,7 +217,7 @@ export default {
               authorization: 'Bearer ' + this.user.token
             }
           })
-          this.tracks[this.form.index] = { ...this.form, image: data.result.image }
+          this.tracks[this.form.index] = { ...this.form, cover: data.result.cover, file: data.result.file }
           this.getTracks()
         }
         this.dialog = false
@@ -229,6 +227,7 @@ export default {
           text: '新增成功'
         })
       } catch (error) {
+        console.log(error)
         this.$swal({
           icon: 'error',
           title: '錯誤',
@@ -258,9 +257,32 @@ export default {
       this.dialog = false
     },
     editTrack (index) {
-      this.form = { ...this.tracks[index], cover: null, file: null, index }
+      this.form = {
+        ...this.tracks[index], cover: null, file: null, index
+      }
       this.dialog = true
-      console.log('hello')
+    },
+    async deleteTrack (id) {
+      try {
+        await this.api.delete('/tracks/' + id, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        this.$swal({
+          icon: 'success',
+          title: '成功',
+          text: '刪除商品成功'
+        })
+
+        this.getTracks()
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: '刪除商品失敗'
+        })
+      }
     },
     async getTracks () {
       try {
