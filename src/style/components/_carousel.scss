@@ -3,7 +3,7 @@
 }
 .swiper-container{
   margin-top: 60px;
-  width: 100vw;
+  width: calc(100vw - 10px);
   height: 600px;
   img{
     width: 100%;

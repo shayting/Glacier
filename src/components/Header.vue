@@ -33,7 +33,7 @@
           </router-link>
           <div v-if="user.isLogin && user.role === 0">
             <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">登出</v-btn>
-            <router-link to="/back/aboutme">
+            <router-link :to='"/back/user/" + user._id'>
               <v-btn elevation="1" class="ms-4">個人頁面</v-btn>
             </router-link>
           </div>

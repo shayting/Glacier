@@ -86,7 +86,7 @@
                         <v-col cols="3">歌詞</v-col>
                         <v-col cols="9">
                           <v-textarea outlined v-model="form.lyric"></v-textarea>
-                          <v-switch v-model="stateSwitch" label="私人"></v-switch>
+                          <v-switch v-model="form.private" label="私人"></v-switch>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -96,7 +96,13 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="secondary" text @click="resetForm">取消</v-btn>
-                <v-btn color="success" text @click="submitModal" type="submit" :disabled="!valid || modalSubmitting">新增</v-btn>
+                <v-btn
+                  color="success"
+                  text
+                  @click="submitModal"
+                  type="submit"
+                  :disabled="!valid || modalSubmitting || form.cover === null || form.file === null"
+                >新增</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -108,12 +114,13 @@
         <v-row>
           <v-col cols="3" v-for="(track, index) in tracks" :key="index">
             <v-card class="px-4 py-4">
+              <v-chip small class="ma-2">{{ track.private? '不公開': '公開'}}</v-chip>
               <div class>
                 <v-img :src="track.cover" width="100%" />
                 <div class="text-h6 my-2">{{ track.title }}</div>
               </div>
               <div class="d-flex justify-end">
-                <v-btn class="theme-btn">編輯</v-btn>
+                <v-btn class="theme-btn" @click="editTrack(index)">編輯</v-btn>
                 <v-btn color="secondary ms-2">刪除</v-btn>
               </div>
             </v-card>
@@ -143,9 +150,9 @@ export default {
         cover: null,
         file: null,
         uploadDate: Date.now(),
-        _id: ''
+        _id: '',
+        index: -1
       },
-      stateSwitch: false,
       dialog: false,
       items: [
         { type: 'Rock' },
@@ -181,6 +188,11 @@ export default {
     },
     async submitModal () {
       if (this.form.cover === null || this.form.file === null || !this.valid) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: '缺少必填欄位'
+        })
         return
       }
       // 停用送出按鈕
@@ -194,12 +206,22 @@ export default {
         }
       }
       try {
-        const { data } = await this.api.post('/tracks', fd, {
-          headers: {
-            authorization: 'Bearer ' + this.user.token
-          }
-        })
-        this.tracks.push(data.result)
+        if (this.form._id.length === 0) {
+          const { data } = await this.api.post('/tracks', fd, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+          this.tracks.push(data.result)
+        } else {
+          const { data } = await this.api.patch('/tracks/' + this.form._id, fd, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+          this.tracks[this.form.index] = { ...this.form, image: data.result.image }
+          this.getTracks()
+        }
         this.dialog = false
         this.$swal({
           icon: 'success',
@@ -229,27 +251,37 @@ export default {
         cover: null,
         file: null,
         date: '',
-        _id: ''
+        _id: '',
+        index: -1
       }
       this.$refs.form.resetValidation()
       this.dialog = false
+    },
+    editTrack (index) {
+      this.form = { ...this.tracks[index], cover: null, file: null, index }
+      this.dialog = true
+      console.log('hello')
+    },
+    async getTracks () {
+      try {
+        const { data } = await this.api.get('/tracks', {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        console.log(data)
+        this.tracks = data.result
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: '取得音樂失敗'
+        })
+      }
     }
   },
   async created () {
-    try {
-      const { data } = await this.api.get('/tracks', {
-        headers: {
-          authorization: 'Bearer ' + this.user.token
-        }
-      })
-      this.tracks = data.result
-    } catch (error) {
-      this.$swal({
-        icon: 'error',
-        title: '錯誤',
-        text: '取得音樂失敗'
-      })
-    }
+    this.getTracks()
   }
 }
 

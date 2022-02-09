@@ -57,22 +57,27 @@
                         <v-col cpls="8">Shay</v-col>
                       </v-row>
                       <v-row class="px-10 text-body-1 align-center">
-                          <v-col cols="4">用戶名稱</v-col>
-                          <v-col cols="8">
-                            <v-text-field v-model="profileEdit.userName" clearable></v-text-field>
-                          </v-col>
+                        <v-col cols="4">用戶名稱</v-col>
+                        <v-col cols="8">
+                          <v-text-field v-model="profileEdit.userName" clearable></v-text-field>
+                        </v-col>
                       </v-row>
                       <v-row class="px-10 text-body-1">
-                          <v-col cols="4">用戶簡介</v-col>
-                          <v-col cols="8">
-                            <v-textarea v-model="profileEdit.userAbout" outlined></v-textarea>
-                          </v-col>
+                        <v-col cols="4">用戶簡介</v-col>
+                        <v-col cols="8">
+                          <v-textarea v-model="profileEdit.userAbout" outlined></v-textarea>
+                        </v-col>
                       </v-row>
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="dialog2 = false, update()" type="submit">Save</v-btn>
+                    <v-btn
+                      color="primary"
+                      text
+                      @click="dialog2 = false, update()"
+                      type="submit"
+                    >Save</v-btn>
                     <v-btn color="secondary" text @click="dialog2 = false">Cancel</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -168,19 +173,19 @@
       </div>
       <v-app-bar color="secondary" elevation="2" class="d-flex justify-center" rounded>
         <div class="px-10 fs-20 back-item">
-          <router-link to="/back/aboutme">關於</router-link>
+          <router-link :to="'/back/user/' + user._id">關於</router-link>
         </div>
         <div class="px-10 fs-20 back-item">
-          <router-link to="/back/mytracks">音樂</router-link>
+          <router-link :to="'/back/user/' + user._id + '/tracks'">音樂</router-link>
         </div>
         <div class="px-10 fs-20 back-item">
-          <router-link to="/back/myplaylists">歌單</router-link>
+          <router-link :to="'/back/user/' + user._id + '/playlists'">歌單</router-link>
         </div>
         <div class="px-10 fs-20 back-item">
-          <router-link to="/back/mylikes">喜歡</router-link>
+          <router-link :to="'/back/user/' + user._id + '/likes'">喜歡</router-link>
         </div>
         <div class="px-10 fs-20 back-item">
-          <router-link to="/back/myevents">活動</router-link>
+          <router-link :to="'/back/user/' + user._id + '/events'">活動</router-link>
         </div>
       </v-app-bar>
     </div>

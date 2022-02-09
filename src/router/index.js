@@ -92,7 +92,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "back" */ '../views/Back.vue'),
     children: [
       {
-        path: 'aboutme',
+        path: 'user/:id',
         name: 'About',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -104,7 +104,7 @@ const routes = [
         }
       },
       {
-        path: 'mytracks',
+        path: 'user/:id/tracks',
         name: 'Mytracks',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -116,7 +116,7 @@ const routes = [
         }
       },
       {
-        path: 'mylikes',
+        path: 'user/:id/likes',
         name: 'Mylikes',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -128,7 +128,7 @@ const routes = [
         }
       },
       {
-        path: 'myevents',
+        path: 'user/:id/events',
         name: 'Myevents',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -140,7 +140,7 @@ const routes = [
         }
       },
       {
-        path: 'myplaylists',
+        path: 'user/:id/playlists',
         name: 'Myplaylists',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route

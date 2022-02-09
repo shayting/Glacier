@@ -21,6 +21,7 @@ export const getUserInfo = (state, data) => {
   state.account = data.account
   state.role = data.role
   state.email = data.email
+  state._id = data._id
 }
 
 export const extend = (state, data) => {
