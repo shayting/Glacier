@@ -4,6 +4,16 @@ export default () => {
     token: '',
     account: '',
     role: 0,
-    email: ''
+    email: '',
+    // --
+    userName: '',
+    avatar: '',
+    description: '',
+    tracks: [],
+    events: [],
+    likes: [],
+    playlists: [],
+    followers: [],
+    following: []
   }
 }

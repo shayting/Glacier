@@ -262,27 +262,32 @@ export default {
       }
       this.dialog = true
     },
-    async deleteTrack (id) {
-      try {
-        await this.api.delete('/tracks/' + id, {
-          headers: {
-            authorization: 'Bearer ' + this.user.token
-          }
-        })
-        this.$swal({
-          icon: 'success',
-          title: '成功',
-          text: '刪除商品成功'
-        })
-
-        this.getTracks()
-      } catch (error) {
-        this.$swal({
-          icon: 'error',
-          title: '錯誤',
-          text: '刪除商品失敗'
-        })
-      }
+    deleteTrack (id) {
+      this.$swal({
+        icon: 'warning',
+        title: '刪除確認',
+        text: '確定要刪除此音樂',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '刪除',
+        cancelButtonTex: '取消'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.api.delete('/tracks/' + id, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+          this.getTracks()
+          this.$swal({
+            icon: 'success',
+            title: '成功',
+            text: '刪除商品成功'
+          })
+        } else {
+          this.$swal.close()
+        }
+      })
     },
     async getTracks () {
       try {

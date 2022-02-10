@@ -9,8 +9,10 @@
               <img src="https://source.boringavatars.com/beam/Shay" />
             </v-avatar>
           </v-col>
+
           <v-col cols="9" class="d-flex justify-space-between">
             <div style="position: relative;width:500px;">
+            <!-- 編輯個人資料button/modal -->
               <v-dialog width="500" v-model="dialog2">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn class="theme-btn ma-8" absolute top right small v-on="on" v-bind="attrs">
@@ -82,10 +84,11 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <div class="ma-10 text-h3">{{ userName }}</div>
-              <div class="mx-10">{{ userAbout }}</div>
+            <!-- 編輯個人資料nd -->
+              <div class="ma-10 text-h3">{{ user.account }}</div>
             </div>
             <div class="d-flex my-10">
+              <!-- 追蹤modal -->
               <v-dialog v-model="dialog" width="500" class="ma-10">
                 <template v-slot:activator="{ on, attrs }">
                   <div class="text-center ms-8">
@@ -94,11 +97,11 @@
                   </div>
                   <div class="text-center ms-8" v-on="on" v-bind="attrs">
                     <div class="fs-20">粉絲</div>
-                    <div>{{ followers.length }}</div>
+                    <div>{{ user.followers.length }}</div>
                   </div>
                   <div class="text-center ms-8" v-on="on" v-bind="attrs">
                     <div class="fs-20">追蹤中</div>
-                    <div>{{ followings.length }}</div>
+                    <div>{{ user.following.length }}</div>
                   </div>
                 </template>
                 <v-card>
@@ -167,6 +170,7 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+              <!-- 追蹤modal end-->
             </div>
           </v-col>
         </v-row>
@@ -205,8 +209,6 @@ export default {
       dialog2: false,
       tab: null,
       changeAvatar: false,
-      userName: 'Shay',
-      userAbout: 'hi 我是Shay 最喜歡的樂團是草東沒有派對',
       profileEdit: {
         userName: 'Shay',
         userAbout: 'hi 我是Shay 最喜歡的樂團是草東沒有派對'
