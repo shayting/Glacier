@@ -101,8 +101,8 @@
                   text
                   @click="submitModal"
                   type="submit"
-                  :disabled="!valid || modalSubmitting || form.cover === null || form.file === null"
-                >新增</v-btn>
+                  :disabled="!valid || modalSubmitting"
+                >{{form._id.length === 0 ? '新增': '儲存'}}</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -116,12 +116,12 @@
             <v-card class="px-4 py-4">
               <v-chip small class="ma-2">{{ track.private? '不公開': '公開'}}</v-chip>
               <div class>
-                <v-img :src="track.cover" width="100%" />
+                <v-img :src="track.cover" height="300"></v-img>
                 <div class="text-h6 my-2">{{ track.title }}</div>
               </div>
               <div class="d-flex justify-end">
                 <v-btn class="theme-btn" @click="editTrack(index)">編輯</v-btn>
-                <v-btn color="secondary ms-2">刪除</v-btn>
+                <v-btn color="secondary ms-2" @click="deleteTrack (track._id)">刪除</v-btn>
               </div>
             </v-card>
           </v-col>
@@ -131,7 +131,6 @@
   </div>
 </template>
 <script>
-
 export default {
   data () {
     return {
@@ -168,14 +167,6 @@ export default {
         { type: 'Classic' },
         { type: 'Blues' },
         { type: 'Jazz' }
-      ],
-      myTracks: [
-        { cover: 'https://source.boringavatars.com/marble/1/?square', title: '大風吹' },
-        { cover: 'https://source.boringavatars.com/marble/2/?square', title: '污堵' },
-        { cover: 'https://source.boringavatars.com/marble/3/?square', title: '花' },
-        { cover: 'https://source.boringavatars.com/marble/4/?square', title: '秦皇島' },
-        { cover: 'https://source.boringavatars.com/marble/5/?square', title: '殺死石家莊的人' },
-        { cover: 'https://source.boringavatars.com/marble/6/?square', title: '海' }
       ]
     }
   },
@@ -260,7 +251,6 @@ export default {
     editTrack (index) {
       this.form = { ...this.tracks[index], cover: null, file: null, index }
       this.dialog = true
-      console.log('hello')
     },
     async getTracks () {
       try {
@@ -278,6 +268,41 @@ export default {
           text: '取得音樂失敗'
         })
       }
+    },
+    deleteTrack (id) {
+      this.$swal({
+        icon: 'warning',
+        title: '刪除確認',
+        text: '確定要刪除此音樂?',
+        showCancelButton: true,
+        cancelButtonText: '取消',
+        confirmButtonText: '刪除',
+        confirmButtonColor: '#dc143c'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.api.delete('/tracks/' + id, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          }).then(() => {
+            this.getTracks()
+            this.$swal({
+              icon: 'success',
+              title: '成功',
+              text: '刪除成功'
+            })
+          }).catch((error) => {
+            this.$swal({
+              icon: 'error',
+              title: '失敗',
+              text: error.message
+            })
+          })
+        } else {
+          // 取消
+          this.$swal.close()
+        }
+      })
     }
   },
   async created () {

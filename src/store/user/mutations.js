@@ -22,6 +22,16 @@ export const getUserInfo = (state, data) => {
   state.role = data.role
   state.email = data.email
   state._id = data._id
+  // ---
+  state.userName = data.userName
+  state.avatar = data.avatar
+  state.description = data.description
+  state.tracks = data.tracks
+  state.events = data.events
+  state.likes = data.likes
+  state.playlists = data.playlists
+  state.following = data.following
+  state.followers = data.followers
 }
 
 export const extend = (state, data) => {

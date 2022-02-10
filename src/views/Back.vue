@@ -11,6 +11,7 @@
           </v-col>
           <v-col cols="9" class="d-flex justify-space-between">
             <div style="position: relative;width:500px;">
+            <!-- 編輯個人資料表單 -->
               <v-dialog width="500" v-model="dialog2">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn class="theme-btn ma-8" absolute top right small v-on="on" v-bind="attrs">
@@ -33,6 +34,7 @@
                         accepted-file-types="image/jpeg, image/png"
                         stylePanelLayout="compact circle"
                         imageResizeTargetWidth="200"
+                        @updatefiles="getAvatar($event)"
                       />
                     </div>
                     <v-btn
@@ -54,18 +56,18 @@
                     <v-form>
                       <v-row class="px-10 text-body-1">
                         <v-col cols="4">用戶帳號</v-col>
-                        <v-col cpls="8">Shay</v-col>
+                        <v-col cpls="8">{{ user.account }}</v-col>
                       </v-row>
                       <v-row class="px-10 text-body-1 align-center">
                         <v-col cols="4">用戶名稱</v-col>
                         <v-col cols="8">
-                          <v-text-field v-model="profileEdit.userName" clearable></v-text-field>
+                          <v-text-field v-model="form.userName" clearable></v-text-field>
                         </v-col>
                       </v-row>
                       <v-row class="px-10 text-body-1">
                         <v-col cols="4">用戶簡介</v-col>
                         <v-col cols="8">
-                          <v-textarea v-model="profileEdit.userAbout" outlined></v-textarea>
+                          <v-textarea v-model="form.description" outlined></v-textarea>
                         </v-col>
                       </v-row>
                     </v-form>
@@ -75,14 +77,14 @@
                     <v-btn
                       color="primary"
                       text
-                      @click="dialog2 = false, update()"
-                      type="submit"
+                      @click="submitModal"
+                      type="submit" :disabled="modalSubmitting"
                     >Save</v-btn>
                     <v-btn color="secondary" text @click="dialog2 = false">Cancel</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <div class="ma-10 text-h3">{{ userName }}</div>
+              <div class="ma-10 text-h3">{{ user.account }}</div>
               <div class="mx-10">{{ userAbout }}</div>
             </div>
             <div class="d-flex my-10">
@@ -90,15 +92,15 @@
                 <template v-slot:activator="{ on, attrs }">
                   <div class="text-center ms-8">
                     <div class="fs-20">音樂</div>
-                    <div>0</div>
+                    <div>{{user.tracks.length}}</div>
                   </div>
                   <div class="text-center ms-8" v-on="on" v-bind="attrs">
                     <div class="fs-20">粉絲</div>
-                    <div>{{ followers.length }}</div>
+                    <div>{{ user.followers.length }}</div>
                   </div>
                   <div class="text-center ms-8" v-on="on" v-bind="attrs">
                     <div class="fs-20">追蹤中</div>
-                    <div>{{ followings.length }}</div>
+                    <div>{{ user.following.length }}</div>
                   </div>
                 </template>
                 <v-card>
@@ -201,16 +203,24 @@ export default {
   },
   data () {
     return {
+      form: {
+        avatar: null,
+        userName: '',
+        description: ''
+      },
+      userInfo: [],
       dialog: false,
       dialog2: false,
+      modalSubmitting: false,
       tab: null,
       changeAvatar: false,
-      userName: 'Shay',
+      // 假資料
       userAbout: 'hi 我是Shay 最喜歡的樂團是草東沒有派對',
       profileEdit: {
         userName: 'Shay',
         userAbout: 'hi 我是Shay 最喜歡的樂團是草東沒有派對'
       },
+      // 追蹤假資料
       followers: [
         { name: 'Shay', image: 'https://source.boringavatars.com/beam/Shay', following: true },
         { name: 'Teddy', image: 'https://source.boringavatars.com/beam/Teddy', following: false },
@@ -226,9 +236,43 @@ export default {
     }
   },
   methods: {
-    update () {
-      this.userName = this.profileEdit.userName
-      this.userAbout = this.profileEdit.userAbout
+    getAvatar (event) {
+      this.form.avatar = event[0].file
+    },
+    async submitModal () {
+      console.log('submitting')
+      // 停用送出按鈕
+      this.modalSubmitting = true
+      // 建立formdata物件
+      const fd = new FormData()
+      for (const key in this.form) {
+        fd.append(key, this.form[key])
+      }
+      try {
+        console.log(fd)
+        console.log(this.user._id)
+        const { data } = await this.api.patch('/users/' + this.user._id, fd, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        console.log(data.result)
+        this.userInfo.push(data.result)
+        this.dialog = false
+        this.$swal({
+          icon: 'success',
+          title: '成功',
+          text: '新增成功'
+        })
+      } catch (error) {
+        console.log(error)
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+      this.modalSubmitting = false
     }
   }
 }
