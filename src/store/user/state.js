@@ -13,6 +13,7 @@ export default () => {
     likes: [],
     playlists: [],
     following: [],
-    followers: []
+    followers: [],
+    state: true
   }
 }

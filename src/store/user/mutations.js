@@ -31,6 +31,7 @@ export const getUserInfo = (state, data) => {
   state.playlists = data.playlists
   state.followers = data.followers
   state.following = data.following
+  state.active = data.active
 }
 
 export const extend = (state, data) => {

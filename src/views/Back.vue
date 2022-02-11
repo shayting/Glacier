@@ -5,7 +5,7 @@
       <div>
         <v-row>
           <v-col cols="3">
-            <v-avatar v-if="user.avatar" size="200" class="ma-10">
+            <v-avatar v-if="userInfo.avatar" size="200" class="ma-10">
               <img :src="userInfo.avatar" />
             </v-avatar>
             <v-avatar v-else size="200" class="ma-10">
@@ -28,7 +28,7 @@
                   <div class="xyCenter flex-column">
                     <v-avatar v-if="!changeAvatar" size="100" class="mt-5">
                       <img v-if="!user.avatar" :src="randomAvatar" />
-                      <img v-else :src="user.avatar">
+                      <img v-else :src="userInfo.avatar">
                     </v-avatar>
                     <div class="mt-5 avatar-upload" style="width:100px;">
                       <file-pond
@@ -88,7 +88,8 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <div v-if="user.userNmae !== '預設'" class="ma-10 text-h3">{{ userInfo.userName }}</div>
+              <!-- 用戶名 -->
+              <div v-if="user.userName.length !== 0" class="ma-10 text-h3">{{ userInfo.userName }}</div>
               <div v-else class="ma-10 text-h3">{{ user.account }}</div>
               <div class="mx-10">{{ userInfo.description }}</div>
             </div>
@@ -281,6 +282,7 @@ export default {
       this.modalSubmitting = false
     },
     updateProfile () {
+      // form表單原先資料渲染
       this.form = {
         cover: this.userInfo.avatar,
         description: this.userInfo.description,
@@ -293,6 +295,7 @@ export default {
           authorization: 'Bearer ' + this.user.token
         }
       })
+      // 抓取最新資料庫資料並存放在userInfo 可以拿來渲染
       this.userInfo = {
         userName: data.result.userName,
         description: data.result.description,
@@ -302,6 +305,7 @@ export default {
     }
   },
   async created () {
+    // 表單內原先資料渲染
     this.form.userName = this.user.userName
     this.form.description = this.user.description
     this.form.cover = this.user.avatar

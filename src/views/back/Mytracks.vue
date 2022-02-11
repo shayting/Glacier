@@ -114,9 +114,9 @@
         <v-row>
           <v-col cols="3" v-for="(track, index) in tracks" :key="index">
             <v-card class="px-4 py-4" style="position: relative;">
-              <v-chip small>{{ track.private? '不公開': '公開'}}</v-chip>
+              <v-chip small class="mb-2">{{ track.private? '不公開': '公開'}}</v-chip>
               <div class>
-                <v-img :src="track.cover" height="300"></v-img>
+                <v-img :src="track.cover" height="200"></v-img>
                 <div class="text-h6 my-2">{{ track.title }}</div>
               </div>
               <div class="d-flex justify-end">
