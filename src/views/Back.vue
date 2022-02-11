@@ -5,8 +5,11 @@
       <div>
         <v-row>
           <v-col cols="3">
-            <v-avatar size="200" class="ma-10">
-              <img src="https://source.boringavatars.com/beam/Shay" />
+            <v-avatar v-if="user.avatar" size="200" class="ma-10">
+              <img :src="userInfo.avatar" />
+            </v-avatar>
+            <v-avatar v-else size="200" class="ma-10">
+              <img :src="randomAvatar" />
             </v-avatar>
           </v-col>
 
@@ -24,17 +27,17 @@
                   <v-divider></v-divider>
                   <div class="xyCenter flex-column">
                     <v-avatar v-if="!changeAvatar" size="100" class="mt-5">
-                      <img src="https://source.boringavatars.com/beam/Shay" />
+                      <img v-if="!user.avatar" :src="randomAvatar" />
+                      <img v-else :src="user.avatar">
                     </v-avatar>
                     <div class="mt-5 avatar-upload" style="width:100px;">
                       <file-pond
                         v-if="changeAvatar"
-                        name="avatar"
+                        imageCropAspectRatio="1"
+                        imageResizeTargetWidth="250"
                         label-idle="上傳圖片"
                         allow-multiple="false"
                         accepted-file-types="image/jpeg, image/png"
-                        stylePanelLayout="compact circle"
-                        imageResizeTargetWidth="200"
                         @updatefiles="getAvatar($event)"
                       />
                     </div>
@@ -81,12 +84,13 @@
                       @click="submitModal"
                       type="submit" :disabled="modalSubmitting"
                     >Save</v-btn>
-                    <v-btn color="secondary" text @click="dialog2 = false">Cancel</v-btn>
+                    <v-btn color="secondary" text @click="dialog2 = false,changeAvatar = false ">Cancel</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <div class="ma-10 text-h3">{{ userName }}</div>
-              <div class="mx-10">{{ userAbout }}</div>
+              <div v-if="user.userNmae !== '預設'" class="ma-10 text-h3">{{ userInfo.userName }}</div>
+              <div v-else class="ma-10 text-h3">{{ user.account }}</div>
+              <div class="mx-10">{{ userInfo.description }}</div>
             </div>
             <div class="d-flex my-10">
               <!-- 追蹤modal -->
@@ -199,6 +203,7 @@
 </template>
 <script>
 import Header from '@/components/Header.vue'
+import user from '../store/user'
 export default {
   name: 'Back',
   components: {
@@ -207,22 +212,17 @@ export default {
   data () {
     return {
       form: {
-        avatar: null,
+        cover: null,
         userName: '',
         description: ''
       },
-      userInfo: [],
+      randomAvatar: 'https://source.boringavatars.com/beam/Shay' + user.account,
+      userInfo: {},
       dialog: false,
       dialog2: false,
       modalSubmitting: false,
       tab: null,
       changeAvatar: false,
-      userName: 'Shay',
-      userAbout: 'hi 我是Shay 最喜歡的樂團是草東沒有派對',
-      profileEdit: {
-        userName: 'Shay',
-        userAbout: 'hi 我是Shay 最喜歡的樂團是草東沒有派對'
-      },
       // 追蹤假資料
       followers: [
         { name: 'Shay', image: 'https://source.boringavatars.com/beam/Shay', following: true },
@@ -240,7 +240,7 @@ export default {
   },
   methods: {
     getAvatar (event) {
-      this.form.avatar = event[0].file
+      this.form.cover = event[0].file
     },
     async submitModal () {
       console.log('submitting')
@@ -259,14 +259,17 @@ export default {
             authorization: 'Bearer ' + this.user.token
           }
         })
-        console.log(data.result)
-        this.userInfo.push(data.result)
-        this.dialog = false
+        this.userInfo = data.result
+        console.log(this.userInfo)
+        this.dialog2 = false
         this.$swal({
           icon: 'success',
           title: '成功',
-          text: '新增成功'
+          text: '修改成功'
         })
+        this.changeAvatar = false
+        this.updateProfile()
+        this.getUser()
       } catch (error) {
         console.log(error)
         this.$swal({
@@ -276,7 +279,33 @@ export default {
         })
       }
       this.modalSubmitting = false
+    },
+    updateProfile () {
+      this.form = {
+        cover: this.userInfo.avatar,
+        description: this.userInfo.description,
+        userName: this.userInfo.userName
+      }
+    },
+    async getUser () {
+      const { data } = await this.api.get('/users/me', {
+        headers: {
+          authorization: 'Bearer ' + this.user.token
+        }
+      })
+      this.userInfo = {
+        userName: data.result.userName,
+        description: data.result.description,
+        avatar: data.result.avatar
+      }
+      console.log(data)
     }
+  },
+  async created () {
+    this.form.userName = this.user.userName
+    this.form.description = this.user.description
+    this.form.cover = this.user.avatar
+    this.getUser()
   }
 }
 </script>

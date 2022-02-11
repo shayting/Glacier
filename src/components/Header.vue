@@ -33,9 +33,10 @@
           </router-link>
           <div v-if="user.isLogin && user.role === 0">
             <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">登出</v-btn>
-            <router-link :to='"/back/user/" + user._id'>
-              <v-btn elevation="1" class="ms-4">個人頁面</v-btn>
+            <router-link v-if="user._id.length !== 0" :to='"/back/user/" + user._id' >
+              <v-btn color="amber" elevation="1" class="ms-4"><v-icon color="black">mdi-account-circle</v-icon></v-btn>
             </router-link>
+            <v-btn dark color="secondary" v-else elevation="1" class="ms-4" disabled><v-icon>mdi-account-circle</v-icon></v-btn>
           </div>
           <div v-if="user.isLogin && user.role === 1">
             <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">登出</v-btn>
