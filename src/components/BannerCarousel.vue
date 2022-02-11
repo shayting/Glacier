@@ -7,7 +7,7 @@
       <img src="https://miro.medium.com/max/1200/1*bsukUGpEQQQLwXqewNDRfw.jpeg" />
     </swiper-slide>
     <swiper-slide>
-      <img src="https://t.kfs.io/upload_images/106426/1126-_____-__tcrc___banner--01_original.jpg" />
+      <img src="https://static.tixcraft.com/images/activity/21_CaoDong_8607828626055eb10839adadf0e26f4a.jpg" />
     </swiper-slide>
     <swiper-slide>
       <img

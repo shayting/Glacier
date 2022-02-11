@@ -1,6 +1,7 @@
 <template>
   <div class="my-10 my-container">
     <v-sheet color="secondary" min-height="500" class="myPlaylists mb-100 py-10" rounded style="position: relative;">
+    <!-- 建立歌單 -->
       <v-dialog width="500" v-model="dialog">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -58,6 +59,7 @@
               </v-card-actions>
             </v-card>
       </v-dialog>
+    <!-- 我的歌單 -->
       <div class="white--text text-h4 px-16 mb-10">我的歌單</div>
       <v-row class="px-16">
         <v-col cols="3" v-for="(playlist, index) in playlists" :key="index">
@@ -100,14 +102,6 @@ export default {
         {
           playlistName: 'work songs',
           playlistSongs: [{ name: 'bye', cover: 'https://source.boringavatars.com/marble/2/?square' }]
-        },
-        {
-          playlistName: 'run songs',
-          playlistSongs: [{ name: 'new', cover: 'https://source.boringavatars.com/marble/13/?square' }]
-        },
-        {
-          playlistName: 'dirve songs',
-          playlistSongs: [{ name: 'tint', cover: 'https://source.boringavatars.com/marble/1/?square' }]
         }
       ],
       dialog: false,

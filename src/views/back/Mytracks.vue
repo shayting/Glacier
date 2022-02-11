@@ -106,22 +106,20 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <div class="ma-10 text-h3"></div>
-          <div class="mx-10"></div>
         </div>
       </v-card-text>
       <v-card-text class="px-16">
         <v-row>
           <v-col cols="3" v-for="(track, index) in tracks" :key="index">
             <v-card class="px-4 py-4">
-              <v-chip small class="ma-2">{{ track.private? '不公開': '公開'}}</v-chip>
+              <v-chip small>{{ track.private? '不公開': '公開'}}</v-chip>
               <div class>
                 <v-img :src="track.cover" height="300"></v-img>
                 <div class="text-h6 my-2">{{ track.title }}</div>
               </div>
               <div class="d-flex justify-end">
                 <v-btn class="theme-btn" @click="editTrack(index)">編輯</v-btn>
-                <v-btn color="secondary ms-2" @click="deleteTrack (track._id)">刪除</v-btn>
+                <v-btn color="secondary ms-2">刪除</v-btn>
               </div>
             </v-card>
           </v-col>
@@ -210,7 +208,7 @@ export default {
               authorization: 'Bearer ' + this.user.token
             }
           })
-          this.tracks[this.form.index] = { ...this.form, image: data.result.image }
+          this.tracks[this.form.index] = { ...this.form, cover: data.result.cover, file: data.result.file }
           this.getTracks()
         }
         this.dialog = false
@@ -220,6 +218,7 @@ export default {
           text: '新增成功'
         })
       } catch (error) {
+        console.log(error)
         this.$swal({
           icon: 'error',
           title: '錯誤',
@@ -249,8 +248,37 @@ export default {
       this.dialog = false
     },
     editTrack (index) {
-      this.form = { ...this.tracks[index], cover: null, file: null, index }
+      this.form = {
+        ...this.tracks[index], cover: null, file: null, index
+      }
       this.dialog = true
+    },
+    deleteTrack (id) {
+      this.$swal({
+        icon: 'warning',
+        title: '刪除確認',
+        text: '確定要刪除此音樂',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '刪除',
+        cancelButtonTex: '取消'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.api.delete('/tracks/' + id, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+          this.getTracks()
+          this.$swal({
+            icon: 'success',
+            title: '成功',
+            text: '刪除商品成功'
+          })
+        } else {
+          this.$swal.close()
+        }
+      })
     },
     async getTracks () {
       try {
