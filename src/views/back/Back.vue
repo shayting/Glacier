@@ -215,7 +215,7 @@
 </template>
 <script>
 import Header from '@/components/Header.vue'
-import user from '../store/user'
+import user from '../../store/user'
 export default {
   name: 'Back',
   components: {

@@ -8,13 +8,13 @@
       class="white--text py-10 mb-100"
       style="position: relative;"
     >
-      <v-card-title class="mb-10 px-16 text-h4 py-">我的音樂</v-card-title>
+      <v-card-title class="px-16 text-h4 py-0">我的音樂</v-card-title>
       <v-card-text class="white--text px-16 text-body-1">
         <div>
           <v-dialog width="1000" v-model="dialog" persistent>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                class="theme-btn mt-10 me-12"
+                class="theme-btn mt-6 me-12"
                 absolute
                 top
                 right
@@ -113,18 +113,20 @@
       </v-card-text>
       <v-card-text class="px-16">
         <v-row>
-          <v-col cols="3" v-for="(item, index) in userTracks" :key="index">
-            <v-card class="px-4 py-4" style="position: relative;">
-              <v-chip small class="mb-2">{{ item.track.private ? '不公開': '公開'}}</v-chip>
-              <div class>
-                <v-img :src="item.track.cover" height="200"></v-img>
-                <div class="text-h6 my-2">{{ item.track.title }}</div>
+          <v-col cols="4" sm="4" md="3" v-for="(item, index) in userTracks" :key="index">
+          <router-link :to="'/track/' + item.track._id">
+            <v-card class="pb-2" style="position: relative;">
+              <v-chip small class="mb-2 state-chip">{{ item.track.private ? '不公開': '公開'}}</v-chip>
+              <div class="track-photowrap">
+                <v-img class="track-photo" :src="item.track.cover"></v-img>
+                <div class="text-body-1 my-2 px-4">{{ item.track.title }}</div>
               </div>
-              <div class="d-flex justify-end">
-                <v-btn class="theme-btn" @click="editTrack(index)">編輯</v-btn>
-                <v-btn color="secondary ms-2" @click="deleteTrack(item.track._id)">刪除</v-btn>
+              <div class="d-flex justify-end px-2">
+                <v-btn small class="theme-btn" @click="editTrack(index)">編輯</v-btn>
+                <v-btn small color="secondary ms-2" @click="deleteTrack(item.track._id)">刪除</v-btn>
               </div>
             </v-card>
+          </router-link>
           </v-col>
         </v-row>
       </v-card-text>

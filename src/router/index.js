@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Front from '../views/Front.vue'
+import Front from '../views/front/Front.vue'
 import store from '../store'
 
 Vue.use(VueRouter)
@@ -17,7 +17,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+          import(/* webpackChunkName: "front" */ '../views/front/Home.vue'),
         meta: {
           title: 'Glacier'
         }
@@ -29,7 +29,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "discover" */ '../views/front/Discover.vue'),
+          import(/* webpackChunkName: "front" */ '../views/front/Discover.vue'),
         meta: {
           title: '發現'
         }
@@ -41,7 +41,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "ranks" */ '../views/front/Ranks.vue'),
+          import(/* webpackChunkName: "front" */ '../views/front/Ranks.vue'),
         meta: {
           title: '排行榜'
         }
@@ -53,7 +53,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "playlists" */ '../views/front/Playlists.vue'),
+          import(/* webpackChunkName: "front" */ '../views/front/Playlists.vue'),
         meta: {
           title: '歌單'
         }
@@ -65,7 +65,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "events" */ '../views/front/Events.vue'),
+          import(/* webpackChunkName: "front" */ '../views/front/Events.vue'),
         meta: {
           title: '演出活動'
         }
@@ -77,9 +77,33 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "login" */ '../views/front/Login.vue'),
+          import(/* webpackChunkName: "front" */ '../views/front/Login.vue'),
         meta: {
           title: '登入/註冊'
+        }
+      },
+      {
+        path: '/track/:id',
+        name: 'Track',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(/* webpackChunkName: "front" */ '../views/front/SingleTrack.vue'),
+        meta: {
+          title: '音樂'
+        }
+      },
+      {
+        path: '/playlist/:id',
+        name: 'Playlist',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(/* webpackChunkName: "front" */ '../views/front/SinglePlaylist.vue'),
+        meta: {
+          title: '歌單'
         }
       }
     ]
@@ -89,7 +113,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "back" */ '../views/Back.vue'),
+    component: () => import(/* webpackChunkName: "back" */ '../views/back/Back.vue'),
     children: [
       {
         path: 'user/:id',
@@ -98,7 +122,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/back/About.vue'),
+          import(/* webpackChunkName: "back" */ '../views/back/About.vue'),
         meta: {
           title: '個人檔案'
         }
@@ -110,7 +134,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "mytracks" */ '../views/back/Mytracks.vue'),
+          import(/* webpackChunkName: "member" */ '../views/back/Mytracks.vue'),
         meta: {
           title: '我的音樂'
         }
@@ -122,7 +146,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "mylikes" */ '../views/back/Mylikes.vue'),
+          import(/* webpackChunkName: "member" */ '../views/back/Mylikes.vue'),
         meta: {
           title: '我的喜歡'
         }
@@ -134,7 +158,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "myevents" */ '../views/back/Myevents.vue'),
+          import(/* webpackChunkName: "member" */ '../views/back/Myevents.vue'),
         meta: {
           title: '我的活動'
         }
@@ -146,7 +170,7 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "myplaylists" */ '../views/back/Myplaylists.vue'),
+          import(/* webpackChunkName: "member" */ '../views/back/Myplaylists.vue'),
         meta: {
           title: '我的歌單'
         }

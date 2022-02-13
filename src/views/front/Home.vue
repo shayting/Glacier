@@ -30,11 +30,11 @@
 </style>
 
 <script>
-import BannerCarousel from '../components/BannerCarousel.vue'
-import DaySong from '../components/DaySong.vue'
-import Instant from '../components/Instant.vue'
-import HomeList from '../components/HomeList.vue'
-import HomeEvent from '../components/HomeEvent.vue'
+import BannerCarousel from '../../components/BannerCarousel.vue'
+import DaySong from '../../components/DaySong.vue'
+import Instant from '../../components/Instant.vue'
+import HomeList from '../../components/HomeList.vue'
+import HomeEvent from '../../components/HomeEvent.vue'
 
 export default {
   name: 'Home',

@@ -3,14 +3,11 @@
   header a{
     color:white;
     display: inline-block;
-    line-height: 64px;
   }
   .back-item:hover a{
-    color:$theme-bg;
-  }
-  .back-item:hover{
-    transition: .5s;
-    background-color: $primary;
+    color:$primary;
+    transition: .3s;
+    transform: translateY(-2px);
   }
 }
 
