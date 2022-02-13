@@ -1,12 +1,12 @@
 <template>
   <div>
     <Header></Header>
-    <div v-if="user.role === 0" id="back" class="my-container white--text">
+    <div v-if="user.role !== 1" id="back" class="my-container white--text">
       <div>
         <v-row>
           <v-col cols="3">
-            <v-avatar v-if="userInfo.avatar" size="200" class="ma-10">
-              <img :src="userInfo.avatar" />
+            <v-avatar v-if="userPage.avatar" size="200" class="ma-10">
+              <img :src="userPage.avatar" />
             </v-avatar>
             <v-avatar v-else size="200" class="ma-10">
               <img :src="randomAvatar" />
@@ -14,9 +14,9 @@
           </v-col>
 
           <v-col cols="9" class="d-flex justify-space-between">
-            <div style="position: relative;width:500px;">
-            <!-- 編輯個人資料button/modal -->
-              <v-dialog width="500" v-model="dialog2">
+            <div style="position: relative;width:570px;">
+              <!-- 編輯個人資料button/modal -->
+              <v-dialog width="500" v-model="dialog2" v-if="user._id === userPage._id">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn class="theme-btn ma-8" absolute top right small v-on="on" v-bind="attrs">
                     <v-icon small left>mdi-pencil</v-icon>編輯個人資料
@@ -27,18 +27,22 @@
                   <v-divider></v-divider>
                   <div class="xyCenter flex-column">
                     <v-avatar v-if="!changeAvatar" size="100" class="mt-5">
-                      <img v-if="!user.avatar" :src="randomAvatar" />
-                      <img v-else :src="userInfo.avatar">
+                      <img v-if="!userInfo.avatar" :src="randomAvatar" />
+                      <img v-else :src="userInfo.avatar" />
                     </v-avatar>
                     <div class="mt-5 avatar-upload" style="width:100px;">
                       <file-pond
                         v-if="changeAvatar"
-                        imageCropAspectRatio="1"
-                        imageResizeTargetWidth="250"
-                        label-idle="上傳圖片"
-                        allow-multiple="false"
-                        accepted-file-types="image/jpeg, image/png"
-                        @updatefiles="getAvatar($event)"
+                          imageCropAspectRatio="1"
+                          imageResizeTargetWidth="250"
+                          stylePanelLayout='compact circle'
+                          styleLoadIndicatorPosition='center bottom'
+                          styleProgressIndicatorPosition='right bottom'
+                          styleButtonRemoveItemPosition='left bottom'
+                          styleButtonProcessItemPosition='right bottom'
+                          accepted-file-types="image/jpeg, image/png"
+                          label-idle="選擇圖片"
+                          @updatefiles="getAvatar($event)"
                       />
                     </div>
                     <v-btn
@@ -82,24 +86,31 @@
                       color="primary"
                       text
                       @click="submitModal"
-                      type="submit" :disabled="modalSubmitting"
-                    >Save</v-btn>
-                    <v-btn color="secondary" text @click="dialog2 = false,changeAvatar = false ">Cancel</v-btn>
+                      type="submit"
+                      :disabled="modalSubmitting"
+                    >儲存</v-btn>
+                    <v-btn
+                      color="secondary"
+                      text
+                      @click="dialog2 = false, changeAvatar = false"
+                    >取消</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+              <v-btn v-else class="theme-btn ma-8" absolute top right medium>追蹤</v-btn>
               <!-- 用戶名 -->
-              <div v-if="user.userName.length !== 0" class="ma-10 text-h3">{{ userInfo.userName }}</div>
-              <div v-else class="ma-10 text-h3">{{ user.account }}</div>
-              <div class="mx-10">{{ userInfo.description }}</div>
+              <div v-if="userPage.userName" class="ma-10 text-h3">{{ userPage.userName }}</div>
+              <div v-else class="ma-10 text-h3">{{ userPage.account }}</div>
+              <div class="mx-10 text-wrapper">{{ userPage.description }}</div>
             </div>
             <div class="d-flex my-10">
               <!-- 追蹤modal -->
+              <!-- 用userPage 抓得到資料但抓不到資料長度 -->
               <v-dialog v-model="dialog" width="500" class="ma-10">
                 <template v-slot:activator="{ on, attrs }">
                   <div class="text-center ms-8">
                     <div class="fs-20">音樂</div>
-                    <div>{{user.tracks.length}}</div>
+                    <div>{{ user.tracks.length }}</div>
                   </div>
                   <div class="text-center ms-8" v-on="on" v-bind="attrs">
                     <div class="fs-20">粉絲</div>
@@ -183,19 +194,19 @@
       </div>
       <v-app-bar color="secondary" elevation="2" class="d-flex justify-center" rounded>
         <div class="px-10 fs-20 back-item">
-          <router-link :to="'/back/user/' + user._id">關於</router-link>
+          <router-link :to="'/back/user/' + this.$route.params.id">關於</router-link>
         </div>
         <div class="px-10 fs-20 back-item">
-          <router-link :to="'/back/user/' + user._id + '/tracks'">音樂</router-link>
+          <router-link :to="'/back/user/' + this.$route.params.id + '/tracks'">音樂</router-link>
         </div>
-        <div class="px-10 fs-20 back-item">
-          <router-link :to="'/back/user/' + user._id + '/playlists'">歌單</router-link>
+        <div class="px-10 fs-20 back-item" v-if="user._id === userPage._id">
+          <router-link :to="'/back/user/' + this.$route.params.id + '/playlists'">歌單</router-link>
         </div>
-        <div class="px-10 fs-20 back-item">
-          <router-link :to="'/back/user/' + user._id + '/likes'">喜歡</router-link>
+        <div class="px-10 fs-20 back-item" v-if="user._id === userPage._id">
+          <router-link :to="'/back/user/' + this.$route.params.id + '/likes'">喜歡</router-link>
         </div>
-        <div class="px-10 fs-20 back-item">
-          <router-link :to="'/back/user/' + user._id + '/events'">活動</router-link>
+        <div class="px-10 fs-20 back-item" v-if="user._id === userPage._id">
+          <router-link :to="'/back/user/' + this.$route.params.id + '/events'">活動</router-link>
         </div>
       </v-app-bar>
     </div>
@@ -218,7 +229,10 @@ export default {
         description: ''
       },
       randomAvatar: 'https://source.boringavatars.com/beam/Shay' + user.account,
+      // 登入者資料
       userInfo: {},
+      // 此路由頁面使用者資料
+      userPage: {},
       dialog: false,
       dialog2: false,
       modalSubmitting: false,
@@ -244,7 +258,6 @@ export default {
       this.form.cover = event[0].file
     },
     async submitModal () {
-      console.log('submitting')
       // 停用送出按鈕
       this.modalSubmitting = true
       // 建立formdata物件
@@ -253,15 +266,12 @@ export default {
         fd.append(key, this.form[key])
       }
       try {
-        console.log(fd)
-        console.log(this.user._id)
         const { data } = await this.api.patch('/users/' + this.user._id, fd, {
           headers: {
             authorization: 'Bearer ' + this.user.token
           }
         })
         this.userInfo = data.result
-        console.log(this.userInfo)
         this.dialog2 = false
         this.$swal({
           icon: 'success',
@@ -271,6 +281,7 @@ export default {
         this.changeAvatar = false
         this.updateProfile()
         this.getUser()
+        this.getOtherUser()
       } catch (error) {
         console.log(error)
         this.$swal({
@@ -289,6 +300,7 @@ export default {
         userName: this.userInfo.userName
       }
     },
+    // 抓登入者資料
     async getUser () {
       const { data } = await this.api.get('/users/me', {
         headers: {
@@ -301,7 +313,27 @@ export default {
         description: data.result.description,
         avatar: data.result.avatar
       }
-      console.log(data)
+    },
+    // ???導致莫名錯誤
+    // 根據路由參數抓用戶資料
+    async getOtherUser () {
+      const { data } = await this.api.get('/users/' + this.$route.params.id)
+      this.userPage = {
+        account: data.result.account,
+        description: data.result.description,
+        avatar: data.result.avatar,
+        userName: data.result.userName,
+        _id: data.result._id,
+        tracks: data.result.tracks,
+        following: data.result.following,
+        followers: data.result.followers
+      }
+    }
+  },
+  // ??有出現 但還是報錯
+  computed: {
+    splitText () {
+      return this.userPage.description.split(/[\r\n]/)[0] + '...'
     }
   },
   async created () {
@@ -309,7 +341,14 @@ export default {
     this.form.userName = this.user.userName
     this.form.description = this.user.description
     this.form.cover = this.user.avatar
-    this.getUser()
+    // 若是未登入的使用者，跳過這行
+    if (this.user._id.length > 0) {
+      this.getUser()
+    }
+    // 寫判斷式先擋掉管理員問題
+    if (this.user.role !== 1) {
+      this.getOtherUser()
+    }
   }
 }
 </script>

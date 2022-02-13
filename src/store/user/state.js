@@ -14,6 +14,6 @@ export default () => {
     playlists: [],
     following: [],
     followers: [],
-    state: true
+    active: true
   }
 }

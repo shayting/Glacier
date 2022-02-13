@@ -1,6 +1,7 @@
 <template>
   <div id="singleTrack" class="my-container white--text">
     <v-row>
+      <!-- 音樂封面 -->
       <v-col cols="4" class="py-4">
         <v-hover>
           <template v-slot:default="{ hover }">
@@ -26,6 +27,7 @@
           <v-btn class="theme-btn">追蹤</v-btn>
         </div>
       </v-col>
+      <!-- 音樂資訊 -->
       <v-col cols="8" style="position: relative;">
         <div class="text-h4 mb-5">大風吹</div>
         <v-divider color="grey"></v-divider>
@@ -63,6 +65,7 @@
       </v-col>
     </v-row>
     <v-row class="mt-10">
+      <!-- 歌詞與介紹 -->
       <v-col cols="4">
         <v-card>
           <v-tabs fixed-tabs v-model="tab" dark>
@@ -71,21 +74,22 @@
           </v-tabs>
           <v-tabs-items v-model="tab" class="white--text pa-10 singleTrack-intro" dark>
             <v-tab-item value="intro">
-              <v-card-text class="text-body-1">這是一首有關大風吹的歌</v-card-text>
+              <v-card-text class="text-body-1 text-wrapper">這是一首有關大風吹的歌</v-card-text>
             </v-tab-item>
             <v-tab-item value="lyric">
-              <v-card-text class="text-body-1">
+              <v-card-text class="text-body-1 text-wrapper">
                 大風吹著誰 誰就倒楣
-                <br />每個人都想當鬼 都一樣的下賤
-                <br />哭啊 喊啊 叫你媽媽帶你去買玩具啊
-                <br />快 快拿到學校炫耀吧 孩子 交點朋友吧
-                <br />哎呀呀 你看你手上拿的是什麼啊
-                <br />那東西我們早就不屑啦 哈哈哈 哈
+                每個人都想當鬼 都一樣的下賤
+                哭啊 喊啊 叫你媽媽帶你去買玩具啊
+                快 快拿到學校炫耀吧 孩子 交點朋友吧
+                哎呀呀 你看你手上拿的是什麼啊
+                那東西我們早就不屑啦 哈哈哈 哈
               </v-card-text>
             </v-tab-item>
           </v-tabs-items>
         </v-card>
       </v-col>
+      <!-- 留言區 -->
       <v-col cols="8">
         <v-sheet dark min-height="548px" class="white--text pa-6 singleTrack-messages" rounded>
           <div class="text-h6">留言</div>

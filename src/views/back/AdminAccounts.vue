@@ -98,7 +98,6 @@ export default {
             authorization: 'Bearer ' + this.user.token
           }
         })
-        console.log(data.result)
         this.accounts = data.result.map(r => {
           if (r.userName.length === 0 || r.userName === null) {
             r.userName = '未設定'

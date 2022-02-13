@@ -2,6 +2,7 @@
 $theme-bg: #111314;
 $primary: #d7f3f5;
 
+
 //  font-size
 .fs-20 {
   font-size: 20px;
@@ -16,6 +17,11 @@ $primary: #d7f3f5;
   align-items: center;
   justify-content: center;
 }
+
+.text-wrapper {
+  white-space: pre-wrap;
+}
+
 
 .mb-100 {
   margin-bottom: 100px!important;

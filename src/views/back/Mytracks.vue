@@ -1,3 +1,4 @@
+
 <template>
   <div class="my-container my-10">
     <v-card
@@ -112,16 +113,16 @@
       </v-card-text>
       <v-card-text class="px-16">
         <v-row>
-          <v-col cols="3" v-for="(track, index) in tracks" :key="index">
+          <v-col cols="3" v-for="(item, index) in userTracks" :key="index">
             <v-card class="px-4 py-4" style="position: relative;">
-              <v-chip small class="mb-2">{{ track.private? '不公開': '公開'}}</v-chip>
+              <v-chip small class="mb-2">{{ item.track.private ? '不公開': '公開'}}</v-chip>
               <div class>
-                <v-img :src="track.cover" height="200"></v-img>
-                <div class="text-h6 my-2">{{ track.title }}</div>
+                <v-img :src="item.track.cover" height="200"></v-img>
+                <div class="text-h6 my-2">{{ item.track.title }}</div>
               </div>
               <div class="d-flex justify-end">
                 <v-btn class="theme-btn" @click="editTrack(index)">編輯</v-btn>
-                <v-btn color="secondary ms-2" @click="deleteTrack(track._id)">刪除</v-btn>
+                <v-btn color="secondary ms-2" @click="deleteTrack(item.track._id)">刪除</v-btn>
               </div>
             </v-card>
           </v-col>
@@ -139,7 +140,7 @@ export default {
         v => !!v || '必填欄位'
       ],
       modalSubmitting: false,
-      tracks: [],
+      userTracks: [],
       form: {
         title: '',
         private: false,
@@ -198,20 +199,19 @@ export default {
       }
       try {
         if (this.form._id.length === 0) {
-          const { data } = await this.api.post('/tracks', fd, {
+          await this.api.post('/tracks', fd, {
             headers: {
               authorization: 'Bearer ' + this.user.token
             }
           })
-          this.tracks.push(data.result)
         } else {
           await this.api.patch('/tracks/' + this.form._id, fd, {
             headers: {
               authorization: 'Bearer ' + this.user.token
             }
           })
-          this.getTracks()
         }
+        this.getUserTracks()
         this.dialog = false
         this.$swal({
           icon: 'success',
@@ -249,9 +249,11 @@ export default {
       this.dialog = false
     },
     editTrack (index) {
+      // 把資料塞回表單
       this.form = {
-        ...this.tracks[index], cover: null, file: null, index
+        ...this.userTracks[index].track, cover: null, file: null, index
       }
+      console.log(this.form)
       this.dialog = true
     },
     deleteTrack (id) {
@@ -270,17 +272,17 @@ export default {
               authorization: 'Bearer ' + this.user.token
             }
           }).then(() => {
-            this.getTracks()
+            this.getUserTracks()
             this.$swal({
               icon: 'success',
               title: '成功',
               text: '刪除成功'
-            }).catch((error) => {
-              this.$swal({
-                icon: 'error',
-                title: '失敗',
-                text: error.message
-              })
+            })
+          }).catch((error) => {
+            this.$swal({
+              icon: 'error',
+              title: '失敗',
+              text: error.message
             })
           })
         } else {
@@ -288,15 +290,17 @@ export default {
         }
       })
     },
-    async getTracks () {
+    async getUserTracks () {
       try {
-        const { data } = await this.api.get('/tracks', {
+        const { data } = await this.api.get('/users/' + this.$route.params.id + '/tracks', {
           headers: {
             authorization: 'Bearer ' + this.user.token
           }
         })
-        console.log(data)
-        this.tracks = data.result
+        this.userTracks = data.result
+        if (this.userTracks.length === 0) {
+          alert('目前無上傳的音樂')
+        }
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -307,8 +311,7 @@ export default {
     }
   },
   async created () {
-    this.getTracks()
+    this.getUserTracks()
   }
 }
-
 </script>
