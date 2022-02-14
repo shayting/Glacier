@@ -19,10 +19,12 @@
         </v-hover>
         <div class="d-flex align-center mt-6">
           <v-avatar size="50">
-            <img :src="track.artist.avatar" />
+            <img v-if="track.artist.avatar !== null" :src="track.artist.avatar" />
+            <img v-else :src="randomAvatar" />
           </v-avatar>
           <router-link :to="'/back/user/' + track.artist._id" class="ms-4 me-auto">
-            <div class="white--text text-h6">{{track.artist.userName}}</div>
+            <div class="white--text text-h6" v-if="track.artist.userName.length!==0">{{track.artist.userName}}</div>
+            <div class="white--text text-h6" v-else>{{track.artist.account}}</div>
           </router-link>
           <v-btn class="theme-btn">追蹤</v-btn>
         </div>
@@ -34,7 +36,7 @@
         <v-chip x-small class="mt-4">{{track.type}}</v-chip>
         <div class="grey--text mt-4">Published:{{track.uploadDate}}</div>
         <div class="mt-4 text-h6">喜歡</div>
-        <span class="primary-text text-h4">126</span>
+        <span class="primary-text text-h4">{{track.likes.length}}</span>
         <v-speed-dial
           v-model="fab"
           :top="top"
@@ -46,6 +48,7 @@
           :transition="transition"
           absolute
         >
+        <!-- 功能選單按鈕 -->
           <template v-slot:activator>
             <v-btn small v-model="fab" color="#d7f3f5" fab>
               <v-icon v-if="fab">mdi-close</v-icon>
@@ -58,7 +61,10 @@
           <v-btn fab dark x-small color="cyan">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
-          <v-btn fab dark x-small color="red">
+          <v-btn v-if="!likeState" @click="likes" fab dark x-small color="secondary">
+            <v-icon>mdi-heart</v-icon>
+          </v-btn>
+          <v-btn v-else @click="likes" fab dark x-small color="red">
             <v-icon>mdi-heart</v-icon>
           </v-btn>
         </v-speed-dial>
@@ -127,9 +133,12 @@ export default {
     // 存放get到的東西
     track: {
       artist: {
-        avatar: ''
-      }
+        userName: '',
+        account: ''
+      },
+      likes: []
     },
+    likeState: false,
     // ---- 播放overlay
     overlay: false,
     // -----彈跳按鈕------
@@ -199,11 +208,35 @@ export default {
           text: '取得音樂失敗'
         })
       }
+    },
+    async likes () {
+      try {
+        if (this.user.isLogin) {
+          await this.api.patch('/users/likes/' + this.user._id, { _id: this.$route.params.id }, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+        }
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    }
+  },
+  computed: {
+    randomAvatar () {
+      if (this.track.artist.avatar === null) {
+        return 'https://source.boringavatars.com/beam/' + this.track.artist.account
+      }
+      return undefined
     }
   },
   async created () {
     this.getTrackById()
   }
-
 }
 </script>
