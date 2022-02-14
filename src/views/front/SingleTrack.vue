@@ -52,7 +52,7 @@
           <template v-slot:activator>
             <v-btn small v-model="fab" color="#d7f3f5" fab>
               <v-icon v-if="fab">mdi-close</v-icon>
-              <v-icon v-else>mdi-menu</v-icon>
+              <v-icon v-else>mdi-music</v-icon>
             </v-btn>
           </template>
           <v-btn fab dark x-small color="amber">
@@ -61,11 +61,8 @@
           <v-btn fab dark x-small color="cyan">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
-          <v-btn v-if="!likeState" @click="likes" fab dark x-small color="secondary">
-            <v-icon>mdi-heart</v-icon>
-          </v-btn>
-          <v-btn v-else @click="likes" fab dark x-small color="red">
-            <v-icon>mdi-heart</v-icon>
+          <v-btn @click="likes" fab dark x-small color="secondary">
+            <v-icon>{{likeIcon}}</v-icon>
           </v-btn>
         </v-speed-dial>
       </v-col>
@@ -145,7 +142,7 @@ export default {
     direction: 'left',
     fab: false,
     fling: false,
-    hover: true,
+    hover: false,
     tabs: null,
     top: true,
     right: true,
@@ -201,6 +198,13 @@ export default {
         })
         this.track = data.result
         this.track.uploadDate = data.result.uploadDate.slice(0, 10)
+        // .some 陣列只要有其中一個符合條件就會回傳true
+        if (this.user.likes !== undefined && this.user.likes.some(like => like.tracks === this.track._id)) {
+          this.likeState = true
+        } else {
+          this.likeState = false
+        }
+        // console.log(this.likeState)
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -218,6 +222,10 @@ export default {
             }
           })
         }
+        // 重新渲染喜歡數
+        this.getTrackById()
+        // 重新渲染喜歡icon
+        this.$store.dispatch('user/getUserInfo')
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -233,6 +241,9 @@ export default {
         return 'https://source.boringavatars.com/beam/' + this.track.artist.account
       }
       return undefined
+    },
+    likeIcon () {
+      return this.likeState ? 'mdi-heart' : 'mdi-heart-outline'
     }
   },
   async created () {
