@@ -15,6 +15,7 @@ export const logout = (state, data) => {
   state.account = ''
   state.role = 0
   state.email = ''
+  state._id = ''
 }
 
 export const getUserInfo = (state, data) => {

@@ -125,7 +125,11 @@
 export default {
   data: () => ({
     // 存放get到的東西
-    track: {},
+    track: {
+      artist: {
+        avatar: ''
+      }
+    },
     // ---- 播放overlay
     overlay: false,
     // -----彈跳按鈕------

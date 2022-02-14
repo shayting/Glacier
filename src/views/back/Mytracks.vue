@@ -11,23 +11,15 @@
       <v-card-title class="px-16 text-h4 py-0">我的音樂</v-card-title>
       <v-card-text class="white--text px-16 text-body-1">
         <div>
-          <v-dialog width="1000" v-model="dialog" persistent>
+          <v-dialog width="1000" v-model="dialog" persistent v-if="user._id.length !== 0">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="theme-btn mt-6 me-12"
-                absolute
-                top
-                right
-                large
-                v-on="on"
-                v-bind="attrs"
-              >
+              <v-btn class="theme-btn mt-6 me-12" absolute top right large v-on="on" v-bind="attrs">
                 <v-icon left>mdi-cloud-upload</v-icon>上傳音樂
               </v-btn>
             </template>
             <!-- 新增表單 -->
             <v-card>
-              <v-card-title>{{form._id.length === 0 ? '新增音樂': '編輯音樂'}}</v-card-title>
+              <v-card-title>{{ form._id.length === 0 ? '新增音樂' : '編輯音樂' }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-5">
                 <v-row class="px-10">
@@ -105,7 +97,7 @@
                   @click="submitModal"
                   type="submit"
                   :disabled="!valid || modalSubmitting"
-                >{{form._id.length === 0 ? '新增': '儲存'}}</v-btn>
+                >{{ form._id.length === 0 ? '新增' : '儲存' }}</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -114,19 +106,19 @@
       <v-card-text class="px-16">
         <v-row>
           <v-col cols="4" sm="4" md="3" v-for="(item, index) in userTracks" :key="index">
-          <router-link :to="'/track/' + item.track._id">
             <v-card class="pb-2" style="position: relative;">
-              <v-chip small class="mb-2 state-chip">{{ item.track.private ? '不公開': '公開'}}</v-chip>
-              <div class="track-photowrap">
-                <v-img class="track-photo" :src="item.track.cover"></v-img>
-                <div class="text-body-1 my-2 px-4">{{ item.track.title }}</div>
-              </div>
-              <div class="d-flex justify-end px-2">
+              <v-chip small class="mb-2 state-chip">{{ item.private ? '不公開' : '公開' }}</v-chip>
+              <router-link :to="'/track/' + item._id">
+                <div class="track-photowrap">
+                  <v-img class="track-photo" :src="item.cover"></v-img>
+                  <div class="text-body-1 my-2 px-4 black--text">{{ item.title }}</div>
+                </div>
+              </router-link>
+              <div v-if="user._id.length !== 0" class="d-flex justify-end px-2">
                 <v-btn small class="theme-btn" @click="editTrack(index)">編輯</v-btn>
-                <v-btn small color="secondary ms-2" @click="deleteTrack(item.track._id)">刪除</v-btn>
+                <v-btn small color="secondary ms-2" @click="deleteTrack(item._id)">刪除</v-btn>
               </div>
             </v-card>
-          </router-link>
           </v-col>
         </v-row>
       </v-card-text>
@@ -213,7 +205,7 @@ export default {
             }
           })
         }
-        this.getUserTracks()
+        this.getPrivate()
         this.dialog = false
         this.$swal({
           icon: 'success',
@@ -253,9 +245,8 @@ export default {
     editTrack (index) {
       // 把資料塞回表單
       this.form = {
-        ...this.userTracks[index].track, cover: null, file: null, index
+        ...this.userTracks[index], cover: null, file: null, index
       }
-      console.log(this.form)
       this.dialog = true
     },
     deleteTrack (id) {
@@ -274,12 +265,13 @@ export default {
               authorization: 'Bearer ' + this.user.token
             }
           }).then(() => {
-            this.getUserTracks()
+            this.getPrivate()
             this.$swal({
               icon: 'success',
               title: '成功',
               text: '刪除成功'
             })
+            this.$emit('deleteTrack')
           }).catch((error) => {
             this.$swal({
               icon: 'error',
@@ -294,15 +286,24 @@ export default {
     },
     async getUserTracks () {
       try {
-        const { data } = await this.api.get('/users/' + this.$route.params.id + '/tracks', {
+        const { data } = await this.api.get('/tracks?artist=' + this.$route.params.id)
+        this.userTracks = data.result
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: '取得音樂失敗'
+        })
+      }
+    },
+    async getPrivate () {
+      try {
+        const { data } = await this.api.get('/tracks/private/' + this.user._id, {
           headers: {
             authorization: 'Bearer ' + this.user.token
           }
         })
         this.userTracks = data.result
-        if (this.userTracks.length === 0) {
-          alert('目前無上傳的音樂')
-        }
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -313,7 +314,11 @@ export default {
     }
   },
   async created () {
-    this.getUserTracks()
+    if (this.user._id === this.$route.params.id) {
+      this.getPrivate()
+    } else {
+      this.getUserTracks()
+    }
   }
 }
 </script>

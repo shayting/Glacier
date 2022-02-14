@@ -97,11 +97,12 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+              <!-- 追蹤按鈕 -->
               <v-btn v-else class="theme-btn ma-8" absolute top right medium>追蹤</v-btn>
               <!-- 用戶名 -->
               <div v-if="userPage.userName" class="ma-10 text-h3">{{ userPage.userName }}</div>
               <div v-else class="ma-10 text-h3">{{ userPage.account }}</div>
-              <div class="mx-10 text-wrapper">{{ userPage.description }}</div>
+              <div class="mx-10 text-wrapper">{{ splitText }}</div>
             </div>
             <div class="d-flex my-10">
               <!-- 追蹤modal -->
@@ -110,15 +111,15 @@
                 <template v-slot:activator="{ on, attrs }">
                   <div class="text-center ms-8">
                     <div class="fs-20">音樂</div>
-                    <div>{{ user.tracks.length }}</div>
+                    <div>{{ tracksCount }}</div>
                   </div>
                   <div class="text-center ms-8" v-on="on" v-bind="attrs">
                     <div class="fs-20">粉絲</div>
-                    <div>{{ user.followers.length }}</div>
+                    <div>{{ userPage.followers.length }}</div>
                   </div>
                   <div class="text-center ms-8" v-on="on" v-bind="attrs">
                     <div class="fs-20">追蹤中</div>
-                    <div>{{ user.following.length }}</div>
+                    <div>{{ userPage.following.length }}</div>
                   </div>
                 </template>
                 <v-card>
@@ -210,12 +211,12 @@
         </div>
       </v-app-bar>
     </div>
-    <router-view></router-view>
+    <router-view @deleteTrack="tracksCount--"></router-view>
   </div>
 </template>
 <script>
 import Header from '@/components/Header.vue'
-import user from '../../store/user'
+// import user from '../../store/user'
 export default {
   name: 'Back',
   components: {
@@ -228,11 +229,16 @@ export default {
         userName: '',
         description: ''
       },
-      randomAvatar: 'https://source.boringavatars.com/beam/Shay' + user.account,
-      // 登入者資料
+      // randomAvatar: 'https://source.boringavatars.com/beam/Shay' + user.account,
+      // 登入者資料(供表單使用)
       userInfo: {},
       // 此路由頁面使用者資料
-      userPage: {},
+      userPage: {
+        tracks: [],
+        followers: [],
+        following: []
+      },
+      tracksCount: 0,
       dialog: false,
       dialog2: false,
       modalSubmitting: false,
@@ -328,12 +334,51 @@ export default {
         following: data.result.following,
         followers: data.result.followers
       }
+    },
+    // 若登入者或未登入者 非當前頁面持有者 顯示此頁面公開音樂
+    async getUserTracks () {
+      try {
+        const { data } = await this.api.get('/tracks?artist=' + this.$route.params.id)
+        this.tracksCount = data.result.length
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: '取得音樂失敗'
+        })
+      }
+    },
+    // 若是當前登入者 會顯示包含私人音樂
+    async getPrivate () {
+      try {
+        const { data } = await this.api.get('/tracks/private/' + this.user._id, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        this.tracksCount = data.result.length
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: '取得音樂失敗'
+        })
+      }
     }
   },
-  // ??有出現 但還是報錯
   computed: {
+    // 如果有抓到才去轉換
     splitText () {
-      return this.userPage.description.split(/[\r\n]/)[0] + '...'
+      if (this.userPage.description) {
+        return this.userPage.description.split(/[\r\n]/)[0] + '...'
+      }
+      return undefined
+    },
+    randomAvatar () {
+      if (this.userPage.avatar === null) {
+        return 'https://source.boringavatars.com/beam/' + this.userPage.account
+      }
+      return undefined
     }
   },
   async created () {
@@ -345,9 +390,15 @@ export default {
     if (this.user._id.length > 0) {
       this.getUser()
     }
+    // this.getOtherUser()
     // 寫判斷式先擋掉管理員問題
     if (this.user.role !== 1) {
       this.getOtherUser()
+      if (this.user._id === this.$route.params.id) {
+        this.getPrivate()
+      } else {
+        this.getUserTracks()
+      }
     }
   }
 }
