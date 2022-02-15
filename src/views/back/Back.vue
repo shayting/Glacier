@@ -98,7 +98,9 @@
                 </v-card>
               </v-dialog>
               <!-- 追蹤按鈕 -->
-              <v-btn v-else class="theme-btn ma-8" absolute top right medium>追蹤</v-btn>
+              <v-btn v-if="user._id !== $route.params.id && !followState" @click="follow" class="theme-btn ma-8" absolute top right medium>+ 追蹤</v-btn>
+              <v-btn v-if="user._id !== $route.params.id && followState" @click="follow"  class="ma-8" outlined
+      color="teal" absolute top right medium>已追蹤</v-btn>
               <!-- 用戶名 -->
               <div v-if="userPage.userName" class="ma-10 text-h3">{{ userPage.userName }}</div>
               <div v-else class="ma-10 text-h3">{{ userPage.account }}</div>
@@ -106,7 +108,6 @@
             </div>
             <div class="d-flex my-10">
               <!-- 追蹤modal -->
-              <!-- 用userPage 抓得到資料但抓不到資料長度 -->
               <v-dialog v-model="dialog" width="500" class="ma-10">
                 <template v-slot:activator="{ on, attrs }">
                   <div class="text-center ms-8">
@@ -133,14 +134,15 @@
                         <ul class="ps-0">
                           <li
                             class="d-flex align-center justify-space-between my-2"
-                            v-for="(follower, index) in followers"
+                            v-for="(follower, index) in userPage.followers"
                             :key="index"
                           >
                             <div class="d-flex align-center">
                               <v-avatar>
-                                <img :src="follower.image" />
+                                <img v-if="follower.users.avatar" :src="follower.users.avatar" />
+                                <img v-else :src="'https://source.boringavatars.com/beam/' + follower.users.acount" />
                               </v-avatar>
-                              <div class="fs-20 mx-5">{{ follower.name }}</div>
+                              <div class="fs-20 mx-5">{{ follower.users.userName }}</div>
                             </div>
                             <v-btn
                               width="80"
@@ -158,13 +160,14 @@
                       <v-card-text>
                         <ul class="ps-0">
                           <li
-                            v-for="(following, index) in followings"
+                            v-for="(following, index) in userPage.following"
                             :key="index"
                             class="d-flex align-center justify-space-between my-2"
                           >
                             <div class="d-flex align-center">
                               <v-avatar>
-                                <img :src="following.image" />
+                                <img v-if="following.users.avatar" :src="following.users.avatar" />
+                                <img v-else :src="'https://source.boringavatars.com/beam/' + following.users.acount" />
                               </v-avatar>
                               <div class="fs-24 mx-5">{{ following.name }}</div>
                             </div>
@@ -229,7 +232,8 @@ export default {
         userName: '',
         description: ''
       },
-      // randomAvatar: 'https://source.boringavatars.com/beam/Shay' + user.account,
+      // 追蹤狀態
+      followState: false,
       // 登入者資料(供表單使用)
       userInfo: {},
       // 此路由頁面使用者資料
@@ -334,6 +338,13 @@ export default {
         following: data.result.following,
         followers: data.result.followers
       }
+      const nowUserFollowing = this.user.following
+      // .some 陣列只要有其中一個符合條件就會回傳true
+      if (nowUserFollowing !== undefined && nowUserFollowing.some(following => following.users === this.$route.params.id)) {
+        this.followState = true
+      } else {
+        this.followState = false
+      }
     },
     // 若登入者或未登入者 非當前頁面持有者 顯示此頁面公開音樂
     async getUserTracks () {
@@ -364,6 +375,56 @@ export default {
           text: '取得音樂失敗'
         })
       }
+    },
+    // 追蹤與取消追蹤功能
+    async follow () {
+      try {
+        await this.api.patch('/users/follow/' + this.user.id, { _id: this.$route.params.id }, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        // 重新抓使用者資料
+        await this.$store.dispatch('user/getUserInfo')
+        await this.getOtherUser()
+        this.$swal({
+          icon: 'success',
+          title: '成功',
+          text: this.followState ? '成功追蹤' : '取消追蹤'
+        })
+        console.log(this.followState)
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    // 使用者在自己的頁面的粉絲/追蹤視窗
+    async sendfollow () {
+      if (this.user.islogin) {
+        if (this.nowuser.isauthor && this.action === 'follower') {
+          await this.axios.patch('/users/follow/' + this.user._id, { _id: this.uid, type: 'delfans' }, {
+            headers: {
+              authorization: 'Bearer ' + this.$store.state.jwt.token
+            }
+          })
+        } else {
+          await this.axios.patch('/users/follow/' + this.$store.state.user._id, { _id: this.uid }, {
+            headers: {
+              authorization: 'Bearer ' + this.$store.state.jwt.token
+            }
+          })
+        }
+      } else {
+        this.$router.push('/login')
+      }
+    },
+    async getUserFollow () {
+      const { data } = await this.api.get('/users/' + this.$route.params.id + '/follow')
+      this.userPage.followers = data.result.followers
+      this.userPage.following = data.result.following
     }
   },
   computed: {
@@ -394,6 +455,7 @@ export default {
     // 寫判斷式先擋掉管理員問題
     if (this.user.role !== 1) {
       this.getOtherUser()
+      this.getUserFollow()
       if (this.user._id === this.$route.params.id) {
         this.getPrivate()
       } else {

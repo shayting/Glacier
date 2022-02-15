@@ -11,7 +11,7 @@
       <v-card-title class="px-16 text-h4 py-0">我的音樂</v-card-title>
       <v-card-text class="white--text px-16 text-body-1">
         <div>
-          <v-dialog width="1000" v-model="dialog" persistent v-if="user._id.length !== 0">
+          <v-dialog width="1000" v-model="dialog" persistent v-if="user._id.length !== 0 && user._id === $route.params.id">
             <template v-slot:activator="{ on, attrs }">
               <v-btn class="theme-btn mt-6 me-12" absolute top right large v-on="on" v-bind="attrs">
                 <v-icon left>mdi-cloud-upload</v-icon>上傳音樂
@@ -114,7 +114,7 @@
                   <div class="text-body-1 my-2 px-4 black--text">{{ item.title }}</div>
                 </div>
               </router-link>
-              <div v-if="user._id.length !== 0" class="d-flex justify-end px-2">
+              <div v-if="user._id.length !== 0 && user._id === $route.params.id" class="d-flex justify-end px-2">
                 <v-btn small class="theme-btn" @click="editTrack(index)">編輯</v-btn>
                 <v-btn small color="secondary ms-2" @click="deleteTrack(item._id)">刪除</v-btn>
               </div>

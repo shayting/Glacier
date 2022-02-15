@@ -26,7 +26,9 @@
             <div class="white--text text-h6" v-if="track.artist.userName.length!==0">{{track.artist.userName}}</div>
             <div class="white--text text-h6" v-else>{{track.artist.account}}</div>
           </router-link>
-          <v-btn class="theme-btn">追蹤</v-btn>
+          <v-btn v-if="user.id !== track.artist._id && !followState" @click="follow" class="theme-btn">+ 追蹤</v-btn>
+          <v-btn v-if="user.id !== track.artist._id && followState" @click="follow" outlined
+      color="teal">已追蹤</v-btn>
         </div>
       </v-col>
       <!-- 音樂資訊 -->
@@ -133,9 +135,12 @@ export default {
         userName: '',
         account: ''
       },
-      likes: []
+      likes: [],
+      followers: [],
+      following: []
     },
     likeState: false,
+    followState: false,
     // ---- 播放overlay
     overlay: false,
     // -----彈跳按鈕------
@@ -204,7 +209,13 @@ export default {
         } else {
           this.likeState = false
         }
-        // console.log(this.likeState)
+        const nowUserFollowing = this.user.following
+        // .some 陣列只要有其中一個符合條件就會回傳true
+        if (nowUserFollowing !== undefined && nowUserFollowing.some(following => following.users === this.track.artist._id)) {
+          this.followState = true
+        } else {
+          this.followState = false
+        }
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -213,6 +224,7 @@ export default {
         })
       }
     },
+    // 加入/取消 喜歡功能
     async likes () {
       try {
         if (this.user.isLogin) {
@@ -222,10 +234,37 @@ export default {
             }
           })
         }
-        // 重新渲染喜歡數
-        this.getTrackById()
         // 重新渲染喜歡icon
-        this.$store.dispatch('user/getUserInfo')
+        await this.$store.dispatch('user/getUserInfo')
+        // 重新渲染喜歡數
+        await this.getTrackById()
+        console.log(this.likeState)
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    // 追蹤與取消追蹤功能
+    async follow () {
+      try {
+        await this.api.patch('/users/follow/' + this.user.id, { _id: this.track.artist._id }, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        // 重新抓使用者資料
+        await this.$store.dispatch('user/getUserInfo')
+        // 重新抓followState
+        await this.getTrackById()
+        this.$swal({
+          icon: 'success',
+          title: '成功',
+          text: this.followState ? '成功追蹤' : '取消追蹤'
+        })
+        console.log(this.followState)
       } catch (error) {
         this.$swal({
           icon: 'error',
