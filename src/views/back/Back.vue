@@ -11,6 +11,8 @@
             <v-avatar v-else size="200" class="ma-10">
               <img :src="randomAvatar" />
             </v-avatar>
+              <div>{{ followCheck }}</div>
+              <div>{{ followersCheck }}</div>
           </v-col>
 
           <v-col cols="9" class="d-flex justify-space-between">
@@ -146,7 +148,7 @@
                             </div>
                             <v-btn
                               width="80"
-                              v-if="follower.following"
+                              v-if="followersCheck[index]"
                               color="primary"
                               outlined
                               elevation="2"
@@ -169,11 +171,11 @@
                                 <img v-if="following.users.avatar" :src="following.users.avatar" />
                                 <img v-else :src="'https://source.boringavatars.com/beam/' + following.users.acount" />
                               </v-avatar>
-                              <div class="fs-24 mx-5">{{ following.name }}</div>
+                              <div class="fs-24 mx-5">{{ following.users.userName }}</div>
                             </div>
                             <v-btn
                               width="80"
-                              v-if="following.following"
+                              v-if="followCheck[index]"
                               color="primary"
                               outlined
                               elevation="2"
@@ -242,25 +244,17 @@ export default {
         followers: [],
         following: []
       },
+      // 登入者follow資訊
+      myFollow: {
+        followers: [{ users: { _id: '44' } }],
+        following: [{ users: { _id: '55' } }]
+      },
       tracksCount: 0,
       dialog: false,
       dialog2: false,
       modalSubmitting: false,
       tab: null,
-      changeAvatar: false,
-      // 追蹤假資料
-      followers: [
-        { name: 'Shay', image: 'https://source.boringavatars.com/beam/Shay', following: true },
-        { name: 'Teddy', image: 'https://source.boringavatars.com/beam/Teddy', following: false },
-        { name: 'Ken', image: 'https://source.boringavatars.com/beam/Ken', following: false },
-        { name: 'Amber', image: 'https://source.boringavatars.com/beam/Amber', following: true }
-      ],
-      followings: [
-        { name: 'Ben', image: 'https://source.boringavatars.com/beam/Ben', following: true },
-        { name: 'Ray', image: 'https://source.boringavatars.com/beam/Ray', following: true },
-        { name: 'Coco', image: 'https://source.boringavatars.com/beam/Coco', following: true },
-        { name: 'Sam', image: 'https://source.boringavatars.com/beam/Sam', following: true }
-      ]
+      changeAvatar: false
     }
   },
   methods: {
@@ -323,6 +317,7 @@ export default {
         description: data.result.description,
         avatar: data.result.avatar
       }
+      console.log(this.userInfo)
     },
     // ???導致莫名錯誤
     // 根據路由參數抓用戶資料
@@ -401,30 +396,15 @@ export default {
         })
       }
     },
-    // 使用者在自己的頁面的粉絲/追蹤視窗
-    async sendfollow () {
-      if (this.user.islogin) {
-        if (this.nowuser.isauthor && this.action === 'follower') {
-          await this.axios.patch('/users/follow/' + this.user._id, { _id: this.uid, type: 'delfans' }, {
-            headers: {
-              authorization: 'Bearer ' + this.$store.state.jwt.token
-            }
-          })
-        } else {
-          await this.axios.patch('/users/follow/' + this.$store.state.user._id, { _id: this.uid }, {
-            headers: {
-              authorization: 'Bearer ' + this.$store.state.jwt.token
-            }
-          })
-        }
-      } else {
-        this.$router.push('/login')
-      }
-    },
     async getUserFollow () {
       const { data } = await this.api.get('/users/' + this.$route.params.id + '/follow')
       this.userPage.followers = data.result.followers
       this.userPage.following = data.result.following
+    },
+    async getMyFollow () {
+      const { data } = await this.api.get('/users/' + this.user._id + '/follow')
+      this.myFollow.followers = data.result.followers
+      this.myFollow.following = data.result.following
     }
   },
   computed: {
@@ -440,6 +420,30 @@ export default {
         return 'https://source.boringavatars.com/beam/' + this.userPage.account
       }
       return undefined
+    },
+    followCheck () {
+      const checkFollowing = this.userPage.following.map(f => {
+        for (let i = 0; i < this.myFollow.following.length; i++) {
+          const result = false
+          if (f.users._id === this.userPage.following[i].users._id) {
+            return true
+          }
+          return result
+        }
+      })
+      return checkFollowing
+    },
+    followersCheck () {
+      const checkFollowers = this.userPage.followers.map(f => {
+        for (let i = 0; i < this.myFollow.following.length; i++) {
+          const result = false
+          if (f.users._id === this.userPage.followers[i].users._id) {
+            return true
+          }
+          return result
+        }
+      })
+      return checkFollowers
     }
   },
   async created () {
@@ -456,6 +460,7 @@ export default {
     if (this.user.role !== 1) {
       this.getOtherUser()
       this.getUserFollow()
+      this.getMyFollow()
       if (this.user._id === this.$route.params.id) {
         this.getPrivate()
       } else {

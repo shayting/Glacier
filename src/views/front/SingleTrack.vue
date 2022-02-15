@@ -98,12 +98,12 @@
               <v-avatar size="50">
                 <img src="https://source.boringavatars.com/beam" />
               </v-avatar>
-              <v-textarea outlined no-resize label="我想要說..." class="ms-4"></v-textarea>
+              <v-textarea outlined no-resize label="我想要說..." class="ms-4" v-model="newComment"></v-textarea>
             </div>
-            <v-btn class="theme-btn" absolute right bottom>留言</v-btn>
+            <v-btn class="theme-btn" absolute right bottom @click="comment">留言</v-btn>
           </v-sheet>
           <v-sheet
-            v-for="(message, index) in messages"
+            v-for="(msg, index) in track.comments"
             :key="index"
             color="secondary"
             height="140px"
@@ -113,13 +113,13 @@
             <div class="d-flex justify-space-between">
               <div class="publisher d-flex">
                 <v-avatar size="40" class="mb-3">
-                  <img :src="message.img" />
+                  <img :src="user.avatar" />
                 </v-avatar>
-                <div class="ms-2 text-h6">{{ message.name }}</div>
+                <div class="ms-2 text-h6">{{ user.userName }}</div>
               </div>
-              <div class="grey--text">Published:{{ message.date }}</div>
+              <div class="grey--text">Published:{{ Date.now() }}</div>
             </div>
-            <div class="ms-14">{{ message.text }}</div>
+            <div class="ms-14">{{ '22222' }}</div>
           </v-sheet>
         </v-sheet>
       </v-col>
@@ -137,7 +137,8 @@ export default {
       },
       likes: [],
       followers: [],
-      following: []
+      following: [],
+      comments: []
     },
     likeState: false,
     followState: false,
@@ -157,6 +158,7 @@ export default {
     // ----介紹歌詞tab-----
     tab: null,
     // ----留言-----
+    newComment: '',
     messages: [{
       name: 'Ben',
       img: 'https://source.boringavatars.com/beam/Ben',
@@ -265,6 +267,42 @@ export default {
           text: this.followState ? '成功追蹤' : '取消追蹤'
         })
         console.log(this.followState)
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    // 留言板功能
+    async comment () {
+      try {
+        const data = {
+          _id: this.user._id,
+          content: this.newComment,
+          date: Date.now()
+        }
+        await this.api.patch('/tracks/comment/' + this.$route.params.id, data, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        this.$swal({
+          icon: 'success',
+          title: '成功',
+          text: '留言成功'
+        })
+        this.track.comments.push({
+          content: this.newComment,
+          date: `${new Date().getFullYear()}-${new Date().getMonth() < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth()}`}-${new Date().getDate() < 10 ? `0${new Date().getDate()}` : new Date().getDate()}`,
+          users: {
+            _id: this.user._id,
+            account: this.user.account,
+            username: this.user.userName,
+            avatar: this.user.avatar
+          }
+        })
       } catch (error) {
         this.$swal({
           icon: 'error',
