@@ -132,6 +132,7 @@
                   </v-tabs>
                   <v-tabs-items v-model="tab">
                     <v-tab-item value="followers">
+                      <!-- 粉絲tab -->
                       <v-card-text>
                         <ul class="ps-0">
                           <li
@@ -142,7 +143,7 @@
                             <div class="d-flex align-center">
                               <v-avatar>
                                 <img v-if="follower.users.avatar" :src="follower.users.avatar" />
-                                <img v-else :src="'https://source.boringavatars.com/beam/' + follower.users.acount" />
+                                <img v-else :src="`https://source.boringavatars.com/beam/${follower.users.account}`" />
                               </v-avatar>
                               <div class="fs-20 mx-5">{{ follower.users.userName }}</div>
                             </div>
@@ -152,13 +153,15 @@
                               color="primary"
                               outlined
                               elevation="2"
+                              @click="followById(follower.users._id)"
                             >追蹤中</v-btn>
-                            <v-btn width="80" v-else color="primary" elevation="2">追蹤</v-btn>
+                            <v-btn width="80" v-else color="primary" elevation="2" @click="followById(follower.users._id)" >追蹤</v-btn>
                           </li>
                         </ul>
                       </v-card-text>
                     </v-tab-item>
                     <v-tab-item value="following">
+                      <!-- 追蹤tab -->
                       <v-card-text>
                         <ul class="ps-0">
                           <li
@@ -169,9 +172,10 @@
                             <div class="d-flex align-center">
                               <v-avatar>
                                 <img v-if="following.users.avatar" :src="following.users.avatar" />
-                                <img v-else :src="'https://source.boringavatars.com/beam/' + following.users.acount" />
+                                <img v-else :src="`https://source.boringavatars.com/beam/${following.users.account}`" />
                               </v-avatar>
-                              <div class="fs-24 mx-5">{{ following.users.userName }}</div>
+                              <div v-if="following.users.userName" class="fs-24 mx-5">{{ following.users.userName }}</div>
+                              <div v-else class="fs-24 mx-5">{{ following.users.account }}</div>
                             </div>
                             <v-btn
                               width="80"
@@ -179,6 +183,7 @@
                               color="primary"
                               outlined
                               elevation="2"
+                              @click="followById(following.users._id)"
                             >追蹤中</v-btn>
                             <v-btn width="80" v-else color="primary" elevation="2">追蹤</v-btn>
                           </li>
@@ -246,8 +251,8 @@ export default {
       },
       // 登入者follow資訊
       myFollow: {
-        followers: [{ users: { _id: '44' } }],
-        following: [{ users: { _id: '55' } }]
+        followers: [],
+        following: []
       },
       tracksCount: 0,
       dialog: false,
@@ -317,7 +322,6 @@ export default {
         description: data.result.description,
         avatar: data.result.avatar
       }
-      console.log(this.userInfo)
     },
     // ???導致莫名錯誤
     // 根據路由參數抓用戶資料
@@ -387,7 +391,30 @@ export default {
           title: '成功',
           text: this.followState ? '成功追蹤' : '取消追蹤'
         })
-        console.log(this.followState)
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    async followById (id) {
+      try {
+        await this.api.patch('/users/follow/' + this.user.id, { _id: id }, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        // 重新抓使用者資料
+        await this.$store.dispatch('user/getUserInfo')
+        await this.getOtherUser()
+        await this.getUserFollow()
+        await this.getMyFollow()
+        this.$swal({
+          icon: 'success',
+          title: '成功'
+        })
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -423,25 +450,25 @@ export default {
     },
     followCheck () {
       const checkFollowing = this.userPage.following.map(f => {
+        const result = false
         for (let i = 0; i < this.myFollow.following.length; i++) {
-          const result = false
-          if (f.users._id === this.userPage.following[i].users._id) {
+          if (f.users._id === this.myFollow.following[i].users._id) {
             return true
           }
-          return result
         }
+        return result
       })
       return checkFollowing
     },
     followersCheck () {
       const checkFollowers = this.userPage.followers.map(f => {
+        const result = false
         for (let i = 0; i < this.myFollow.following.length; i++) {
-          const result = false
-          if (f.users._id === this.userPage.followers[i].users._id) {
+          if (f.users._id === this.myFollow.following[i].users._id) {
             return true
           }
-          return result
         }
+        return result
       })
       return checkFollowers
     }
