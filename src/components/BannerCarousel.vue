@@ -1,5 +1,5 @@
 <template>
-  <swiper ref="mySwiper" :options="swiperOptions">
+  <swiper ref="mySwiper" :options="swiperOptions" :breakpoints="swiperOptions.breakpoints">
     <swiper-slide>
       <img src="https://miro.medium.com/max/1200/1*bsukUGpEQQQLwXqewNDRfw.jpeg" />
     </swiper-slide>
@@ -42,7 +42,6 @@ export default {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev'
         }
-        // Some Swiper option/callback...
       }
     }
   },

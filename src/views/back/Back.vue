@@ -11,8 +11,8 @@
             <v-avatar v-else size="200" class="ma-10">
               <img :src="randomAvatar" />
             </v-avatar>
-              <div>{{ followCheck }}</div>
-              <div>{{ followersCheck }}</div>
+              <!-- <div>{{ followCheck }}</div>
+              <div>{{ followersCheck }}</div> -->
           </v-col>
 
           <v-col cols="9" class="d-flex justify-space-between">
@@ -145,7 +145,8 @@
                                 <img v-if="follower.users.avatar" :src="follower.users.avatar" />
                                 <img v-else :src="`https://source.boringavatars.com/beam/${follower.users.account}`" />
                               </v-avatar>
-                              <div class="fs-20 mx-5">{{ follower.users.userName }}</div>
+                              <div v-if="follower.users.userName" class="fs-20 mx-5">{{ follower.users.userName }}</div>
+                              <div v-else class="fs-20 mx-5">{{ follower.users.account }}</div>
                             </div>
                             <v-btn
                               width="80"
@@ -185,7 +186,7 @@
                               elevation="2"
                               @click="followById(following.users._id)"
                             >追蹤中</v-btn>
-                            <v-btn width="80" v-else color="primary" elevation="2">追蹤</v-btn>
+                            <v-btn width="80" v-else color="primary" elevation="2" @click="followById(following.users._id)">追蹤</v-btn>
                           </li>
                         </ul>
                       </v-card-text>
@@ -205,19 +206,16 @@
       </div>
       <v-app-bar color="secondary" elevation="2" class="d-flex justify-center" rounded>
         <div class="px-10 fs-20 back-item">
-          <router-link :to="'/back/user/' + this.$route.params.id">關於</router-link>
+          <router-link :to="'/back/user/' + this.$route.params.id">ABOUT</router-link>
         </div>
         <div class="px-10 fs-20 back-item">
-          <router-link :to="'/back/user/' + this.$route.params.id + '/tracks'">音樂</router-link>
+          <router-link :to="'/back/user/' + this.$route.params.id + '/tracks'">MUSIC</router-link>
         </div>
-        <div class="px-10 fs-20 back-item" v-if="user._id === userPage._id">
-          <router-link :to="'/back/user/' + this.$route.params.id + '/playlists'">歌單</router-link>
+        <div class="px-10 fs-20 back-item">
+          <router-link :to="'/back/user/' + this.$route.params.id + '/playlists'">PLAYLIST</router-link>
         </div>
-        <div class="px-10 fs-20 back-item" v-if="user._id === userPage._id">
-          <router-link :to="'/back/user/' + this.$route.params.id + '/likes'">喜歡</router-link>
-        </div>
-        <div class="px-10 fs-20 back-item" v-if="user._id === userPage._id">
-          <router-link :to="'/back/user/' + this.$route.params.id + '/events'">活動</router-link>
+        <div class="px-10 fs-20 back-item">
+          <router-link :to="'/back/user/' + this.$route.params.id + '/likes'">LIKE</router-link>
         </div>
       </v-app-bar>
     </div>
@@ -429,7 +427,7 @@ export default {
       this.userPage.following = data.result.following
     },
     async getMyFollow () {
-      const { data } = await this.api.get('/users/' + this.user._id + '/follow')
+      const { data } = await this.api.get('/users/' + this.user._id + '/Myfollow')
       this.myFollow.followers = data.result.followers
       this.myFollow.following = data.result.following
     }

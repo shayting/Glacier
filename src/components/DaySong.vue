@@ -1,6 +1,7 @@
 <template>
   <v-card
     class="mx-auto my-12"
+    dark
   >
     <v-card-title>Song of the Day</v-card-title>
     <v-img

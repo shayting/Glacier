@@ -60,15 +60,15 @@
             </v-card>
       </v-dialog>
     <!-- 我的歌單 -->
-      <div class="white--text text-h4 px-16 mb-10">我的歌單</div>
+      <div class="white--text text-h4 px-16 mb-10">Playlists</div>
       <v-row class="px-16">
         <v-col cols="3" v-for="(playlist, index) in playlists" :key="index">
-          <v-card class="pa-4">
+          <v-card class="pa-4" color="#9e9e9e">
             <v-hover>
               <template v-slot:default="{ hover }">
                 <v-img :src="playlist.playlistSongs[0].cover">
                   <v-fade-transition>
-                    <v-overlay v-if="hover" absolute color="#036358">
+                    <v-overlay v-if="hover" absolute color="#d7f3f5">
                       <v-icon x-large>mdi-play-circle-outline</v-icon>
                     </v-overlay>
                   </v-fade-transition>

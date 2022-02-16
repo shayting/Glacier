@@ -9,17 +9,17 @@
         </div>
         <div class="menu xyCenter d-none d-md-flex">
           <ul class="menu-list d-flex px-2">
-            <li class="px-2">
-              <router-link to="/discover">發現</router-link>
+            <li class="px-4 text-h6">
+              <router-link to="/discover">Discover</router-link>
             </li>
-            <li class="px-2">
-              <router-link to="/ranks">排行榜</router-link>
+            <li class="px-4 text-h6">
+              <router-link to="/ranks">Rank</router-link>
             </li>
-            <li class="px-2">
-              <router-link to="/playlists">歌單</router-link>
+            <li class="px-4 text-h6">
+              <router-link to="/playlists">Playlists</router-link>
             </li>
-            <li class="px-2">
-              <router-link to="/events">表演活動</router-link>
+            <li class="px-4 text-h6">
+              <router-link to="/events">Events</router-link>
             </li>
           </ul>
         </div>
@@ -29,19 +29,19 @@
           </div>
           <v-icon class="mx-2">mdi-magnify</v-icon>
           <router-link v-if="!user.isLogin" to="/login">
-            <v-btn elevation="1" class="ms-4 theme-bg loginBtn">登入/註冊</v-btn>
+            <v-btn elevation="1" class="ms-4 theme-bg loginBtn">Log in</v-btn>
           </router-link>
           <div v-if="user.isLogin && user.role === 0">
-            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">登出</v-btn>
+            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">Log out</v-btn>
             <router-link v-if="user._id.length !== 0" :to='"/back/user/" + user._id' >
               <v-btn color="amber" elevation="1" class="ms-4"><v-icon color="black">mdi-account-circle</v-icon></v-btn>
             </router-link>
             <v-btn dark color="secondary" v-else elevation="1" class="ms-4" disabled><v-icon>mdi-account-circle</v-icon></v-btn>
           </div>
           <div v-if="user.isLogin && user.role === 1">
-            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">登出</v-btn>
+            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">Log out</v-btn>
             <router-link to="/back/admin">
-              <v-btn elevation="1" class="ms-4">管理員後台</v-btn>
+              <v-btn elevation="1" class="ms-4">Admin</v-btn>
             </router-link>
           </div>
           <v-icon class="mx-2 hamburger d-md-none" @click.stop="drawer = !drawer">mdi-menu</v-icon>
@@ -50,13 +50,13 @@
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary dark>
       <v-list-item>
-        <v-list-item-avatar>
+        <v-list-item-avatar v-if="user.isLogin">
           <v-img
-            src="https://source.boringavatars.com/beam/Shay"
+            :src="user.avatar"
           ></v-img>
         </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>User</v-list-item-title>
+        <v-list-item-content v-if="user.isLogin">
+          <v-list-item-title>{{ user.account}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
@@ -82,11 +82,10 @@ export default {
     return {
       drawer: null,
       items: [
-        { title: '個人頁面', icon: 'mdi-account-box', router: '/back/aboutMe' },
-        { title: '發現', icon: 'mdi-music-box-multiple', router: '/discover' },
-        { title: '排行榜', icon: 'mdi-crown', router: '/ranks' },
-        { title: '歌單', icon: 'mdi-playlist-music', router: '/playlists' },
-        { title: '表演活動', icon: 'mdi-calendar', router: '/events' }
+        { title: 'Discover', icon: 'mdi-music-box-multiple', router: '/discover' },
+        { title: 'Rank', icon: 'mdi-crown', router: '/ranks' },
+        { title: 'Playlists', icon: 'mdi-playlist-music', router: '/playlists' },
+        { title: 'events', icon: 'mdi-calendar', router: '/events' }
       ]
     }
   },

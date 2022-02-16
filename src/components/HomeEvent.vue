@@ -4,13 +4,11 @@
     <swiper class="swiper" :options="swiperOption" style="width: 100%;">
       <swiper-slide v-for="(item,index) in items" :key="index" class="xyCenter">
         <v-card class="mx-auto" width="500" style="position: relative;">
-          <v-btn icon absolute top right style="z-index: 100;">
-            <v-icon color="white" medium>mdi-bookmark-outline</v-icon>
-          </v-btn>
           <v-img
             class="align-end"
             height="300px"
             :src="item.img"
+            style="border-radius: 4px 4px 0 0 ;"
           >
             <v-card-text><v-chip label color="#d7f3f5">{{item.title}}</v-chip></v-card-text>
           </v-img>
@@ -21,26 +19,8 @@
             <div>{{ item.place }}</div>
           </v-card-text>
 
-          <v-card-actions>
-            <v-btn absolute bottom right class="theme-btn" text elevation="2">更多資訊</v-btn>
-          </v-card-actions>
         </v-card>
       </swiper-slide>
-      <!-- <swiper-slide>
-        <img src="https://cdn.ndtv.com/tech/images/gadgets/pikachu_hi_pokemon.jpg" alt />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://cdn.ndtv.com/tech/images/gadgets/pikachu_hi_pokemon.jpg" alt />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://cdn.ndtv.com/tech/images/gadgets/pikachu_hi_pokemon.jpg" alt />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://cdn.ndtv.com/tech/images/gadgets/pikachu_hi_pokemon.jpg" alt />
-      </swiper-slide>
-      <swiper-slide>
-        <img src="https://cdn.ndtv.com/tech/images/gadgets/pikachu_hi_pokemon.jpg" alt />
-      </swiper-slide> -->
       <div class="swiper-button-next" slot="button-next"></div>
       <div class="swiper-button-prev" slot="button-prev"></div>
     </swiper>
@@ -64,12 +44,28 @@ export default {
         { title: 'Deca joins 巡迴演唱會', date: '2021,02,13', img: 'https://static.accupass.com/userupload/bfbc6468bff34439910ce1f770b80e29.jpg', place: '駁二藝術特區', time: '20:00' }, { title: 'Deca joins 巡迴演唱會', date: '2021,02,13', img: 'http://urbannomad.tw/wp-content/uploads/2020/02/2020_banner_KKTix.jpg', place: '駁二藝術特區', time: '20:00' }, { title: 'Deca joins 巡迴演唱會', date: '2021,02,13', img: 'https://blow.streetvoice.com/wp-content/uploads/2020/05/95340219_696944227799792_201425337593102336_o.jpg', place: '駁二藝術特區', time: '20:00' }, { title: 'Deca joins 巡迴演唱會', date: '2021,02,13', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjQDpKJ62XEaCLq8-HutoPXT5kvfMASmkJ0kgtm-wSxmHNljYb8v_ORKwBHQr5XggDpV8&usqp=CAU', place: '駁二藝術特區', time: '20:00' }, { title: 'Deca joins 巡迴演唱會', date: '2021,02,13', img: 'https://t.kfs.io/upload_images/134658/2022___-__banner_1200x630_large.jpg', place: '駁二藝術特區', time: '20:00' }, { title: 'Deca joins 巡迴演唱會', date: '2021,02,13', img: 'https://tmc.taipei/wp-content/uploads/2021/09/%E5%AF%AC1360px%EF%BC%8C%E9%AB%98680px.jpg', place: '駁二藝術特區', time: '20:00' }
       ],
       swiperOption: {
-        slidesPerView: 3,
-        spaceBetween: 30,
         freeMode: true,
+        autoplay: true,
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev'
+        },
+        breakpoints: {
+          // when window width is >= 320px
+          320: {
+            slidesPerView: 2,
+            spaceBetween: 10
+          },
+          // when window width is >= 480px
+          480: {
+            slidesPerView: 2,
+            spaceBetween: 20
+          },
+          // when window width is >= 640px
+          920: {
+            slidesPerView: 3,
+            spaceBetween: 30
+          }
         }
       }
     }

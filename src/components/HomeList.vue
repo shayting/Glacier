@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white my-12">
+  <v-card dark color="my-12" class="white--text">
     <v-card-title class="text-center justify-center py-6">
       <div class="font-weight-bold fs-20 basil--text">
         歌單推薦
@@ -9,7 +9,7 @@
     <v-tabs
       v-model="tab"
       background-color="transparent"
-      color="black"
+      dark
       grow
     >
       <v-tab
@@ -20,7 +20,7 @@
       </v-tab>
     </v-tabs>
 
-    <v-tabs-items v-model="tab">
+    <v-tabs-items v-model="tab" dark>
       <v-tab-item
         v-for="(item,index) in items"
         :key="index"

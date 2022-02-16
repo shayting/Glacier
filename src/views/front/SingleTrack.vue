@@ -7,7 +7,7 @@
           <template v-slot:default="{ hover }">
             <v-img width="400" :src="track.cover">
               <v-fade-transition>
-                <v-overlay v-if="hover" absolute color="#036358">
+                <v-overlay v-if="hover" absolute color="#d7f3f5">
                   <v-icon x-large>mdi-play-circle-outline</v-icon>
                 </v-overlay>
               </v-fade-transition>

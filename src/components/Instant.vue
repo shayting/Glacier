@@ -1,5 +1,5 @@
 <template>
-  <div class="instantRank my-12 d-flex flex-column justify-center">
+  <div class="instantRank my-12 d-flex flex-column justify-center" style="background-color: #1e1e1e; color:white">
     <ul>
       <li class="py-4 fs-20">即時熱門</li>
       <li v-for="(item, index) in music" :key="index" class="d-flex align-center">

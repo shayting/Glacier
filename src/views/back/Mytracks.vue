@@ -8,10 +8,15 @@
       class="white--text py-10 mb-100"
       style="position: relative;"
     >
-      <v-card-title class="px-16 text-h4 py-0">我的音樂</v-card-title>
+      <v-card-title class="px-16 text-h4 py-0">Music</v-card-title>
       <v-card-text class="white--text px-16 text-body-1">
         <div>
-          <v-dialog width="1000" v-model="dialog" persistent v-if="user._id.length !== 0 && user._id === $route.params.id">
+          <v-dialog
+            width="1000"
+            v-model="dialog"
+            persistent
+            v-if="user._id.length !== 0 && user._id === $route.params.id"
+          >
             <template v-slot:activator="{ on, attrs }">
               <v-btn class="theme-btn mt-6 me-12" absolute top right large v-on="on" v-bind="attrs">
                 <v-icon left>mdi-cloud-upload</v-icon>上傳音樂
@@ -103,18 +108,35 @@
           </v-dialog>
         </div>
       </v-card-text>
+      <!-- 音樂卡片 -->
       <v-card-text class="px-16">
         <v-row>
           <v-col cols="4" sm="4" md="3" v-for="(item, index) in userTracks" :key="index">
             <v-card class="pb-2" style="position: relative;">
               <v-chip small class="mb-2 state-chip">{{ item.private ? '不公開' : '公開' }}</v-chip>
+              <v-btn absolute icon class="myTrack-like">
+                <v-icon small>mdi-heart-outline</v-icon>
+              </v-btn>
               <router-link :to="'/track/' + item._id">
                 <div class="track-photowrap">
-                  <v-img class="track-photo" :src="item.cover"></v-img>
+                  <v-hover>
+                    <template v-slot:default="{ hover }">
+                      <v-img class="track-photo" :src="item.cover">
+                        <v-fade-transition>
+                          <v-overlay v-if="hover" absolute color="#d7f3f5">
+                            <v-icon x-large>mdi-play-circle-outline</v-icon>
+                          </v-overlay>
+                        </v-fade-transition>
+                      </v-img>
+                    </template>
+                  </v-hover>
                   <div class="text-body-1 my-2 px-4 black--text">{{ item.title }}</div>
                 </div>
               </router-link>
-              <div v-if="user._id.length !== 0 && user._id === $route.params.id" class="d-flex justify-end px-2">
+              <div
+                v-if="user._id.length !== 0 && user._id === $route.params.id"
+                class="d-flex justify-end px-2"
+              >
                 <v-btn small class="theme-btn" @click="editTrack(index)">編輯</v-btn>
                 <v-btn small color="secondary ms-2" @click="deleteTrack(item._id)">刪除</v-btn>
               </div>
