@@ -111,7 +111,7 @@
             <div class="d-flex my-10">
               <!-- 追蹤modal -->
               <v-dialog v-model="dialog" width="500" class="ma-10">
-                <template v-slot:activator="{ on, attrs }">
+                <template v-slot:activator="{ on, attrs }" @click="renderNew">
                   <div class="text-center ms-8">
                     <div class="fs-20">音樂</div>
                     <div>{{ tracksCount }}</div>
@@ -409,10 +409,6 @@ export default {
         await this.getOtherUser()
         await this.getUserFollow()
         await this.getMyFollow()
-        this.$swal({
-          icon: 'success',
-          title: '成功'
-        })
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -427,9 +423,14 @@ export default {
       this.userPage.following = data.result.following
     },
     async getMyFollow () {
-      const { data } = await this.api.get('/users/' + this.user._id + '/Myfollow')
+      const { data } = await this.api.get('/users/' + this.user._id + '/myfollow')
       this.myFollow.followers = data.result.followers
       this.myFollow.following = data.result.following
+    },
+    renderNew () {
+      this.getOtherUser()
+      this.getUserFollow()
+      this.getMyFollow()
     }
   },
   computed: {
@@ -485,9 +486,9 @@ export default {
     if (this.user.role !== 1) {
       this.getOtherUser()
       this.getUserFollow()
-      this.getMyFollow()
       if (this.user._id === this.$route.params.id) {
         this.getPrivate()
+        this.getMyFollow()
       } else {
         this.getUserTracks()
       }

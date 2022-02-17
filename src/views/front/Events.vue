@@ -4,14 +4,16 @@
     <v-row>
       <v-col cols="12" md="6" v-for="(event,index) in events" :key="index">
         <v-card elevation="2">
-          <v-img
+          <div class="eventCoverBox">
+          <v-img class="eventCover"
             :src="event.cover"
           ></v-img>
+          </div>
           <v-card-title class="text-h6">{{event.title}}</v-card-title>
           <v-card-text class="black--text text-body-1">
             <div>
               演出日期 :
-              <span>2022/07/07 - 2022/07/09</span>
+              <span>{{ new Date(event.date).toLocaleDateString().replace(/\//g, '／')}}</span>
             </div>
             <div>
               演出者 :

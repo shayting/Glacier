@@ -1,0 +1,11 @@
+.eventCoverBox {
+  height: 400px;
+  @include md {
+    height: 300px;
+  }
+  .eventCover{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}

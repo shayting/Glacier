@@ -78,7 +78,7 @@
                 @click="createEvent"
                 :disabled="modalSubmitting"
               >新增</v-btn>
-              <v-btn v-else color="success" :disabled="modalSubmitting" @click="editAccount">保存</v-btn>
+              <v-btn v-else color="success" :disabled="modalSubmitting" @click="editEvent">保存</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -95,11 +95,11 @@
         </v-card-title>
         <!-- 表格 -->
         <v-data-table :headers="headers" :items="events" :search="search">
-          <template v-slot:item.active="{ item }">
-            <v-switch v-model="item.active" readonly @click="changeState(item)"></v-switch>
-          </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:item.edit="{ item }">
             <v-icon small class="mr-2" @click="openEditForm(item)">mdi-pencil</v-icon>
+          </template>
+          <template v-slot:item.del="{ item }">
+            <v-icon small class="mr-2" @click="deleteEvent(item)">mdi-trash-can</v-icon>
           </template>
         </v-data-table>
       </v-card>
@@ -125,7 +125,8 @@ export default {
         { text: '日期', value: 'date' },
         { text: '地點', value: 'place' },
         { text: '票價', value: 'price' },
-        { text: '編輯', value: 'actions', sortable: false }
+        { text: '編輯', value: 'edit', sortable: false },
+        { text: '刪除', value: 'del', sortable: false }
       ],
       events: [],
       modalSubmitting: false,
@@ -137,14 +138,13 @@ export default {
         date: '',
         performer: '',
         place: '',
-        price: null
+        price: null,
+        _id: ''
       },
       id: '',
       state: true,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-      menu: false,
-      modal: false,
-      menu2: false
+      menu: false
     }
   },
   computed: {
@@ -156,11 +156,14 @@ export default {
     getCoverFiles (event) {
       this.form.cover = event[0].file
     },
+    // 取得event
     async getAllEvents () {
       try {
         const { data } = await this.api.get('/events/all')
         this.events = data.result
-        console.log(this.events)
+        for (let i = 0; i < this.events.length; i++) {
+          this.events[i].date = new Date(this.events[i].date).toLocaleDateString().replace(/\//g, '.')
+        }
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -169,28 +172,40 @@ export default {
         })
       }
     },
+    // 打開編輯表格
     openEditForm (item) {
+      // editedIndex 表示當時表格狀態 1=編輯 -1=新增
+      this.editedIndex = 1
       // 將點擊到的帳號id存入data
       this.id = item._id
-      this.editedIndex = 1
       this.dialog = true
-      this.form.account = item.account
-      this.form.email = item.email
-      this.form.userName = item.userName
+      this.form.title = item.title
+      this.form.place = item.place
+      this.form.performer = item.performer
+      this.form.price = item.price
+      this.form.content = item.content
+      this.form.cover = null
+      this.form.date = null
     },
+    // 打開新增表格
     openCreateForm () {
       this.editedIndex = -1
     },
+    // reset表格
     resetForm () {
       this.dialog = false
       this.form = {
-        account: '',
-        password: '',
-        email: '',
-        userName: '',
+        title: '',
+        content: '',
+        cover: null,
+        date: '',
+        performer: '',
+        place: '',
+        price: null,
         _id: ''
       }
     },
+    // 新增event
     async createEvent () {
       try {
         // 停用送出按鈕
@@ -198,8 +213,10 @@ export default {
         // 建立formdata物件
         const fd = new FormData()
         for (const key in this.form) {
+          if (key !== '_id') {
           // 把資料塞進formdata中
-          fd.append(key, this.form[key])
+            fd.append(key, this.form[key])
+          }
         }
         await this.api.post('/events', fd, {
           headers: {
@@ -213,7 +230,7 @@ export default {
           confirmButtonColor: '#4DB6AC'
         })
         this.resetForm()
-        // this.getAllEvents()
+        this.getAllEvents()
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -224,10 +241,18 @@ export default {
       }
       this.modalSubmitting = false
     },
+    // 編輯
     async editEvent () {
       this.modalSubmitting = true
+      const fd = new FormData()
+      for (const key in this.form) {
+        if (key !== '_id') {
+          // 把資料塞進formdata中
+          fd.append(key, this.form[key])
+        }
+      }
       try {
-        await this.api.patch('/events/' + this.id, { account: this.form.account, email: this.form.email, userName: this.form.userName }, {
+        await this.api.patch('/events/' + this.id, fd, {
           headers: {
             authorization: 'Bearer ' + this.user.token
           }
@@ -238,7 +263,7 @@ export default {
           title: '成功',
           text: '修改成功'
         })
-        // this.getAllEvents()
+        this.getAllEvents()
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -248,29 +273,40 @@ export default {
       }
       this.modalSubmitting = false
     },
-    async changeState (item) {
-      this.id = item._id
-      let state = item.active
-      state = !state
-      try {
-        await this.api.patch('/users/admin/' + this.id, { active: state }, {
-          headers: {
-            authorization: 'Bearer ' + this.user.token
-          }
-        })
-        this.$swal({
-          icon: 'success',
-          title: '成功',
-          text: '修改成功'
-        })
-        // this.getAllEvents()
-      } catch (error) {
-        this.$swal({
-          icon: 'error',
-          title: '錯誤',
-          text: error.response.data.message
-        })
-      }
+    // 刪除
+    async deleteEvent (item) {
+      this.$swal({
+        icon: 'warning',
+        title: '刪除確認',
+        text: '確定要刪除此活動嗎？',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '刪除',
+        cancelButtonText: '取消'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.api.delete('/events/' + item._id, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          }).then(() => {
+            this.getAllEvents()
+            this.$swal({
+              icon: 'success',
+              title: '成功',
+              text: '刪除成功'
+            })
+          }).catch((error) => {
+            this.$swal({
+              icon: 'error',
+              title: '失敗',
+              text: error.message
+            })
+          })
+        } else {
+          this.$swal.close()
+        }
+      })
     }
   },
   async created () {
