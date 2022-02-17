@@ -2,7 +2,7 @@
   <div class="my-10 my-container">
     <v-sheet color="secondary" min-height="500" class="myPlaylists mb-100 px-16 py-10" rounded>
       <div class="white--text text-h4 mb-10">Like</div>
-      <v-row>
+      <v-row v-if="userLikes">
         <v-col cols="6" md="4" v-for="(item,index) in userLikes" :key="index">
           <v-card
             color="grey"
@@ -14,7 +14,8 @@
                   class="text-h5"
                 >{{item.tracks.title}}</v-card-title>
 
-                <v-card-subtitle>hello</v-card-subtitle>
+                <v-card-subtitle v-if="item.tracks.artist.userName">{{item.tracks.artist.userName}}</v-card-subtitle>
+                <v-card-subtitle v-else>{{item.tracks.artist.account}}</v-card-subtitle>
 
                 <v-card-actions>
                   <v-btn
@@ -71,7 +72,6 @@ export default {
       try {
         const { data } = await this.api.get('/users/' + this.$route.params.id)
         this.userLikes = data.result.likes
-        console.log(this.userLikes)
       } catch (error) {
         this.$swal({
           icon: 'error',
