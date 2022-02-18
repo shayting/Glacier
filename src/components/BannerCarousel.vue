@@ -1,20 +1,8 @@
 <template>
   <swiper ref="mySwiper" :options="swiperOptions" :breakpoints="swiperOptions.breakpoints">
-    <swiper-slide>
-      <img src="https://miro.medium.com/max/1200/1*bsukUGpEQQQLwXqewNDRfw.jpeg" />
+    <swiper-slide v-for="banner in banners" :key="banner._id">
+      <img :src="banner.bannerImage" />
     </swiper-slide>
-    <swiper-slide>
-      <img src="https://miro.medium.com/max/1200/1*bsukUGpEQQQLwXqewNDRfw.jpeg" />
-    </swiper-slide>
-    <swiper-slide>
-      <img src="https://static.tixcraft.com/images/activity/21_CaoDong_8607828626055eb10839adadf0e26f4a.jpg" />
-    </swiper-slide>
-    <swiper-slide>
-      <img
-        src="https://i0.wp.com/hackazine-tw.com/wp-content/uploads/2020/08/httpscdn.evbuc_.comimages92147907.png?resize=825%2C500&ssl=1"
-      />
-    </swiper-slide>
-
     <div class="swiper-pagination" slot="pagination"></div>
     <div class="swiper-button-next" slot="button-next"></div>
     <div class="swiper-button-prev" slot="button-prev"></div>
@@ -28,6 +16,7 @@ export default {
   name: 'carrousel',
   data () {
     return {
+      banners: [],
       swiperOptions: {
         pagination: {
           el: '.swiper-pagination',
@@ -57,6 +46,15 @@ export default {
   mountd () {
     console.log('Current Swiper instance object', this.swiper)
     this.swiper.slideTo(3, 1000, false)
+  },
+  async created () {
+    try {
+      const { data } = await this.api.get('/banners')
+      console.log(data.result)
+      this.banners = data.result
+    } catch (error) {
+      console.log(error.response.data.message)
+    }
   }
 }
 </script>

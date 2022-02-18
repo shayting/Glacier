@@ -35,19 +35,10 @@
         </div>
       </li>
     </ul>
-    <!-- Back to top button -->
-    <v-btn elevation="2" color="#d7f3f5"
-  fab id="pagetop" v-show="scY > 300" @click="toTop"><v-icon small>mdi-triangle</v-icon>
-    </v-btn>
+    <BackToTop></BackToTop>
   </div>
 </template>
 <style lang="scss">
-#pagetop{
-  position: fixed;
-  right: 100px;
-  bottom: 100px;
-  cursor: pointer;
-}
 .instantRank {
   background: #ffffff;
   padding-bottom: 20px;
@@ -82,12 +73,14 @@
 }
 </style>
 <script>
+import BackToTop from '@/components/BackToTop.vue'
 
 export default {
+  components: {
+    BackToTop
+  },
   data: () => ({
-    publicTracks: [],
-    scTimer: 0,
-    scY: 0
+    publicTracks: []
   }),
   methods: {
     async getAllPublic () {
@@ -123,20 +116,6 @@ export default {
           text: error.response.data.message
         })
       }
-    },
-    handleScroll: function () {
-      if (this.scTimer) return
-      this.scTimer = setTimeout(() => {
-        this.scY = window.scrollY
-        clearTimeout(this.scTimer)
-        this.scTimer = 0
-      }, 100)
-    },
-    toTop: function () {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      })
     }
   },
   computed: {
@@ -156,9 +135,6 @@ export default {
       }
       return myLikes
     }
-  },
-  mounted () {
-    window.addEventListener('scroll', this.handleScroll)
   },
   async created () {
     this.getAllPublic()

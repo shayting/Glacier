@@ -300,7 +300,7 @@ export default {
             this.$swal({
               icon: 'error',
               title: '失敗',
-              text: error.message
+              text: error.response.data.message
             })
           })
         } else {

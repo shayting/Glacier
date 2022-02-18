@@ -28,48 +28,65 @@
             <input type="text" placeholder="search" class="input-style" />
           </div>
           <v-icon class="mx-2">mdi-magnify</v-icon>
-          <router-link v-if="!user.isLogin" to="/login">
-            <v-btn elevation="1" class="ms-4 theme-bg loginBtn">Log in</v-btn>
-          </router-link>
+          <!-- 沒有登入 -->
+          <v-btn
+            v-if="!user.isLogin"
+            to="/login"
+            elevation="1"
+            class="ms-4 theme-bg loginBtn"
+          >Log in</v-btn>
+          <!-- 一般會員已登入 -->
           <div v-if="user.isLogin && user.role === 0">
-            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">Log out</v-btn>
-            <router-link v-if="user._id.length !== 0" :to='"/back/user/" + user._id' >
-              <v-btn color="amber" elevation="1" class="ms-4"><v-icon color="black">mdi-account-circle</v-icon></v-btn>
-            </router-link>
-            <v-btn dark color="secondary" v-else elevation="1" class="ms-4" disabled><v-icon>mdi-account-circle</v-icon></v-btn>
+            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">
+            <v-icon color="black">mdi-logout-variant</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="user._id.length !== 0"
+              :to="'/back/user/' + user._id"
+              color="amber"
+              elevation="1"
+              class="ms-4"
+            >
+              <v-icon color="black">mdi-account-circle</v-icon>
+            </v-btn>
+            <v-btn dark color="secondary" v-else elevation="1" class="ms-4" disabled>
+              <v-icon>mdi-account-circle</v-icon>
+            </v-btn>
           </div>
+          <!-- 管理員已登入 -->
           <div v-if="user.isLogin && user.role === 1">
-            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">Log out</v-btn>
-            <router-link to="/back/admin">
-              <v-btn elevation="1" class="ms-4">Admin</v-btn>
-            </router-link>
+            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">
+              <v-icon color="black">mdi-logout-variant</v-icon>
+            </v-btn>
+            <v-btn to="/back/admin" elevation="1" class="ms-4">Admin</v-btn>
           </div>
+          <!-- 漢堡 -->
           <v-icon class="mx-2 hamburger d-md-none" @click.stop="drawer = !drawer">mdi-menu</v-icon>
         </div>
       </div>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" absolute temporary dark>
+    <!-- 左側邊欄 -->
+    <v-navigation-drawer v-model="drawer" disable-resize-watcher app dark temporary>
       <v-list-item>
         <v-list-item-avatar v-if="user.isLogin">
-          <v-img
-            :src="user.avatar"
-          ></v-img>
+          <v-img v-if="user.avatar" :src="user.avatar"></v-img>
+          <v-img v-else :src="'https://source.boringavatars.com/beam/' + user.account"></v-img>
         </v-list-item-avatar>
         <v-list-item-content v-if="user.isLogin">
-          <v-list-item-title>{{ user.account}}</v-list-item-title>
+          <v-list-item-title>{{ user.account }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
       <v-list>
         <v-list-item v-for="item in items" :key="item.title" link>
-        <router-link :to="item.router" class="d-flex">
-          <v-list-item-icon>
-            <v-icon color="#d7f3f5">{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </router-link>
+          <router-link :to="item.router" class="d-flex drawer-link">
+            <v-list-item-icon>
+              <v-icon color="#d7f3f5">{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </router-link>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -103,7 +120,7 @@ export default {
 }
 </script>
 <style lang="scss">
-#header{
+#header {
   z-index: 9999;
 }
 </style>

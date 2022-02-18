@@ -7,6 +7,7 @@
           <li><router-link to="/back/admin/songs">音樂管理</router-link></li>
           <li><router-link to="/back/admin/events">活動管理</router-link></li>
           <li><router-link to="/back/admin/playlists">歌單管理</router-link></li>
+          <li><router-link to="/back/admin/banners">廣告管理</router-link></li>
         </ul>
       </v-col>
       <v-col cols="10">

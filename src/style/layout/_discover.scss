@@ -1,7 +1,14 @@
 #discover{
+  @include md {
+    display: flex;
+  }
   .chips-sheet{
-    position: fixed;
-    width: 20%;
+    width: 100%;
+    margin-bottom: 20px;
+    @include md {
+      width: 18%;
+      position: fixed;
+    }
   }
   .instantNum{
     width: 30px;
@@ -11,6 +18,10 @@
     height: 60px;
   }
   .discover-list{
+    @include md {
+      width: 75%;
+      margin-left: auto;
+    }
     li:hover{
       background: rgba(255,255,255,0.2);
     }

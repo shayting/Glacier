@@ -238,6 +238,17 @@ const routes = [
               admin: true,
               title: '歌單管理'
             }
+          },
+          {
+            path: 'banners',
+            name: 'AdminBanners',
+            component: () =>
+              import(/* webpackChunkName: "admin" */ '../views/back/AdminBanners.vue'),
+            meta: {
+              login: true,
+              admin: true,
+              title: '廣告管理'
+            }
           }
         ]
       }
