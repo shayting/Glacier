@@ -102,3 +102,8 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+#header{
+  z-index: 9999;
+}
+</style>

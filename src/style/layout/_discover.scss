@@ -1,0 +1,18 @@
+#discover{
+  .chips-sheet{
+    position: fixed;
+    width: 20%;
+  }
+  .instantNum{
+    width: 30px;
+  }
+  .discover-cover{
+    width: 60px;
+    height: 60px;
+  }
+  .discover-list{
+    li:hover{
+      background: rgba(255,255,255,0.2);
+    }
+  }
+}

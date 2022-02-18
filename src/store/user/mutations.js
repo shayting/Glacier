@@ -16,6 +16,7 @@ export const logout = (state, data) => {
   state.role = 0
   state.email = ''
   state._id = ''
+  state.likes = ''
 }
 
 export const getUserInfo = (state, data) => {

@@ -113,7 +113,7 @@
         <v-row>
           <v-col cols="4" sm="4" md="3" v-for="(item, index) in userTracks" :key="index">
             <v-card class="pb-2" style="position: relative;">
-              <v-chip small class="mb-2 state-chip">{{ item.private ? '不公開' : '公開' }}</v-chip>
+              <v-chip v-if="user._id === $route.params.id" small class="mb-2 state-chip">{{ item.private ? '不公開' : '公開' }}</v-chip>
               <v-btn absolute icon class="myTrack-like">
                 <v-icon small>mdi-heart-outline</v-icon>
               </v-btn>
@@ -183,7 +183,8 @@ export default {
         { type: 'Reggae / Funk' },
         { type: 'Classic' },
         { type: 'Blues' },
-        { type: 'Jazz' }
+        { type: 'Jazz' },
+        { type: 'R&B / Soul' }
       ]
     }
   },
