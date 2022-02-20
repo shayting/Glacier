@@ -74,7 +74,14 @@ export default {
     async getUserLike () {
       try {
         const { data } = await this.api.get('/users/' + this.$route.params.id)
-        this.userLikes = data.result.likes
+        // 身份判斷 公開私人
+        if (this.user._id === this.$route.params.id) {
+          this.userLikes = data.result.likes
+        } else {
+          this.userLikes = data.result.likes.filter(item => {
+            return !item.tracks.private
+          })
+        }
         console.log(this.userLikes)
       } catch (error) {
         this.$swal({

@@ -134,7 +134,7 @@
                     <v-tab-item value="followers">
                       <!-- 粉絲tab -->
                       <v-card-text>
-                        <ul class="ps-0">
+                        <ul class="ps-0" v-if="userPage.followers">
                           <li
                             class="d-flex align-center justify-space-between my-2"
                             v-for="(follower, index) in userPage.followers"
@@ -424,7 +424,6 @@ export default {
     },
     async getMyFollow () {
       const { data } = await this.api.get('/users/' + this.user._id + '/myfollow')
-      this.myFollow.followers = data.result.followers
       this.myFollow.following = data.result.following
     },
     renderNew () {
@@ -486,9 +485,9 @@ export default {
     if (this.user.role !== 1) {
       this.getOtherUser()
       this.getUserFollow()
+      this.getMyFollow()
       if (this.user._id === this.$route.params.id) {
         this.getPrivate()
-        this.getMyFollow()
       } else {
         this.getUserTracks()
       }

@@ -123,13 +123,13 @@
             class="mt-5 py-2 px-3"
             rounded
           >
-            <div class="d-flex justify-space-between"  v-if="comment.users">
+            <div class="d-flex justify-space-between" v-if="comment.users">
               <div class="publisher d-flex">
                 <v-avatar size="40" class="mb-3">
                   <img v-if="comment.users.avatar" :src="comment.users.avatar" />
                   <img v-else :src="`https://source.boringavatars.com/beam/${user.account}`" />
                 </v-avatar>
-                <div class="ms-2 text-h6">{{comment.users.userName}}</div>
+                <div class="ms-2 text-h6">{{ comment.users.userName }}</div>
               </div>
               <div class="grey--text">Published on {{ comment.date.slice(0, 10) }}</div>
             </div>
@@ -171,7 +171,10 @@ export default {
     // ----介紹歌詞tab-----
     tab: null,
     // ----留言-----
-    newComment: ''
+    newComment: '',
+    // 加入歌單dilog
+    plusDialog: true,
+    playlists: ['111', '222', '333']
   }),
   watch: {
     top (val) {

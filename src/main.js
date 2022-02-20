@@ -10,6 +10,7 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import vueFilePond from 'vue-filepond'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import VueKinesis from 'vue-kinesis'
 import mixin from './mixin.js'
 
 import 'swiper/css/swiper.css'
@@ -22,6 +23,7 @@ Vue.config.productionTip = false
 Vue.use(VueAwesomeSwiper)
 Vue.use(Vuelidate)
 Vue.use(VueSweetalert2)
+Vue.use(VueKinesis)
 Vue.mixin(mixin)
 
 Vue.component('FilePond', vueFilePond(

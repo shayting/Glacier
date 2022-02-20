@@ -152,18 +152,6 @@ const routes = [
         }
       },
       {
-        path: 'user/:id/events',
-        name: 'Myevents',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-          import(/* webpackChunkName: "member" */ '../views/back/Myevents.vue'),
-        meta: {
-          title: '我的活動'
-        }
-      },
-      {
         path: 'user/:id/playlists',
         name: 'Myplaylists',
         // route level code-splitting
