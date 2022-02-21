@@ -115,7 +115,6 @@ export default {
         this.vibePlaylists = this.playlists.filter(p => {
           return p.type === 'vibe'
         })
-        console.log(this.festivalPlaylists)
       } catch (error) {
         this.$swal({
           icon: 'error',

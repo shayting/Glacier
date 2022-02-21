@@ -114,8 +114,9 @@
           <v-col cols="4" sm="4" md="3" v-for="(item, index) in userTracks" :key="index">
             <v-card class="pb-2" style="position: relative;">
               <v-chip v-if="user._id === $route.params.id" small class="mb-2 state-chip">{{ item.private ? '不公開' : '公開' }}</v-chip>
-              <v-btn absolute icon class="myTrack-like">
-                <v-icon small>mdi-heart-outline</v-icon>
+              <v-btn absolute icon :color="myLikes.includes(item._id) ? 'red' : 'white'" class="myTrack-like" @click="likes(item._id)">
+                <v-icon small v-if="!myLikes.includes(item._id)" medium>mdi-cards-heart-outline</v-icon>
+                  <v-icon v-else small>mdi-cards-heart</v-icon>
               </v-btn>
               <router-link :to="'/track/' + item._id">
                 <div class="track-photowrap">
@@ -137,8 +138,12 @@
                 v-if="user._id.length !== 0 && user._id === $route.params.id"
                 class="d-flex justify-end px-2"
               >
-                <v-btn small class="theme-btn" @click="editTrack(index)">編輯</v-btn>
-                <v-btn small color="secondary ms-2" @click="deleteTrack(item._id)">刪除</v-btn>
+                <v-btn small class="theme-btn" @click="editTrack(index)">
+                <v-icon small>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn small color="secondary ms-2" @click="deleteTrack(item._id)">
+                <v-icon small>mdi-trash-can</v-icon>
+                </v-btn>
               </div>
             </v-card>
           </v-col>
@@ -334,6 +339,35 @@ export default {
           text: '取得音樂失敗'
         })
       }
+    },
+    // 加入/取消 喜歡功能
+    async likes (id) {
+      try {
+        if (this.user.isLogin) {
+          await this.api.patch('/users/likes/' + this.user._id, { _id: id }, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+        }
+        // 重新渲染喜歡icon
+        await this.$store.dispatch('user/getUserInfo')
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    }
+  },
+  computed: {
+    myLikes () {
+      const myLikes = []
+      for (let i = 0; i < this.user.likes.length; i++) {
+        myLikes.push(this.user.likes[i].tracks)
+      }
+      return myLikes
     }
   },
   async created () {

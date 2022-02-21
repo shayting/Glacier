@@ -13,7 +13,7 @@
           <div class="px-4">票價：{{event.price}}</div>
 
           <v-card-actions>
-            <v-btn color="teal lighten-2" text>Explore</v-btn>
+            <v-btn color="teal lighten-2" text>官網購票</v-btn>
 
             <v-spacer></v-spacer>
 

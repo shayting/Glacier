@@ -2,11 +2,13 @@
 import { api } from '@/plugins/axios.js'
 import swal from 'sweetalert2'
 import router from '@/router'
-export const login = async ({ commit }, form) => {
+export const login = async ({ commit, dispatch }, form) => {
   try {
     const { data } = await api.post('/users/login', form)
     // commit同個module mutation的login
     commit('login', data.result)
+    // 登入馬上抓資料
+    await dispatch('getUserInfo')
     router.push('/')
     swal.fire({
       icon: 'success',

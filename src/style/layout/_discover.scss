@@ -22,6 +22,9 @@
       width: 75%;
       margin-left: auto;
     }
+    @include lg {
+      width: 70%;
+    }
     li:hover{
       background: rgba(255,255,255,0.2);
     }

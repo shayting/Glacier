@@ -7,43 +7,95 @@
         <v-img v-else width="400" src="https://source.boringavatars.com/marble/1/?square"></v-img>
       </v-col>
       <v-col cols="9" style="position: relative;">
-      <!-- 編輯歌單彈跳視窗 -->
-        <v-dialog width="500" v-model="dialog">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn class="theme-btn" absolute top right large v-on="on" v-bind="attrs">
-              <v-icon left>mdi-pencil</v-icon>編輯歌單
-            </v-btn>
-          </template>
+        <div class="text-h4 mb-2">{{ playlist.title }}</div>
+        <div v-if="playlist.songs" class="grey--text text-h6">{{ playlist.songs.length }}首歌</div>
+        <span class="grey--text">Published: {{ playlist.createDate }}</span>
+        <div class="mt-10 fs-20">{{ playlist.description }}</div>
+        <!-- 歌單 -->
+        <v-sheet color="secondary" min-height="500" class="mt-10 pa-4" rounded>
+          <ul class="white--text" v-if="this.songs">
+            <li
+              class="d-flex align-center pa-2"
+              style="height:100px;"
+              v-for="(song, index) in songs"
+              :key="song._id"
+            >
+              <div class="text-h6">{{ index + 1 }}</div>
+              <img class="ms-2" :src="song.song.cover" />
+              <div class="me-auto ms-6">
+                <div class="text-h6">{{ song.song.title }}</div>
+                <div class="text-body-2">{{ song.song.artist.userName }}</div>
+              </div>
+              <div class="d-flex align-center">
+                <v-btn icon color="white">
+                  <v-icon medium>mdi-play-circle</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  :color="myLikes.includes(song.song._id) ? 'red' : 'white'"
+                  @click="likes(song.song._id)"
+                >
+                  <v-icon v-if="!myLikes.includes(song.song._id)" medium>mdi-cards-heart-outline</v-icon>
+                  <v-icon v-else medium>mdi-cards-heart</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                  <v-icon
+                    v-if="user._id === playlist.owner"
+                    medium
+                    @click="deleteSong(song.song._id)"
+                  >mdi-trash-can</v-icon>
+                  <v-icon v-else medium @click='getSongId(song.song._id)'>mdi-plus</v-icon>
+                </v-btn>
+              </div>
+            </li>
+          </ul>
+          <div v-if="songs.length === 0" class="white--text text-center">此歌單尚無歌曲</div>
+        </v-sheet>
+        <!-- 加入歌單dialog -->
+        <v-dialog v-model="dialogAdd" persistent max-width="500">
+          <v-card>
+            <v-card-title>選擇想加入的歌單</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text class="py-10">
+              <v-form ref="form">
+                <v-select
+                  :items="items"
+                  label="歌單名稱"
+                  outlined
+                  v-model="seletedPlaylist"
+                  :rules="titleRule"
+                ></v-select>
+              </v-form>
+            </v-card-text>
+            <v-card-text>
+              <div class="mb-2">沒有適合的歌單？</div>
+              <v-btn block color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
+            </v-card-text>
+            <v-card-text>
+              <v-btn @click="dialogAdd = false">取消</v-btn>
+              <v-btn color="success" @click="addToPlaylist">確定</v-btn>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+        <!-- 新增歌單 dialog-->
+        <v-dialog v-model="dialogCreate" max-width="500">
           <v-card>
             <v-card-title>建立歌單</v-card-title>
             <v-divider></v-divider>
-            <v-card-text class="mt-5">
-              <v-row class="px-10">
-                <v-col cols="12">
-                  <file-pond
-                    name="cover"
-                    label-idle="上傳封面"
-                    allow-multiple="false"
-                    accepted-file-types="image/jpeg, image/png"
-                    imageResizeTargetWidth="100"
-                  />
-                </v-col>
-              </v-row>
-            </v-card-text>
-            <v-card-text class="my-5">
-              <v-form class="px-10">
+            <v-card-text>
+              <v-form class="px-10" ref="form">
                 <v-row>
                   <v-col cols="12">
                     <v-row class="text-body-1 align-center">
                       <v-col cols="3">歌單名稱</v-col>
                       <v-col cols="9">
-                        <v-text-field clearable></v-text-field>
+                        <v-text-field clearable :rules="titleRule" v-model="form.title"></v-text-field>
                       </v-col>
                     </v-row>
                     <v-row class="text-body-1">
                       <v-col cols="3">簡介</v-col>
                       <v-col cols="9">
-                        <v-textarea outlined></v-textarea>
+                        <v-textarea outlined v-model="form.description"></v-textarea>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -52,39 +104,11 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialog = false" type="submit">Save</v-btn>
-              <v-btn color="secondary" text @click="dialog = false">Cancel</v-btn>
+              <v-btn color="secondary" @click="resetForm" text>Cancel</v-btn>
+              <v-btn color="primary" @click="createPlaylist" text type="submit">Save</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <div class="text-h4 mb-2">{{ playlist.title}}</div>
-        <div v-if="playlist.songs" class="grey--text text-h6">{{ playlist.songs.length }}首歌</div>
-        <span class="grey--text">Published: {{ playlist.createDate }}</span>
-        <div class="mt-10 fs-20">{{ playlist.description }}</div>
-        <!-- 歌單 -->
-        <v-sheet color="secondary" min-height="500" class="mt-10 pa-4" rounded>
-          <ul class="white--text" v-if="this.songs">
-            <li class="d-flex align-center pa-2" style="height:100px;" v-for="(song, index) in songs" :key="song._id">
-              <div class="text-h6">{{index + 1}}</div>
-              <img class="ms-2" :src="song.song.cover">
-              <div class="me-auto ms-6">
-                <div class="text-h6">{{song.song.title}}</div>
-                <div class="text-body-2">{{song.song.artist.userName}}</div>
-              </div>
-              <div class="d-flex align-center">
-                <v-btn icon color="white">
-                  <v-icon medium>mdi-play-circle</v-icon>
-                </v-btn>
-                <v-btn icon color="white">
-                  <v-icon medium>mdi-cards-heart-outline</v-icon>
-                </v-btn>
-                <v-btn icon color="white">
-                  <v-icon medium @click="deleteSong(song.song._id)">mdi-trash-can</v-icon>
-                </v-btn>
-              </div>
-            </li>
-          </ul>
-        </v-sheet>
       </v-col>
     </v-row>
   </div>
@@ -93,9 +117,25 @@
 export default {
   data () {
     return {
-      dialog: false,
       playlist: {},
-      songs: []
+      songs: [],
+      dialogAdd: false,
+      dialogCreate: false,
+      // select 欄位顯示
+      items: [],
+      // userPlaylist
+      playlists: [],
+      nowSongId: '',
+      seletedPlaylist: '',
+      form: {
+        title: '',
+        description: ''
+      },
+      // 表單驗證
+      valid: true,
+      titleRule: [
+        v => !!v || '必填欄位'
+      ]
     }
   },
   methods: {
@@ -109,7 +149,6 @@ export default {
         this.playlist = data.result
         this.playlist.createDate = data.result.createDate.slice(0, 10)
         this.songs = this.playlist.songs
-        console.log(this.songs)
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -153,10 +192,125 @@ export default {
           this.$swal.close()
         }
       })
+    },
+    // 加入/取消 喜歡功能
+    async likes (id) {
+      try {
+        if (this.user.isLogin) {
+          await this.api.patch('/users/likes/' + this.user._id, { _id: id }, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+        }
+        // 重新渲染喜歡icon
+        await this.$store.dispatch('user/getUserInfo')
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    getSongId (id) {
+      // 存取使用者所選擇的歌曲id
+      if (this.user.isLogin) {
+        this.dialogAdd = true
+        this.nowSongId = id
+        console.log(this.nowSongId)
+      }
+    },
+    async getUserPlaylist () {
+      if (this.user._id.length !== 0) {
+        try {
+          const { data } = await this.api.get('/playlists?owner=' + this.user._id)
+          this.playlists = data.result
+          for (let i = 0; i < this.playlists.length; i++) {
+            this.items.push(data.result[i].title)
+          }
+        } catch (error) {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: '取得歌單失敗'
+          })
+        }
+      }
+    },
+    async addToPlaylist () {
+      // 找出使用者選擇的playlist Id
+      const idx = this.playlists.findIndex(p => p.title === this.seletedPlaylist)
+      const playlistId = this.playlists[idx]._id
+      console.log(playlistId)
+      console.log(this.nowSongId)
+      try {
+        if (this.user.isLogin) {
+          await this.api.patch('/playlists/addsong/' + playlistId, { _id: this.nowSongId }, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+          this.dialogAdd = false
+          this.seletedPlaylist = ''
+          this.$swal({
+            icon: 'success',
+            title: '成功',
+            text: '加入成功'
+          })
+        }
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    async createPlaylist () {
+      try {
+        await this.api.post('/playlists', { title: this.form.title, description: this.form.description }, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        this.getUserPlaylist()
+        this.$swal({
+          icon: 'success',
+          title: '成功',
+          text: '新增成功'
+        })
+        this.resetForm()
+      } catch (error) {
+        console.log(error)
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    resetForm () {
+      this.dialogCreate = false
+      this.$refs.form.resetValidation()
+      this.form = {
+        title: '',
+        description: ''
+      }
+    }
+  },
+  computed: {
+    myLikes () {
+      const myLikes = []
+      for (let i = 0; i < this.user.likes.length; i++) {
+        myLikes.push(this.user.likes[i].tracks)
+      }
+      return myLikes
     }
   },
   async created () {
     this.getPlaylist()
+    this.getUserPlaylist()
   }
 }
 </script>

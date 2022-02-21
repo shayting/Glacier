@@ -1,6 +1,7 @@
 <template>
   <div>
     <Header></Header>
+    <loading :active.sync="isLoading" color="#fb8c00"></loading>
     <div v-if="user.role !== 1" id="back" class="my-container white--text">
       <div>
         <v-row>
@@ -11,8 +12,6 @@
             <v-avatar v-else size="200" class="ma-10">
               <img :src="randomAvatar" />
             </v-avatar>
-              <!-- <div>{{ followCheck }}</div>
-              <div>{{ followersCheck }}</div> -->
           </v-col>
 
           <v-col cols="9" class="d-flex justify-space-between">
@@ -35,16 +34,16 @@
                     <div class="mt-5 avatar-upload" style="width:100px;">
                       <file-pond
                         v-if="changeAvatar"
-                          imageCropAspectRatio="1"
-                          imageResizeTargetWidth="250"
-                          stylePanelLayout='compact circle'
-                          styleLoadIndicatorPosition='center bottom'
-                          styleProgressIndicatorPosition='right bottom'
-                          styleButtonRemoveItemPosition='left bottom'
-                          styleButtonProcessItemPosition='right bottom'
-                          accepted-file-types="image/jpeg, image/png"
-                          label-idle="選擇圖片"
-                          @updatefiles="getAvatar($event)"
+                        imageCropAspectRatio="1"
+                        imageResizeTargetWidth="250"
+                        stylePanelLayout="compact circle"
+                        styleLoadIndicatorPosition="center bottom"
+                        styleProgressIndicatorPosition="right bottom"
+                        styleButtonRemoveItemPosition="left bottom"
+                        styleButtonProcessItemPosition="right bottom"
+                        accepted-file-types="image/jpeg, image/png"
+                        label-idle="選擇圖片"
+                        @updatefiles="getAvatar($event)"
                       />
                     </div>
                     <v-btn
@@ -91,18 +90,31 @@
                       type="submit"
                       :disabled="modalSubmitting"
                     >儲存</v-btn>
-                    <v-btn
-                      color="secondary"
-                      text
-                      @click="dialog2 = false, changeAvatar = false"
-                    >取消</v-btn>
+                    <v-btn color="secondary" text @click="dialog2 = false, changeAvatar = false">取消</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
               <!-- 追蹤按鈕 -->
-              <v-btn v-if="user._id !== $route.params.id && !followState" @click="follow" class="theme-btn ma-8" absolute top right medium>+ 追蹤</v-btn>
-              <v-btn v-if="user._id !== $route.params.id && followState" @click="follow"  class="ma-8" outlined
-      color="teal" absolute top right medium>已追蹤</v-btn>
+              <v-btn
+                v-if="user._id !== $route.params.id && !followState"
+                @click="follow"
+                class="theme-btn ma-8"
+                absolute
+                top
+                right
+                medium
+              >+ 追蹤</v-btn>
+              <v-btn
+                v-if="user._id !== $route.params.id && followState"
+                @click="follow"
+                class="ma-8"
+                outlined
+                color="teal"
+                absolute
+                top
+                right
+                medium
+              >已追蹤</v-btn>
               <!-- 用戶名 -->
               <div v-if="userPage.userName" class="ma-10 text-h3">{{ userPage.userName }}</div>
               <div v-else class="ma-10 text-h3">{{ userPage.account }}</div>
@@ -137,26 +149,38 @@
                         <ul class="ps-0" v-if="userPage.followers">
                           <li
                             class="d-flex align-center justify-space-between my-2"
-                            v-for="(follower, index) in userPage.followers"
-                            :key="index"
+                            v-for="follower in userPage.followers"
+                            :key="follower._id"
                           >
                             <div class="d-flex align-center">
                               <v-avatar>
                                 <img v-if="follower.users.avatar" :src="follower.users.avatar" />
-                                <img v-else :src="`https://source.boringavatars.com/beam/${follower.users.account}`" />
+                                <img
+                                  v-else
+                                  :src="`https://source.boringavatars.com/beam/${follower.users.account}`"
+                                />
                               </v-avatar>
-                              <div v-if="follower.users.userName" class="fs-20 mx-5">{{ follower.users.userName }}</div>
+                              <div
+                                v-if="follower.users.userName"
+                                class="fs-20 mx-5"
+                              >{{ follower.users.userName }}</div>
                               <div v-else class="fs-20 mx-5">{{ follower.users.account }}</div>
                             </div>
                             <v-btn
                               width="80"
-                              v-if="followersCheck[index]"
+                              v-if="followCheck(follower.users._id)"
                               color="primary"
                               outlined
                               elevation="2"
                               @click="followById(follower.users._id)"
                             >追蹤中</v-btn>
-                            <v-btn width="80" v-else color="primary" elevation="2" @click="followById(follower.users._id)" >追蹤</v-btn>
+                            <v-btn
+                              width="80"
+                              v-else
+                              color="primary"
+                              elevation="2"
+                              @click="followById(follower.users._id)"
+                            >追蹤</v-btn>
                           </li>
                         </ul>
                       </v-card-text>
@@ -166,27 +190,39 @@
                       <v-card-text>
                         <ul class="ps-0">
                           <li
-                            v-for="(following, index) in userPage.following"
-                            :key="index"
+                            v-for="following in userPage.following"
+                            :key="following._id"
                             class="d-flex align-center justify-space-between my-2"
                           >
                             <div class="d-flex align-center">
                               <v-avatar>
                                 <img v-if="following.users.avatar" :src="following.users.avatar" />
-                                <img v-else :src="`https://source.boringavatars.com/beam/${following.users.account}`" />
+                                <img
+                                  v-else
+                                  :src="`https://source.boringavatars.com/beam/${following.users.account}`"
+                                />
                               </v-avatar>
-                              <div v-if="following.users.userName" class="fs-24 mx-5">{{ following.users.userName }}</div>
+                              <div
+                                v-if="following.users.userName"
+                                class="fs-24 mx-5"
+                              >{{ following.users.userName }}</div>
                               <div v-else class="fs-24 mx-5">{{ following.users.account }}</div>
                             </div>
                             <v-btn
                               width="80"
-                              v-if="followCheck[index]"
+                              v-if="followCheck(following.users._id)"
                               color="primary"
                               outlined
                               elevation="2"
                               @click="followById(following.users._id)"
                             >追蹤中</v-btn>
-                            <v-btn width="80" v-else color="primary" elevation="2" @click="followById(following.users._id)">追蹤</v-btn>
+                            <v-btn
+                              width="80"
+                              v-else
+                              color="primary"
+                              elevation="2"
+                              @click="followById(following.users._id)"
+                            >追蹤</v-btn>
                           </li>
                         </ul>
                       </v-card-text>
@@ -232,6 +268,11 @@ export default {
   },
   data () {
     return {
+      attrs: {
+        class: 'mb-6',
+        boilerplate: true,
+        elevation: 2
+      },
       form: {
         cover: null,
         userName: '',
@@ -245,7 +286,9 @@ export default {
       userPage: {
         tracks: [],
         followers: [],
-        following: []
+        following: [],
+        account: '',
+        avatar: ''
       },
       // 登入者follow資訊
       myFollow: {
@@ -257,7 +300,8 @@ export default {
       dialog2: false,
       modalSubmitting: false,
       tab: null,
-      changeAvatar: false
+      changeAvatar: false,
+      isLoading: false
     }
   },
   methods: {
@@ -321,20 +365,17 @@ export default {
         avatar: data.result.avatar
       }
     },
-    // ???導致莫名錯誤
     // 根據路由參數抓用戶資料
     async getOtherUser () {
+      this.isLoading = true
       const { data } = await this.api.get('/users/' + this.$route.params.id)
-      this.userPage = {
-        account: data.result.account,
-        description: data.result.description,
-        avatar: data.result.avatar,
-        userName: data.result.userName,
-        _id: data.result._id,
-        tracks: data.result.tracks,
-        following: data.result.following,
-        followers: data.result.followers
-      }
+      this.userPage.account = data.result.account
+      this.userPage.description = data.result.description
+      this.userPage.avatar = data.result.avatar
+      this.userPage.userName = data.result.userName
+      this.userPage._id = data.result._id
+      this.userPage.tracks = data.result.tracks
+      this.isLoading = false
       const nowUserFollowing = this.user.following
       // .some 陣列只要有其中一個符合條件就會回傳true
       if (nowUserFollowing !== undefined && nowUserFollowing.some(following => following.users === this.$route.params.id)) {
@@ -430,6 +471,9 @@ export default {
       this.getOtherUser()
       this.getUserFollow()
       this.getMyFollow()
+    },
+    followCheck (id) {
+      return this.myFollow.following.some(following => following.users._id === id)
     }
   },
   computed: {
@@ -445,30 +489,6 @@ export default {
         return 'https://source.boringavatars.com/beam/' + this.userPage.account
       }
       return undefined
-    },
-    followCheck () {
-      const checkFollowing = this.userPage.following.map(f => {
-        const result = false
-        for (let i = 0; i < this.myFollow.following.length; i++) {
-          if (f.users._id === this.myFollow.following[i].users._id) {
-            return true
-          }
-        }
-        return result
-      })
-      return checkFollowing
-    },
-    followersCheck () {
-      const checkFollowers = this.userPage.followers.map(f => {
-        const result = false
-        for (let i = 0; i < this.myFollow.following.length; i++) {
-          if (f.users._id === this.myFollow.following[i].users._id) {
-            return true
-          }
-        }
-        return result
-      })
-      return checkFollowers
     }
   },
   async created () {
@@ -476,20 +496,23 @@ export default {
     this.form.userName = this.user.userName
     this.form.description = this.user.description
     this.form.cover = this.user.avatar
-    // 若是未登入的使用者，跳過這行
-    if (this.user._id.length > 0) {
-      this.getUser()
-    }
-    // this.getOtherUser()
-    // 寫判斷式先擋掉管理員問題
-    if (this.user.role !== 1) {
+
+    // 讓進入管理頁的時候不要執行以下function
+    const routeName = ['About', 'Mytracks', 'Myplaylists', 'Mylikes'].includes(this.$route.name)
+    if (routeName) {
       this.getOtherUser()
       this.getUserFollow()
-      this.getMyFollow()
-      if (this.user._id === this.$route.params.id) {
-        this.getPrivate()
-      } else {
-        this.getUserTracks()
+    }
+
+    if (this.user._id.length > 0) {
+      this.getUser()
+      if (this.user.role !== 1) {
+        this.getMyFollow()
+        if (this.user._id === this.$route.params.id) {
+          this.getPrivate()
+        } else {
+          this.getUserTracks()
+        }
       }
     }
   }

@@ -50,7 +50,6 @@ export default {
   async created () {
     try {
       const { data } = await this.api.get('/banners')
-      console.log(data.result)
       this.banners = data.result
     } catch (error) {
       console.log(error.response.data.message)

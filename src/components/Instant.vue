@@ -29,7 +29,7 @@
             <v-icon v-else small>mdi-cards-heart</v-icon>
             <div class="ms-2">{{ item.likes.length }}</div>
           </v-btn>
-          <v-btn icon color="white" class="mx-1" @click="dialogAdd = true, getSongId(item._id)">
+          <v-btn icon color="white" class="mx-1" @click="getSongId(item._id)">
             <v-icon medium>mdi-plus</v-icon>
           </v-btn>
         </div>
@@ -41,7 +41,9 @@
         <v-card-title>選擇想加入的歌單</v-card-title>
         <v-divider></v-divider>
         <v-card-text class="py-10">
-          <v-select :items="items" label="歌單名稱" outlined v-model="seletedPlaylist"></v-select>
+          <v-form ref="form">
+          <v-select :items="items" label="歌單名稱" outlined v-model="seletedPlaylist" :rules="titleRule"></v-select>
+          </v-form>
         </v-card-text>
         <v-card-text>
           <div class="mb-2">沒有適合的歌單？</div>
@@ -154,11 +156,15 @@ export default {
   }),
   methods: {
     getSongId (id) {
-      this.nowSongId = id
-      console.log(this.nowSongId)
+      if (this.user.isLogin) {
+        this.dialogAdd = true
+        this.nowSongId = id
+        console.log(this.nowSongId)
+      }
     },
     resetForm () {
       this.dialogCreate = false
+      this.$refs.form.resetValidation()
       this.form = {
         title: '',
         description: ''
@@ -184,8 +190,6 @@ export default {
           for (let i = 0; i < this.playlists.length; i++) {
             this.items.push(data.result[i].title)
           }
-          console.log(this.playlists)
-          console.log(this.items)
         } catch (error) {
           this.$swal({
             icon: 'error',
