@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header></Header>
-    <loading :active.sync="isLoading" color="#fb8c00"></loading>
+    <!-- <loading :active.sync="isLoading" color="#fb8c00"></loading> -->
     <div v-if="user.role !== 1" id="back" class="my-container white--text">
       <div>
         <v-row>

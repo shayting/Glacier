@@ -27,7 +27,7 @@ Vue.use(VueAwesomeSwiper)
 Vue.use(Vuelidate)
 Vue.use(VueSweetalert2)
 Vue.use(VueKinesis)
-Vue.use(VueLoading)
+Vue.component('Loading', VueLoading)
 Vue.mixin(mixin)
 
 Vue.component('FilePond', vueFilePond(
