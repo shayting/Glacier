@@ -16,7 +16,7 @@
         </div>
         <div class="d-flex xyCenter" style="width: 130px;">
           <v-btn icon color="white" class="mx-1">
-            <v-icon medium>mdi-play-circle</v-icon>
+            <v-icon medium @click="play(index)">mdi-play-circle</v-icon>
           </v-btn>
           <v-btn
             outlined
@@ -152,9 +152,26 @@ export default {
     ],
     items: [],
     playlists: [],
-    nowSongId: ''
+    nowSongId: '',
+    // 儲存點擊要播放的音樂
+    playingSong: {
+      title: '',
+      artist: '',
+      src: '',
+      pic: ''
+    }
   }),
   methods: {
+    play (index) {
+      this.playingSong = {
+        title: this.sortItems[index].title,
+        artist: this.sortItems[index].artist.userName,
+        src: this.sortItems[index].file,
+        pic: this.sortItems[index].cover
+      }
+      console.log(this.playingSong)
+      this.$store.commit('track/play', this.playingSong)
+    },
     getSongId (id) {
       if (this.user.isLogin) {
         this.dialogAdd = true

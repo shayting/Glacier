@@ -10,8 +10,8 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import vueFilePond from 'vue-filepond'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
-import VueKinesis from 'vue-kinesis'
 import VueLoading from 'vue-loading-overlay'
+import Aplayer from 'vue-aplayer'
 
 import mixin from './mixin.js'
 
@@ -26,10 +26,10 @@ Vue.config.productionTip = false
 Vue.use(VueAwesomeSwiper)
 Vue.use(Vuelidate)
 Vue.use(VueSweetalert2)
-Vue.use(VueKinesis)
-Vue.component('Loading', VueLoading)
 Vue.mixin(mixin)
 
+Vue.component('Aplayer', Aplayer)
+Vue.component('Loading', VueLoading)
 Vue.component('FilePond', vueFilePond(
   FilePondPluginFileValidateType,
   FilePondPluginImagePreview
