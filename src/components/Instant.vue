@@ -157,17 +157,19 @@ export default {
     playingSong: {
       title: '',
       artist: '',
-      src: '',
-      pic: ''
+      file: '',
+      cover: '',
+      _id: ''
     }
   }),
   methods: {
     play (index) {
       this.playingSong = {
+        _id: this.sortItems[index]._id,
         title: this.sortItems[index].title,
         artist: this.sortItems[index].artist.userName,
-        src: this.sortItems[index].file,
-        pic: this.sortItems[index].cover
+        file: this.sortItems[index].file,
+        cover: this.sortItems[index].cover
       }
       console.log(this.playingSong)
       this.$store.commit('track/play', this.playingSong)
