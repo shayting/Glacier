@@ -21,7 +21,7 @@
         <v-chip @click="filter = 'Punk'">Punk</v-chip>
       </v-chip-group>
     </v-sheet>
-    <!-- list -->
+    <!-- 歌曲 list -->
     <v-sheet color="secondary" min-height="800" class="pa-4 discover-list" rounded>
       <ul class="white--text">
         <li
@@ -39,7 +39,7 @@
             <div class="text-body-2">{{ track.artist.userName }}</div>
           </div>
           <div class="d-flex align-center">
-            <v-btn icon color="white" class="mx-1">
+            <v-btn icon color="white" class="mx-1" @click="play(index)">
               <v-icon medium>mdi-play-circle</v-icon>
             </v-btn>
             <v-btn
@@ -59,6 +59,7 @@
           </div>
         </li>
       </ul>
+      <div v-if="filterItems.length === 0" class="white--text text-center">目前沒有此類型音樂</div>
     </v-sheet>
     <!-- 加入歌單dialog -->
     <v-dialog v-model="dialogAdd" persistent max-width="500">
@@ -145,9 +146,29 @@ export default {
     valid: true,
     titleRule: [
       v => !!v || '必填欄位'
-    ]
+    ],
+    // 儲存點擊要播放的音樂
+    playingSong: {
+      title: '',
+      artist: '',
+      file: '',
+      cover: '',
+      _id: ''
+    }
   }),
   methods: {
+    // 播放音樂
+    play (index) {
+      this.playingSong = {
+        _id: this.filterItems[index]._id,
+        title: this.filterItems[index].title,
+        artist: this.filterItems[index].artist.userName,
+        file: this.filterItems[index].file,
+        cover: this.filterItems[index].cover
+      }
+      console.log(this.playingSong)
+      this.$store.commit('track/play', this.playingSong)
+    },
     async getAllPublic () {
       try {
         const { data } = await this.api.get('/tracks/public')
@@ -189,8 +210,6 @@ export default {
       // 找出使用者選擇的playlist Id
       const idx = this.playlists.findIndex(p => p.title === this.seletedPlaylist)
       const playlistId = this.playlists[idx]._id
-      console.log(playlistId)
-      console.log(this.nowSongId)
       try {
         if (this.user.isLogin) {
           await this.api.patch('/playlists/addsong/' + playlistId, { _id: this.nowSongId }, {
@@ -269,6 +288,7 @@ export default {
     }
   },
   computed: {
+    // 類別篩選
     filterItems () {
       return this.publicTracks.filter(item => {
         if (this.filter === '') return true

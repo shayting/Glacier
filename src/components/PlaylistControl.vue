@@ -8,7 +8,7 @@
         <v-card-text class="py-10">
           <v-form ref="form">
             <v-select
-              :items="items"
+              :items="playlistItems"
               label="歌單名稱"
               outlined
               v-model="seletedPlaylist"
@@ -38,13 +38,13 @@
                 <v-row class="text-body-1 align-center">
                   <v-col cols="3">歌單名稱</v-col>
                   <v-col cols="9">
-                    <v-text-field clearable :rules="titleRule" v-model="form.title"></v-text-field>
+                    <v-text-field clearable :rules="titleRule" v-model="playListForm.title"></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row class="text-body-1">
                   <v-col cols="3">簡介</v-col>
                   <v-col cols="9">
-                    <v-textarea outlined v-model="form.description"></v-textarea>
+                    <v-textarea outlined v-model="playListForm.description"></v-textarea>
                   </v-col>
                 </v-row>
               </v-col>
@@ -66,12 +66,12 @@ export default {
     dialogAdd: false,
     dialogCreate: false,
     // select 欄位顯示
-    items: [],
+    playlistItems: [],
     // userPlaylist
     playlists: [],
     nowSongId: '',
     seletedPlaylist: '',
-    form: {
+    playListForm: {
       title: '',
       description: ''
     },
@@ -96,7 +96,7 @@ export default {
           const { data } = await this.api.get('/playlists?owner=' + this.user._id)
           this.playlists = data.result
           for (let i = 0; i < this.playlists.length; i++) {
-            this.items.push(data.result[i].title)
+            this.playlistItems.push(data.result[i].title)
           }
         } catch (error) {
           this.$swal({
@@ -138,7 +138,7 @@ export default {
     },
     async createPlaylist () {
       try {
-        await this.api.post('/playlists', { title: this.form.title, description: this.form.description }, {
+        await this.api.post('/playlists', { title: this.playListForm.title, description: this.playListForm.description }, {
           headers: {
             authorization: 'Bearer ' + this.user.token
           }

@@ -15,7 +15,7 @@
           <div class="ms-2 text-body-2">{{ item.artist.userName }}</div>
         </div>
         <div class="d-flex xyCenter" style="width: 130px;">
-          <v-btn icon color="white" class="mx-1">
+          <v-btn icon color="white" class="mx-1" @click="play(index)">
             <v-icon medium>mdi-play-circle</v-icon>
           </v-btn>
           <v-btn
@@ -122,9 +122,29 @@ export default {
     valid: true,
     titleRule: [
       v => !!v || '必填欄位'
-    ]
+    ],
+    // 儲存點擊要播放的音樂
+    playingSong: {
+      title: '',
+      artist: '',
+      file: '',
+      cover: '',
+      _id: ''
+    }
   }),
   methods: {
+    // 播放音樂
+    play (index) {
+      this.playingSong = {
+        _id: this.sortItems[index]._id,
+        title: this.sortItems[index].title,
+        artist: this.sortItems[index].artist.userName,
+        file: this.sortItems[index].file,
+        cover: this.sortItems[index].cover
+      }
+      console.log(this.playingSong)
+      this.$store.commit('track/play', this.playingSong)
+    },
     getSongId (id) {
       // 存取使用者所選擇的歌曲id
       if (this.user.isLogin) {

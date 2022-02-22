@@ -8,7 +8,7 @@
             <v-img width="400" :src="track.cover">
               <v-fade-transition>
                 <v-overlay v-if="hover" absolute color="#d7f3f5">
-                  <v-icon x-large>mdi-play-circle-outline</v-icon>
+                  <v-icon x-large @click="play(track._id)">mdi-play-circle-outline</v-icon>
                 </v-overlay>
               </v-fade-transition>
             </v-img>
@@ -65,7 +65,7 @@
               <v-icon v-else>mdi-music</v-icon>
             </v-btn>
           </template>
-          <v-btn fab dark x-small color="amber">
+          <v-btn fab dark x-small color="amber" @click="play(track._id)">
             <v-icon>mdi-play</v-icon>
           </v-btn>
           <v-btn fab dark x-small color="cyan">
@@ -247,7 +247,15 @@ export default {
     valid: true,
     titleRule: [
       v => !!v || '必填欄位'
-    ]
+    ],
+    // 儲存點擊要播放的音樂
+    playingSong: {
+      title: '',
+      artist: '',
+      file: '',
+      cover: '',
+      _id: ''
+    }
   }),
   watch: {
     top (val) {
@@ -264,6 +272,18 @@ export default {
     }
   },
   methods: {
+    // 播放音樂
+    play (index) {
+      this.playingSong = {
+        _id: this.track._id,
+        title: this.track.title,
+        artist: this.track.artist.userName,
+        file: this.track.file,
+        cover: this.track.cover
+      }
+      console.log(this.playingSong)
+      this.$store.commit('track/play', this.playingSong)
+    },
     async getTrackById () {
       try {
         const { data } = await this.api.get('/tracks/' + this.$route.params.id, {

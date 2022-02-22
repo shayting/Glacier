@@ -27,7 +27,7 @@
                 <div class="text-body-2">{{ song.song.artist.userName }}</div>
               </div>
               <div class="d-flex align-center">
-                <v-btn icon color="white">
+                <v-btn icon color="white" @click="play(index)">
                   <v-icon medium>mdi-play-circle</v-icon>
                 </v-btn>
                 <v-btn
@@ -123,7 +123,7 @@ export default {
       dialogCreate: false,
       // select 欄位顯示
       items: [],
-      // userPlaylist
+      // 使用者自己的playlists名稱
       playlists: [],
       nowSongId: '',
       seletedPlaylist: '',
@@ -135,10 +135,30 @@ export default {
       valid: true,
       titleRule: [
         v => !!v || '必填欄位'
-      ]
+      ],
+      // 儲存點擊要播放的音樂
+      playingSong: {
+        title: '',
+        artist: '',
+        file: '',
+        cover: '',
+        _id: ''
+      }
     }
   },
   methods: {
+    // 播放音樂
+    play (index) {
+      this.playingSong = {
+        _id: this.songs[index].song._id,
+        title: this.songs[index].song.title,
+        artist: this.songs[index].song.artist.userName,
+        file: this.songs[index].song.file,
+        cover: this.songs[index].song.cover
+      }
+      console.log(this.playingSong)
+      this.$store.commit('track/play', this.playingSong)
+    },
     async getPlaylist () {
       try {
         const { data } = await this.api.get('/playlists/' + this.$route.params.id, {

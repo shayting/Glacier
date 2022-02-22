@@ -11,6 +11,7 @@
       <v-card-title class="px-16 text-h4 py-0">Music</v-card-title>
       <v-card-text class="white--text px-16 text-body-1">
         <div>
+          <!-- 上傳音樂 modal -->
           <v-dialog
             width="1000"
             v-model="dialog"
@@ -112,37 +113,55 @@
       <v-card-text class="px-16">
         <v-row>
           <v-col cols="4" sm="4" md="3" v-for="(item, index) in userTracks" :key="index">
-            <v-card class="pb-2" style="position: relative;">
-              <v-chip v-if="user._id === $route.params.id" small class="mb-2 state-chip">{{ item.private ? '不公開' : '公開' }}</v-chip>
-              <v-btn absolute icon :color="myLikes.includes(item._id) ? 'red' : 'white'" class="myTrack-like" @click="likes(item._id)">
+            <v-card class="pb-2 track-card" style="position: relative;" elevation="0">
+              <v-chip
+                v-if="user._id === $route.params.id"
+                x-small
+                class="mb-2 state-chip"
+              >{{ item.private ? 'private' : 'public' }}</v-chip>
+              <v-btn
+                small
+                absolute
+                icon
+                :color="myLikes.includes(item._id) ? 'red' : 'white'"
+                class="myTrack-like"
+                @click="likes(item._id)"
+              >
                 <v-icon small v-if="!myLikes.includes(item._id)" medium>mdi-cards-heart-outline</v-icon>
-                  <v-icon v-else small>mdi-cards-heart</v-icon>
+                <v-icon v-else small>mdi-cards-heart</v-icon>
               </v-btn>
-              <router-link :to="'/track/' + item._id">
                 <div class="track-photowrap">
                   <v-hover>
                     <template v-slot:default="{ hover }">
                       <v-img class="track-photo" :src="item.cover">
                         <v-fade-transition>
                           <v-overlay v-if="hover" absolute color="#d7f3f5">
-                            <v-icon x-large>mdi-play-circle-outline</v-icon>
+                            <v-icon @click="play(index)" x-large>mdi-play-circle-outline</v-icon>
                           </v-overlay>
                         </v-fade-transition>
                       </v-img>
                     </template>
                   </v-hover>
-                  <div class="text-body-1 my-2 px-4 black--text">{{ item.title }}</div>
+                  <div class="d-flex align-center justify-space-between">
+                    <router-link :to="'/track/' + item._id">
+                    <div class="text-body-1 mt-2 white--text">{{ item.title }}</div>
+                    <div class="grey--text">{{item.artist.userName}}</div>
+                    </router-link>
+                    <v-btn small class="myTrack-plus me-8" icon color="white" @click="getSongId (item._id)">
+                      <v-icon small>mdi-plus</v-icon>
+                    </v-btn>
+                  </div>
                 </div>
-              </router-link>
+              <!-- 編輯/刪除按鈕 -->
               <div
                 v-if="user._id.length !== 0 && user._id === $route.params.id"
-                class="d-flex justify-end px-2"
+                class="d-flex justify-end"
               >
-                <v-btn small class="theme-btn" @click="editTrack(index)">
-                <v-icon small>mdi-pencil</v-icon>
+                <v-btn x-small class="secondary myTrack-edit" @click="editTrack(index)">
+                  <v-icon x-small>mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn small color="secondary ms-2" @click="deleteTrack(item._id)">
-                <v-icon small>mdi-trash-can</v-icon>
+                <v-btn x-small color="secondary myTrack-del" @click="deleteTrack(item._id)" class="ms-2 btn-hover">
+                  <v-icon x-small>mdi-trash-can</v-icon>
                 </v-btn>
               </div>
             </v-card>
@@ -150,6 +169,64 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <!-- 加入歌單dialog -->
+    <v-dialog v-model="dialogAdd" persistent max-width="500">
+      <v-card>
+        <v-card-title>選擇想加入的歌單</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="py-10">
+          <v-form ref="form">
+            <v-select
+              :items="playlistItems"
+              label="歌單名稱"
+              outlined
+              v-model="seletedPlaylist"
+              :rules="titleRule"
+            ></v-select>
+          </v-form>
+        </v-card-text>
+        <v-card-text>
+          <div class="mb-2">沒有適合的歌單？</div>
+          <v-btn block color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
+        </v-card-text>
+        <v-card-text>
+          <v-btn @click="dialogAdd = false">取消</v-btn>
+          <v-btn color="success" @click="addToPlaylist">確定</v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <!-- 新增歌單 dialog-->
+    <v-dialog v-model="dialogCreate" max-width="500">
+      <v-card>
+        <v-card-title>建立歌單</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-form class="px-10" ref="form">
+            <v-row>
+              <v-col cols="12">
+                <v-row class="text-body-1 align-center">
+                  <v-col cols="3">歌單名稱</v-col>
+                  <v-col cols="9">
+                    <v-text-field clearable :rules="titleRule" v-model="form.title"></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row class="text-body-1">
+                  <v-col cols="3">簡介</v-col>
+                  <v-col cols="9">
+                    <v-textarea outlined v-model="form.description"></v-textarea>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" @click="resetPlaylistForm" text>Cancel</v-btn>
+          <v-btn color="primary" @click="createPlaylist" text type="submit">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
@@ -174,6 +251,14 @@ export default {
         _id: '',
         index: -1
       },
+      // 儲存點擊要播放的音樂
+      playingSong: {
+        title: '',
+        artist: '',
+        file: '',
+        cover: '',
+        _id: ''
+      },
       dialog: false,
       items: [
         { type: 'Rock' },
@@ -190,10 +275,119 @@ export default {
         { type: 'Blues' },
         { type: 'Jazz' },
         { type: 'R&B / Soul' }
+      ],
+      dialogAdd: false,
+      dialogCreate: false,
+      // playlist select 欄位顯示
+      playlistItems: [],
+      // userPlaylist
+      playlists: [],
+      nowSongId: '',
+      seletedPlaylist: '',
+      playListForm: {
+        title: '',
+        description: ''
+      },
+      // 表單驗證
+      titleRule: [
+        v => !!v || '必填欄位'
       ]
     }
   },
   methods: {
+    getSongId (id) {
+      // 存取使用者所選擇的歌曲id
+      if (this.user.isLogin) {
+        this.dialogAdd = true
+        this.nowSongId = id
+      }
+    },
+    async getUserPlaylist () {
+      if (this.user._id.length !== 0) {
+        try {
+          const { data } = await this.api.get('/playlists?owner=' + this.user._id)
+          this.playlists = data.result
+          for (let i = 0; i < this.playlists.length; i++) {
+            this.playlistItems.push(data.result[i].title)
+          }
+        } catch (error) {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: '取得歌單失敗'
+          })
+        }
+      }
+    },
+    async addToPlaylist () {
+      // 找出使用者選擇的playlist Id
+      const idx = this.playlists.findIndex(p => p.title === this.seletedPlaylist)
+      const playlistId = this.playlists[idx]._id
+      try {
+        if (this.user.isLogin) {
+          await this.api.patch('/playlists/addsong/' + playlistId, { _id: this.nowSongId }, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+          this.dialogAdd = false
+          this.seletedPlaylist = ''
+          this.$swal({
+            icon: 'success',
+            title: '成功',
+            text: '加入成功'
+          })
+        }
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    async createPlaylist () {
+      try {
+        await this.api.post('/playlists', { title: this.playListForm.title, description: this.playListForm.description }, {
+          headers: {
+            authorization: 'Bearer ' + this.user.token
+          }
+        })
+        this.getUserPlaylist()
+        this.$swal({
+          icon: 'success',
+          title: '成功',
+          text: '新增成功'
+        })
+        this.resetPlaylistForm()
+      } catch (error) {
+        console.log(error)
+        this.$swal({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response.data.message
+        })
+      }
+    },
+    resetPlaylistForm () {
+      this.dialogCreate = false
+      this.$refs.form.resetValidation()
+      this.form = {
+        title: '',
+        description: ''
+      }
+    },
+    // 播放音樂
+    play (index) {
+      this.playingSong = {
+        _id: this.userTracks[index]._id,
+        title: this.userTracks[index].title,
+        artist: this.userTracks[index].artist.userName,
+        file: this.userTracks[index].file,
+        cover: this.userTracks[index].cover
+      }
+      this.$store.commit('track/play', this.playingSong)
+    },
     getCoverFiles (event) {
       this.form.cover = event[0].file
     },
@@ -371,6 +565,7 @@ export default {
     }
   },
   async created () {
+    this.getUserPlaylist()
     if (this.user._id === this.$route.params.id) {
       this.getPrivate()
     } else {

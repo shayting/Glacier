@@ -15,8 +15,8 @@
           <div class="ms-2 text-body-2">{{ item.artist.userName }}</div>
         </div>
         <div class="d-flex xyCenter" style="width: 130px;">
-          <v-btn icon color="white" class="mx-1">
-            <v-icon medium @click="play(index)">mdi-play-circle</v-icon>
+          <v-btn icon color="white" class="mx-1" @click="play(index)">
+            <v-icon medium>mdi-play-circle</v-icon>
           </v-btn>
           <v-btn
             outlined
@@ -163,6 +163,7 @@ export default {
     }
   }),
   methods: {
+    // 播放音樂
     play (index) {
       this.playingSong = {
         _id: this.sortItems[index]._id,
