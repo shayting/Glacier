@@ -4,30 +4,30 @@
       <div class="text-h5 mb-2 white--text">類別</div>
       <!-- 類別chips -->
       <v-chip-group active-class="light-blue--text" column dark>
-        <v-chip @click="filter = ''">All</v-chip>
-        <v-chip @click="filter = 'Rock'">Rock</v-chip>
-        <v-chip @click="filter = 'Hip hop / Rap'">Hip hop / Rap</v-chip>
-        <v-chip @click="filter = 'Electronic'">Electronic</v-chip>
-        <v-chip @click="filter = 'Pop'">Pop</v-chip>
-        <v-chip @click="filter = 'Folk'">Folk</v-chip>
-        <v-chip @click="filter = 'Alternative'">Alternative</v-chip>
-        <v-chip @click="filter = 'Post rock'">Post rock</v-chip>
-        <v-chip @click="filter = 'Metal'">Metal</v-chip>
-        <v-chip @click="filter = 'Reggae / Funk'">Reggae / Funk</v-chip>
-        <v-chip @click="filter = 'R&B / Soul'">R&B / Soul</v-chip>
-        <v-chip @click="filter = 'Classic'">Classic</v-chip>
-        <v-chip @click="filter = 'Blues'">Blues</v-chip>
-        <v-chip @click="filter = 'Jazz'">Jazz</v-chip>
-        <v-chip @click="filter = 'Punk'">Punk</v-chip>
+        <v-chip @click="musicType('')">All</v-chip>
+        <v-chip @click="musicType('Rock')">Rock</v-chip>
+        <v-chip @click="musicType('Hip hop / Rap')">Hip hop / Rap</v-chip>
+        <v-chip @click="musicType('Electronic')">Electronic</v-chip>
+        <v-chip @click="musicType('Pop')">Pop</v-chip>
+        <v-chip @click="musicType('Folk')">Folk</v-chip>
+        <v-chip @click="musicType('Alternative')">Alternative</v-chip>
+        <v-chip @click="musicType('Post rock')">Post rock</v-chip>
+        <v-chip @click="musicType('Metal')">Metal</v-chip>
+        <v-chip @click="musicType('Reggae / Funk')">Reggae / Funk</v-chip>
+        <v-chip @click="musicType('R&B / Soul')">R&B / Soul</v-chip>
+        <v-chip @click="musicType('Classic')">Classic</v-chip>
+        <v-chip @click="musicType('Blues')">Blues</v-chip>
+        <v-chip @click="musicType('Jazz')">Jazz</v-chip>
+        <v-chip @click="musicType('Punk')">Punk</v-chip>
       </v-chip-group>
     </v-sheet>
     <!-- 歌曲 list -->
     <v-sheet color="secondary" min-height="800" class="pa-4 discover-list" rounded>
       <ul class="white--text">
         <li
-          class="d-flex align-center pa-2"
+          class="d-flex align-center pa-2 discover-list-item"
           style="height:80px;"
-          v-for="(track, index) in filterItems"
+          v-for="(track, index) in sliceitems"
           :key="index"
         >
           <div class="text-h6 instantNum">{{ index + 1 }}</div>
@@ -53,13 +53,22 @@
               <v-icon v-else small>mdi-cards-heart</v-icon>
               <div class="ms-2">{{ track.likes.length }}</div>
             </v-btn>
-            <v-btn icon color="white" class="mx-1" @click="getSongId(track._id)" >
+            <v-btn icon color="white" class="mx-1" @click="getSongId(track._id)">
               <v-icon medium>mdi-plus</v-icon>
             </v-btn>
           </div>
         </li>
       </ul>
-      <div v-if="filterItems.length === 0" class="white--text text-center">目前沒有此類型音樂</div>
+      <div v-if="filterItems.length === 0" class="white--text text-center text-h6">目前沒有此類型音樂</div>
+      <div class="text-center my-4 discover-page">
+        <v-pagination
+          v-model="page"
+          :length="Math.ceil(filterItems.length / 15)"
+          circle
+          dark
+          color="secondary"
+        ></v-pagination>
+      </div>
     </v-sheet>
     <!-- 加入歌單dialog -->
     <v-dialog v-model="dialogAdd" persistent max-width="500">
@@ -68,16 +77,24 @@
         <v-divider></v-divider>
         <v-card-text class="py-10">
           <v-form ref="form">
-          <v-select :items="items" label="歌單名稱" outlined v-model="seletedPlaylist" :rules="titleRule"></v-select>
+            <v-select
+              :items="items"
+              label="歌單名稱"
+              outlined
+              v-model="seletedPlaylist"
+              :rules="titleRule"
+            ></v-select>
           </v-form>
         </v-card-text>
-        <v-card-text>
-          <div class="mb-2">沒有適合的歌單？</div>
-          <v-btn block color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
-        </v-card-text>
-        <v-card-text>
-          <v-btn @click="dialogAdd = false">取消</v-btn>
-          <v-btn color="success" @click="addToPlaylist">確定</v-btn>
+        <v-card-text class="d-flex justify-space-between">
+          <div>
+            <div class="mb-2">沒有適合的歌單？</div>
+            <v-btn color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
+          </div>
+          <div class="mt-7">
+            <v-btn @click="dialogAdd = false">取消</v-btn>
+            <v-btn color="success ms-2" @click="addToPlaylist">確定</v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -113,9 +130,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- <div class="text-center my-4">
-      <v-pagination v-model="page" :length="4" circle dark color="secondary"></v-pagination>
-    </div> -->
     <BackToTop></BackToTop>
   </div>
 </template>
@@ -285,6 +299,15 @@ export default {
           text: error.response.data.message
         })
       }
+    },
+    // 換頁後到最頂部
+    top () {
+      window.scrollTo({ top: 0 })
+    },
+    musicType (type) {
+      this.filter = type
+      this.page = 1
+      this.top()
     }
   },
   computed: {
@@ -301,6 +324,12 @@ export default {
         myLikes.push(this.user.likes[i].tracks)
       }
       return myLikes
+    },
+    sliceitems () {
+      return this.filterItems.slice(
+        (this.page - 1) * 15,
+        (this.page - 1) * 15 + 15
+      )
     }
   },
   async created () {

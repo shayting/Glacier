@@ -1,8 +1,8 @@
-#discover{
+#discover {
   @include md {
     display: flex;
   }
-  .chips-sheet{
+  .chips-sheet {
     width: 100%;
     margin-bottom: 20px;
     @include md {
@@ -10,14 +10,14 @@
       position: fixed;
     }
   }
-  .instantNum{
+  .instantNum {
     width: 30px;
   }
-  .discover-cover{
+  .discover-cover {
     width: 60px;
     height: 60px;
   }
-  .discover-list{
+  .discover-list {
     @include md {
       width: 75%;
       margin-left: auto;
@@ -25,8 +25,8 @@
     @include lg {
       width: 70%;
     }
-    li:hover{
-      background: rgba(255,255,255,0.2);
+    .discover-list-item:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
   }
 }

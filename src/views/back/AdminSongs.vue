@@ -34,7 +34,8 @@ export default {
           sortable: false,
           value: 'title'
         },
-        { text: '作者名稱', value: 'artist' },
+        { text: '音樂ID', value: '_id' },
+        { text: '作者名稱', value: 'artist.userName' },
         { text: '音樂類型', value: 'type' },
         { text: '隱私狀態', value: 'private' }
       ],

@@ -1,11 +1,12 @@
 <template>
   <div
+  id="rank"
     class="instantRank my-12 d-flex flex-column justify-center pb-16 my-container"
     style="background-color: #1e1e1e; color:white; position: relative; "
   >
-    <ul>
+    <ul id="rank-list">
       <li class="py-4 fs-20">即時熱門</li>
-      <li v-for="(item, index) in sortItems" :key="index" class="d-flex align-center">
+      <li v-for="(item, index) in sliceitems" :key="index" class="d-flex align-center">
         <div class="instantNum">{{ index + 1 }}</div>
         <router-link :to="'/track/' + item._id">
           <img :src="item.cover" />
@@ -35,6 +36,16 @@
         </div>
       </li>
     </ul>
+    <div class="text-center my-4">
+      <v-pagination
+        v-model="page"
+        :length="Math.ceil(sortItems.length / 15)"
+        circle
+        dark
+        color="secondary"
+      ></v-pagination>
+    </div>
+
     <!-- 加入歌單dialog -->
     <v-dialog v-model="dialogAdd" persistent max-width="500">
       <v-card>
@@ -51,13 +62,15 @@
             ></v-select>
           </v-form>
         </v-card-text>
-        <v-card-text>
-          <div class="mb-2">沒有適合的歌單？</div>
-          <v-btn block color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
-        </v-card-text>
-        <v-card-text>
-          <v-btn @click="dialogAdd = false">取消</v-btn>
-          <v-btn color="success" @click="addToPlaylist">確定</v-btn>
+        <v-card-text class="d-flex justify-space-between">
+          <div>
+            <div class="mb-2">沒有適合的歌單？</div>
+            <v-btn color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
+          </div>
+          <div class="mt-7">
+            <v-btn @click="dialogAdd = false">取消</v-btn>
+            <v-btn color="success ms-2" @click="addToPlaylist">確定</v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -105,6 +118,7 @@ export default {
     BackToTop
   },
   data: () => ({
+    page: 1,
     publicTracks: [],
     dialogAdd: false,
     dialogCreate: false,
@@ -274,6 +288,12 @@ export default {
         return b.likes.length - a.likes.length
       })
     },
+    sliceitems () {
+      return this.sortItems.slice(
+        (this.page - 1) * 15,
+        (this.page - 1) * 15 + 15
+      )
+    },
     // 判斷是否按過讚
     myLikes () {
       const myLikes = []
@@ -289,38 +309,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.instantRank {
-  background: #ffffff;
-  padding-bottom: 20px;
-  border-radius: 4px;
-  ul {
-    padding: 0;
-  }
-
-  li {
-    border-bottom: 1px solid #ccc;
-    padding: 5px 30px;
-  }
-  li ~ li {
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    .instantNum {
-      width: 30px;
-    }
-    &:nth-child(2),
-    &:nth-child(3),
-    &:nth-child(4) {
-      font-size: 20px;
-      img {
-        width: 80px;
-      }
-    }
-  }
-  img {
-    width: 60px;
-  }
-}
-</style>

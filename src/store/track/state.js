@@ -1,7 +1,7 @@
 export default () => {
   return {
     title: 'glacier',
-    artist: 'glacier',
+    artist: '-',
     src: 'glacier',
     pic: 'glacier',
     _id: '',

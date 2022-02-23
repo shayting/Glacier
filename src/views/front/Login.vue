@@ -32,11 +32,13 @@
                     <v-text-field
                       class="my-2"
                       v-model="loginForm.password"
+                      :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                       :error-messages="loginPasswordErrors"
                       :counter="20"
                       label="密碼"
-                      type="password"
+                      :type="show ? 'text' : 'password'"
                       required
+                      @click:append="show = !show"
                       @input="$v.loginForm.password.$touch()"
                       @blur="$v.loginForm.password.$touch()"
                     ></v-text-field>
@@ -143,6 +145,7 @@ export default {
     }
   },
   data: () => ({
+    show: false,
     step: 1,
     registerForm: {
       account: '',

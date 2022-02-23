@@ -77,13 +77,15 @@
             ></v-select>
           </v-form>
         </v-card-text>
-        <v-card-text>
-          <div class="mb-2">沒有適合的歌單？</div>
-          <v-btn block color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
-        </v-card-text>
-        <v-card-text>
-          <v-btn @click="dialogAdd = false">取消</v-btn>
-          <v-btn color="success" @click="addToPlaylist">確定</v-btn>
+        <v-card-text class="d-flex justify-space-between">
+          <div>
+            <div class="mb-2">沒有適合的歌單？</div>
+            <v-btn color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
+          </div>
+          <div class="mt-7">
+            <v-btn @click="dialogAdd = false">取消</v-btn>
+            <v-btn color="success ms-2" @click="addToPlaylist">確定</v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>

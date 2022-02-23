@@ -1,6 +1,36 @@
 .aplayer{
+  margin: 0!important;
   width: 100%!important;
   position: fixed!important;
-  z-index: 9999;
-  bottom:-4px;
+  background-color: #292b2c!important;
+  z-index: 5;
+  bottom:0;
+  .aplayer-title{
+    color: $primary!important;
+  }
+  .aplayer-author{
+    margin-left: 10px;
+  }
+  .aplayer-pic{
+    background-color: $theme-bg!important;
+  }
+  // .aplayer-bar-wrap{
+  //   padding: 10px 0!important;
+  // }
+  .aplayer-played{
+    background-color:$primary!important;
+  }
+  .aplayer-loaded{
+    background-color: grey!important;
+  }
+  .aplayer-thumb{
+    border-color:$primary!important;
+    background-color: $primary!important;
+  }
+  .aplayer-volume{
+    background-color: $primary!important;
+  }
+  .aplayer-info{
+    padding: 8px 20px!important;
+  }
 }

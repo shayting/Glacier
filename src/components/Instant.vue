@@ -7,9 +7,19 @@
       <li class="py-4 fs-20">Top 10</li>
       <li v-for="(item, index) in sortItems" :key="index" class="d-flex align-center">
         <div class="instantNum">{{ index + 1 }}</div>
-        <router-link :to="'/track/' + item._id">
-          <img :src="item.cover" />
+        <router-link :to="'/track/' + item._id" class="d-none d-sm-flex align-center">
+          <img :src="item.cover"/>
         </router-link>
+        <!-- <v-hover>
+          <template v-slot:default="{ hover }">
+            <img :src="item.cover"/>
+            <v-fade-transition>
+                <v-overlay v-if="hover" absolute color="#d7f3f5">
+                  <v-icon x-large @click="play(track._id)">mdi-play-circle-outline</v-icon>
+                </v-overlay>
+              </v-fade-transition>
+          </template>
+        </v-hover> -->
         <div class="me-auto">
           <div class="ms-2">{{ item.title }}</div>
           <div class="ms-2 text-body-2">{{ item.artist.userName }}</div>
@@ -22,14 +32,14 @@
             outlined
             rounded
             :color="myLikes.includes(item._id) ? 'red' : 'white'"
-            class="mx-1"
+            class="mx-1 d-none d-sm-block"
             @click="likes(item._id)"
           >
             <v-icon v-if="!myLikes.includes(item._id)" small>mdi-cards-heart-outline</v-icon>
             <v-icon v-else small>mdi-cards-heart</v-icon>
-            <div class="ms-2">{{ item.likes.length }}</div>
+            <div class="ms-2 d-md-block">{{ item.likes.length }}</div>
           </v-btn>
-          <v-btn icon color="white" class="mx-1" @click="getSongId(item._id)">
+          <v-btn icon color="white" class="mx-1 d-none d-sm-block" @click="getSongId(item._id)">
             <v-icon medium>mdi-plus</v-icon>
           </v-btn>
         </div>
@@ -42,16 +52,24 @@
         <v-divider></v-divider>
         <v-card-text class="py-10">
           <v-form ref="form">
-          <v-select :items="items" label="歌單名稱" outlined v-model="seletedPlaylist" :rules="titleRule"></v-select>
+            <v-select
+              :items="items"
+              label="歌單名稱"
+              outlined
+              v-model="seletedPlaylist"
+              :rules="titleRule"
+            ></v-select>
           </v-form>
         </v-card-text>
-        <v-card-text>
-          <div class="mb-2">沒有適合的歌單？</div>
-          <v-btn block color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
-        </v-card-text>
-        <v-card-text>
-          <v-btn @click="dialogAdd = false">取消</v-btn>
-          <v-btn color="success" @click="addToPlaylist">確定</v-btn>
+        <v-card-text class="d-flex justify-space-between">
+          <div>
+            <div class="mb-2">沒有適合的歌單？</div>
+            <v-btn color="primary" @click="dialogAdd = false, dialogCreate = true">建立歌單</v-btn>
+          </div>
+          <div class="mt-7">
+            <v-btn @click="dialogAdd = false">取消</v-btn>
+            <v-btn color="success ms-2" @click="addToPlaylist">確定</v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -82,8 +100,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="secondary" @click="resetForm" text>Cancel</v-btn>
-          <v-btn color="primary" @click="createPlaylist" text type="submit">Save</v-btn>
+          <v-btn color="secondary" @click="resetForm" text>取消</v-btn>
+          <v-btn color="primary" @click="createPlaylist" text type="submit">確認</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -124,7 +142,7 @@
     &:nth-child(4) {
       font-size: 20px;
       img {
-        width: 80px;
+        width: 100px;
       }
     }
   }

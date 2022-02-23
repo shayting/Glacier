@@ -21,7 +21,7 @@ export default {
     return {
       music: {
         title: 'glacier',
-        artist: 'glacier',
+        artist: '-',
         src: 'glacier',
         pic: 'glacier',
         _id: ''
