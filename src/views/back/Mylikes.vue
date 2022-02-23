@@ -11,7 +11,7 @@
             <div class="d-flex flex-no-wrap justify-space-between">
               <div>
                 <v-card-title
-                  class="text-h5"
+                  class="text-h6"
                 >{{item.tracks.title}}</v-card-title>
 
                 <v-card-subtitle v-if="item.tracks.artist.userName">{{item.tracks.artist.userName}}</v-card-subtitle>

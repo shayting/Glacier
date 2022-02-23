@@ -1,6 +1,7 @@
 
 <template>
   <div class="my-container my-10">
+    <loading :active.sync="isLoading" color="#d7f3f5"></loading>
     <v-card
       elevation="2"
       min-height="500"
@@ -31,6 +32,7 @@
                 <v-row class="px-10">
                   <v-col cols="6">
                     <file-pond
+                      ref="pond2"
                       name="cover"
                       label-idle="點擊或拖曳上傳封面"
                       allow-multiple="false"
@@ -42,6 +44,7 @@
                   </v-col>
                   <v-col cols="6">
                     <file-pond
+                      ref="pond"
                       name="track"
                       label-idle="點擊或拖曳上傳音樂"
                       allow-multiple="false"
@@ -235,6 +238,7 @@
 export default {
   data () {
     return {
+      isLoading: false,
       valid: true,
       uploadRule: [
         v => !!v || '必填欄位'
@@ -407,6 +411,7 @@ export default {
       }
       // 停用送出按鈕
       this.modalSubmitting = true
+      this.isLoading = true
       // 建立formdata物件
       const fd = new FormData()
       for (const key in this.form) {
@@ -429,8 +434,8 @@ export default {
             }
           })
         }
+        this.isLoading = false
         this.getPrivate()
-        this.dialog = false
         this.$swal({
           icon: 'success',
           title: '成功',
@@ -444,7 +449,23 @@ export default {
           text: error.response.data.message
         })
       }
+      this.dialog = false
       this.modalSubmitting = false
+      this.$refs.form.resetValidation()
+      this.form = {
+        title: '',
+        private: false,
+        type: '',
+        description: '',
+        lyric: '',
+        cover: null,
+        file: null,
+        uploadDate: Date.now(),
+        _id: '',
+        index: -1
+      }
+      this.$refs.pond.removeFile()
+      this.$refs.pond2.removeFile()
     },
     resetForm () {
       if (this.modalSubmitting) {

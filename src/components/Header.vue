@@ -7,27 +7,27 @@
             <v-img width="35" src="@/assets/image/glacier-logo.png"></v-img>
           </router-link>
         </div>
-        <div class="menu xyCenter d-none d-md-flex">
+        <div class="menu xyCenter d-none d-sm-flex">
           <ul class="menu-list d-flex px-2">
-            <li class="px-4 text-h6">
+            <li class="px-3 text-h6">
               <router-link to="/discover">Discover</router-link>
             </li>
-            <li class="px-4 text-h6">
+            <li class="px-3 text-h6">
               <router-link to="/ranks">Rank</router-link>
             </li>
-            <li class="px-4 text-h6">
+            <li class="px-3 text-h6">
               <router-link to="/playlists">Playlists</router-link>
             </li>
-            <li class="px-4 text-h6">
+            <li class="px-3 text-h6">
               <router-link to="/events">Events</router-link>
             </li>
           </ul>
         </div>
         <div class="nav-icon d-flex">
-          <div>
+          <div class="d-none d-lg-block">
             <input type="text" placeholder="search" class="input-style" />
           </div>
-          <v-icon class="mx-2">mdi-magnify</v-icon>
+          <v-icon class="mx-2 d-none d-lg-block">mdi-magnify</v-icon>
           <!-- 沒有登入 -->
           <v-btn
             v-if="!user.isLogin"

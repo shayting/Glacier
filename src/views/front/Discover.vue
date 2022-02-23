@@ -30,8 +30,8 @@
           v-for="(track, index) in sliceitems"
           :key="index"
         >
-          <div class="text-h6 instantNum">{{ index + 1 }}</div>
-          <router-link :to="'/track/' + track._id">
+          <div class="text-h6 instantNum">{{ (page-1) * 15 + index + 1 }}</div>
+          <router-link :to="'/track/' + track._id" class="xyCenter">
             <img class="ms-2 discover-cover" :src="track.cover" />
           </router-link>
           <div class="me-auto ms-6">

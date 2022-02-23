@@ -21,7 +21,9 @@
               :key="song._id"
             >
               <div class="text-h6">{{ index + 1 }}</div>
-              <img class="ms-2" :src="song.song.cover" />
+              <router-link :to="'/track/' + song.song._id" class="d-block">
+              <v-img width="80px" class="ms-2" :src="song.song.cover" />
+              </router-link>
               <div class="me-auto ms-6">
                 <div class="text-h6">{{ song.song.title }}</div>
                 <div class="text-body-2">{{ song.song.artist.userName }}</div>

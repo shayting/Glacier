@@ -7,8 +7,8 @@
     <ul id="rank-list">
       <li class="py-4 fs-20">即時熱門</li>
       <li v-for="(item, index) in sliceitems" :key="index" class="d-flex align-center">
-        <div class="instantNum">{{ index + 1 }}</div>
-        <router-link :to="'/track/' + item._id">
+        <div class="instantNum">{{ (page-1) * 15 + index + 1  }}</div>
+        <router-link :to="'/track/' + item._id" class="xyCenter">
           <img :src="item.cover" />
         </router-link>
         <div class="me-auto">
@@ -36,6 +36,7 @@
         </div>
       </li>
     </ul>
+    <!-- 頁碼 -->
     <div class="text-center my-4">
       <v-pagination
         v-model="page"
