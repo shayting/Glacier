@@ -21,6 +21,7 @@ header{
   li {
     a{
       color:$primary!important;
+      font-size: 1.2rem!important;
     }
     &:hover::after {
       transform: scaleX(1);

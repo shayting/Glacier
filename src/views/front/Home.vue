@@ -33,7 +33,7 @@
 import BannerCarousel from '../../components/BannerCarousel.vue'
 import DaySong from '../../components/DaySong.vue'
 import Instant from '../../components/Instant.vue'
-import HomeList from '../../components/HomeList.vue'
+import HomeList from '../../components/HomePlaylist.vue'
 import HomeEvent from '../../components/HomeEvent.vue'
 
 export default {

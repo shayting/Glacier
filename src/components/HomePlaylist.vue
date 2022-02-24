@@ -1,16 +1,31 @@
 <template>
   <div id="homePlaylist" class="my-10">
     <div class="white--text text-h5 text-center mb-10">推薦歌單</div>
-      <v-row>
-        <v-col cols="3" v-for="item in playlists" :key="item._id">
-          <v-card height="320" :to="'/playlist/' + item._id">
-            <v-img height="200px" :src="item.cover">
-            </v-img>
-            <v-card-title>{{item.title}}</v-card-title>
-            <v-card-text>{{item.description}}</v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
+    <v-row>
+      <v-col
+        class="px-16 px-md-2"
+        cols="12"
+        sm="6"
+        md="3"
+        v-for="item in playlists"
+        :key="item._id"
+      >
+        <kinesis-container>
+          <kinesis-element :strength="10" type="depth">
+            <v-card :to="'/playlist/' + item._id" color="transparent" class="pb-2">
+              <div class="homeList-img pa-6">
+                <v-img :src="item.cover"></v-img>
+              </div>
+              <div class="homeList-title white--text text-h6 text-center mb-2">{{ item.title }}</div>
+              <div class="homeList-descrition grey--text text-center">{{ item.description }}</div>
+              <div
+                class="homeList-descrition grey--text text-center"
+              >published on {{ item.createDate }}</div>
+            </v-card>
+          </kinesis-element>
+        </kinesis-container>
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script>

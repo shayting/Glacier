@@ -12,6 +12,7 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import VueLoading from 'vue-loading-overlay'
 import Aplayer from 'vue-aplayer'
+import { KinesisContainer, KinesisElement } from 'vue-kinesis'
 
 import mixin from './mixin.js'
 
@@ -34,6 +35,8 @@ Vue.component('FilePond', vueFilePond(
   FilePondPluginFileValidateType,
   FilePondPluginImagePreview
 ))
+Vue.component('kinesis-container', KinesisContainer)
+Vue.component('kinesis-element', KinesisElement)
 
 new Vue({
   router,

@@ -9,35 +9,35 @@
         </div>
         <div class="menu xyCenter d-none d-sm-flex">
           <ul class="menu-list d-flex px-2">
-            <li class="px-3 text-h6">
+            <li class="px-2 px-md-3 text-h6">
               <router-link to="/discover">Discover</router-link>
             </li>
-            <li class="px-3 text-h6">
+            <li class="px-2 px-md-3 text-h6">
               <router-link to="/ranks">Rank</router-link>
             </li>
-            <li class="px-3 text-h6">
+            <li class="px-2 px-md-3 text-h6">
               <router-link to="/playlists">Playlists</router-link>
             </li>
-            <li class="px-3 text-h6">
+            <li class="px-2 px-md-3 text-h6">
               <router-link to="/events">Events</router-link>
             </li>
           </ul>
         </div>
         <div class="nav-icon d-flex">
-          <div class="d-none d-lg-block">
+          <div class="d-none d-md-block">
             <input type="text" placeholder="search" class="input-style" />
           </div>
-          <v-icon class="mx-2 d-none d-lg-block">mdi-magnify</v-icon>
+          <v-icon class="mx-2 d-none d-md-block align-self-center">mdi-magnify</v-icon>
           <!-- 沒有登入 -->
           <v-btn
             v-if="!user.isLogin"
             to="/login"
             elevation="1"
-            class="ms-4 theme-bg loginBtn"
+            class="ms-md-4 theme-bg loginBtn"
           >Log in</v-btn>
           <!-- 一般會員已登入 -->
           <div v-if="user.isLogin && user.role === 0">
-            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">
+            <v-btn elevation="1" class="ms-md-4 theme-bg loginBtn" @click="logout">
             <v-icon color="black">mdi-logout-variant</v-icon>
             </v-btn>
             <v-btn
@@ -55,10 +55,12 @@
           </div>
           <!-- 管理員已登入 -->
           <div v-if="user.isLogin && user.role === 1">
-            <v-btn elevation="1" class="ms-4 theme-bg loginBtn" @click="logout">
+            <v-btn elevation="1" class="ms-md-4 theme-bg loginBtn" @click="logout">
               <v-icon color="black">mdi-logout-variant</v-icon>
             </v-btn>
-            <v-btn to="/back/admin" elevation="1" class="ms-4">Admin</v-btn>
+            <v-btn to="/back/admin" elevation="1" class="ms-md-4" color="teal">
+              <v-icon>mdi-head-minus</v-icon>
+            </v-btn>
           </div>
           <!-- 漢堡 -->
           <v-icon class="mx-2 hamburger d-md-none" @click.stop="drawer = !drawer">mdi-menu</v-icon>

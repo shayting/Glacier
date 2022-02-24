@@ -116,12 +116,14 @@
     </v-dialog>
     <router-link to="ranks" style="display: block;">
       <v-btn
-        class="theme-btn mx-auto mt-5"
+        class="mx-auto mt-5"
         elevation="2"
         style="width: 100px;"
         absolute
         bottom
         right
+        color="white"
+        outlined
       >more</v-btn>
     </router-link>
   </div>
