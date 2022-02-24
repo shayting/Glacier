@@ -21,6 +21,7 @@
                 <v-row>
                   <v-col cols="12">
                     <file-pond
+                      ref="pond"
                       name="cover"
                       label-idle="點擊或拖曳上傳封面"
                       allow-multiple="false"
@@ -127,7 +128,9 @@ export default {
   },
   methods: {
     getCoverFiles (event) {
-      this.form.cover = event[0].file
+      if (event[0]) {
+        this.form.cover = event[0].file
+      }
     },
     // 取得adminplaylists
     async getAdminPlaylists () {
@@ -210,6 +213,7 @@ export default {
         }
         this.getAdminPlaylists()
         this.resetForm()
+        this.$refs.pond.removeFile()
       } catch (error) {
         this.$swal({
           icon: 'error',

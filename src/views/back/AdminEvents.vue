@@ -22,6 +22,7 @@
                 <v-row>
                   <v-col cols="12">
                     <file-pond
+                      ref="pond"
                       name="cover"
                       label-idle="點擊或拖曳上傳封面"
                       allow-multiple="false"
@@ -154,7 +155,9 @@ export default {
   },
   methods: {
     getCoverFiles (event) {
-      this.form.cover = event[0].file
+      if (event[0]) {
+        this.form.cover = event[0].file
+      }
     },
     // 取得event
     async getAllEvents () {
@@ -231,6 +234,7 @@ export default {
           confirmButtonColor: '#4DB6AC'
         })
         this.resetForm()
+        this.$refs.pond.removeFile()
         this.getAllEvents()
       } catch (error) {
         this.$swal({

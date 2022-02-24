@@ -118,7 +118,7 @@
               <!-- 用戶名 -->
               <div v-if="userPage.userName" class="ma-10 text-h3">{{ userPage.userName }}</div>
               <div v-else class="ma-10 text-h3">{{ userPage.account }}</div>
-              <div class="mx-10 text-wrapper">{{ splitText }}</div>
+              <div v-if="userPage.description" class="mx-10 text-wrapper">{{ splitText }}</div>
             </div>
             <div class="d-flex my-10">
               <!-- 追蹤modal -->
@@ -306,7 +306,9 @@ export default {
   },
   methods: {
     getAvatar (event) {
-      this.form.cover = event[0].file
+      if (event[0]) {
+        this.form.cover = event[0].file
+      }
     },
     async submitModal () {
       // 停用送出按鈕
@@ -479,10 +481,7 @@ export default {
   computed: {
     // 如果有抓到才去轉換
     splitText () {
-      if (this.userPage.description) {
-        return this.userPage.description.split(/[\r\n]/)[0] + '...'
-      }
-      return undefined
+      return this.userPage.description.split(/[\r\n]/)[0] + '...'
     },
     randomAvatar () {
       if (this.userPage.avatar === null) {

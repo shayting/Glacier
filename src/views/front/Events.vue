@@ -48,7 +48,6 @@ export default {
       try {
         const { data } = await this.api.get('/events/all')
         this.events = data.result
-        console.log(this.events)
       } catch (error) {
         this.$swal({
           icon: 'error',

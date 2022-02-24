@@ -395,10 +395,14 @@ export default {
       this.$store.commit('track/play', this.playingSong)
     },
     getCoverFiles (event) {
-      this.form.cover = event[0].file
+      if (event[0]) {
+        this.form.cover = event[0].file
+      }
     },
     getFileFiles (event) {
-      this.form.file = event[0].file
+      if (event[0]) {
+        this.form.file = event[0].file
+      }
     },
     async submitModal () {
       if ((this.form._id.length === 0) && (this.form.cover === null || this.form.file === null || !this.valid)) {

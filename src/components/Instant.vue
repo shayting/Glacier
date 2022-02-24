@@ -10,21 +10,25 @@
         <router-link :to="'/track/' + item._id" class="d-none d-sm-flex align-center">
           <img :src="item.cover"/>
         </router-link>
-        <!-- <v-hover>
+        <!-- 手機版音樂封面 -->
+        <div class="d-block d-sm-none">
+          <v-hover>
           <template v-slot:default="{ hover }">
-            <img :src="item.cover"/>
-            <v-fade-transition>
+            <v-img width="80" :src="item.cover">
+              <v-fade-transition>
                 <v-overlay v-if="hover" absolute color="#d7f3f5">
-                  <v-icon x-large @click="play(track._id)">mdi-play-circle-outline</v-icon>
+                  <v-icon x-large @click="play(index)">mdi-play-circle-outline</v-icon>
                 </v-overlay>
               </v-fade-transition>
+            </v-img>
           </template>
-        </v-hover> -->
+        </v-hover>
+        </div>
         <div class="me-auto">
           <div class="ms-2">{{ item.title }}</div>
           <div class="ms-2 text-body-2">{{ item.artist.userName }}</div>
         </div>
-        <div class="d-flex xyCenter" style="width: 130px;">
+        <div class="d-none d-sm-flex xyCenter " style="width: 130px;">
           <v-btn icon color="white" class="mx-1" @click="play(index)">
             <v-icon medium>mdi-play-circle</v-icon>
           </v-btn>
@@ -32,16 +36,21 @@
             outlined
             rounded
             :color="myLikes.includes(item._id) ? 'red' : 'white'"
-            class="mx-1 d-none d-sm-block"
+            class="mx-1"
             @click="likes(item._id)"
           >
             <v-icon v-if="!myLikes.includes(item._id)" small>mdi-cards-heart-outline</v-icon>
             <v-icon v-else small>mdi-cards-heart</v-icon>
-            <div class="ms-2 d-md-block">{{ item.likes.length }}</div>
+            <div class="ms-2 d-sm-block">{{ item.likes.length }}</div>
           </v-btn>
-          <v-btn icon color="white" class="mx-1 d-none d-sm-block" @click="getSongId(item._id)">
+          <v-btn icon color="white" class="mx-1" @click="getSongId(item._id)">
             <v-icon medium>mdi-plus</v-icon>
           </v-btn>
+        </div>
+        <div class="d-sm-none">
+            <v-btn :to="'/track/' + item._id"  icon small color="grey">
+              <v-icon small>mdi-music-box-multiple</v-icon>
+            </v-btn>
         </div>
       </li>
     </ul>
@@ -155,6 +164,8 @@
 
 export default {
   data: () => ({
+    // ---- 播放overlay
+    overlay: false,
     publicTracks: [],
     dialogAdd: false,
     dialogCreate: false,

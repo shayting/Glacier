@@ -1,6 +1,5 @@
 // actions 執行非同步的function
 import { api } from '@/plugins/axios.js'
-import swal from 'sweetalert2'
 
 export const getLastSong = async ({ commit, state }) => {
   try {
@@ -15,11 +14,5 @@ export const getLastSong = async ({ commit, state }) => {
     commit('play', info)
   } catch (error) {
     console.log(error)
-    swal.fire({
-      icon: 'error',
-      title: '失敗',
-      text: error.response.data.message,
-      confirmButtonColor: '#4DB6AC'
-    })
   }
 }

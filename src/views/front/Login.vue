@@ -6,16 +6,16 @@
           <v-window v-model="step">
           <!-- 登入 -->
             <v-window-item :value="1">
-              <v-row align="center">
-                <v-col cols="6" class="pa-12 theme-btn xyCenter change-form">
+              <v-row class="center flex-column-reverse flex-sm-row">
+                <v-col cols="12" sm="6" class="pa-10 theme-btn xyCenter change-form">
                   <div class="xyCenter flex-column">
-                    <h3 class="text-center my-10">還沒有註冊嗎？</h3>
+                    <h3 class="text-center my-8">還沒有註冊嗎？</h3>
                     <v-card-actions class="xyCenter">
                       <v-btn outlined rounded width="100" color="blue-gray" @click="step++">註冊</v-btn>
                     </v-card-actions>
                   </div>
                 </v-col>
-                <v-col cols="6" class="pa-16">
+                <v-col cols="12" sm="6" class="pa-10 flex-sm-row xyCenter" style="width:100%">
                   <v-form @submit.prevent="login">
                     <h2>會員登入</h2>
                     <v-text-field
@@ -49,9 +49,9 @@
             </v-window-item>
             <!-- 註冊 -->
             <v-window-item :value="2">
-              <v-row align="center">
-                <v-col cols="6" class="pa-16">
-                  <v-form @submit.prevent="register">
+              <v-row class="flex-column flex-sm-row">
+                <v-col cols="12" sm="6" class="pa-16 align-center d-flex">
+                  <v-form @submit.prevent="register" style="width:100%;">
                     <h2>會員註冊</h2>
                     <v-text-field
                       class="my-2"
@@ -97,10 +97,10 @@
                       @input="$v.registerForm.confirmPassword.$touch()"
                       @blur="$v.registerForm.confirmPassword.$touch()"
                     ></v-text-field>
-                    <v-btn class="mr-4 mt-8 white--text" type="submit" rounded width="100" color="#66BB6A">註冊</v-btn>
+                    <v-btn class="mr-4 white--text" type="submit" rounded width="100" color="#66BB6A">註冊</v-btn>
                   </v-form>
                 </v-col>
-                <v-col cols="6" class="pa-12 theme-btn xyCenter change-form">
+                <v-col cols="12" sm="6" class="pa-16 theme-btn xyCenter change-form">
                   <div class="xyCenter flex-column">
                     <h3 class="text-center my-10">已經註冊過了？</h3>
                     <v-card-actions class="xyCenter">
@@ -210,11 +210,9 @@ export default {
   watch: {
     step (value) {
       if (value === 1) {
-        console.log(this.step)
         this.$router.replace({ params: { action: 'login' } }).catch(() => {})
         this.$v.registerForm.$reset()
       } else {
-        console.log(this.step)
         this.$router.replace({ params: { action: 'register' } }).catch(() => {})
         this.$v.loginForm.$reset()
       }

@@ -14,6 +14,9 @@
 </template>
 
 <script>
+import VConsole from 'vconsole'
+const vConsole = new VConsole()
+console.log(vConsole)
 
 export default {
   name: 'App',

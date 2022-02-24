@@ -1,46 +1,40 @@
 <template>
   <div id="playlists">
-    <div id="festival-playlist" class="example-3d py-10">
-      <div class=" text-center text-h4">特別企劃</div>
-      <swiper class="swiper" :options="swiperOption" style="width: 80%;">
-        <swiper-slide v-for="(item, index) in festivalPlaylists" :key="index" class="xyCenter">
-          <router-link
-            :to="'/playlist/' + item._id"
-            style="display: block;width:300px;height: 300px;"
-          >
-            <v-img
-              class="align-end"
-              height="300px"
-              width="300px"
-              :src="item.cover"
-              style="border-radius: 4px 4px 0 0 ;"
-            ></v-img>
-          </router-link>
-        </swiper-slide>
-        <div class="swiper-button-next" slot="button-next"></div>
-        <div class="swiper-button-prev" slot="button-prev"></div>
-      </swiper>
+    <div id="festival-playlist" class="py-16">
+      <div class="text-center text-h4 mt-10">特別企劃</div>
+      <div class="example-3d xyCenter">
+        <swiper class="swiper" :options="swiperOption" style="width: 80%;">
+          <swiper-slide v-for="(item, index) in festivalPlaylists" :key="index">
+            <router-link :to="'/playlist/' + item._id">
+              <v-img
+                class="align-end"
+                :src="item.cover"
+                style="border-radius: 4px 4px 0 0 ;"
+              ></v-img>
+            </router-link>
+          </swiper-slide>
+          <div class="swiper-button-next" slot="button-next"></div>
+          <div class="swiper-button-prev" slot="button-prev"></div>
+        </swiper>
+      </div>
     </div>
-    <div id="vibe-playlist" class="example-3d py-10">
+    <div id="vibe-playlist" class="py-16">
       <div class="white--text text-center text-h4">情境歌單</div>
-      <swiper class="swiper" :options="swiperOption" style="width: 80%;">
-        <swiper-slide v-for="(item, index) in vibePlaylists" :key="index" class="xyCenter">
-          <router-link
-            :to="'/playlist/' + item._id"
-            style="display: block;width:300px"
-          >
-            <v-img
-              class="align-end"
-              height="300px"
-              width="300px"
-              :src="item.cover"
-              style="border-radius: 4px 4px 0 0 ;"
-            ></v-img>
-          </router-link>
-        </swiper-slide>
-        <div class="swiper-button-next" slot="button-next"></div>
-        <div class="swiper-button-prev" slot="button-prev"></div>
-      </swiper>
+      <div class="example-3d xyCenter">
+        <swiper class="swiper" :options="swiperOption" style="width: 80%;">
+          <swiper-slide v-for="(item, index) in vibePlaylists" :key="index">
+            <router-link :to="'/playlist/' + item._id">
+              <v-img
+                class="align-end"
+                :src="item.cover"
+                style="border-radius: 4px 4px 0 0 ;"
+              ></v-img>
+            </router-link>
+          </swiper-slide>
+          <div class="swiper-button-next" slot="button-next"></div>
+          <div class="swiper-button-prev" slot="button-prev"></div>
+        </swiper>
+      </div>
     </div>
   </div>
 </template>
@@ -67,7 +61,6 @@ export default {
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
-        freeMode: true,
         coverflowEffect: {
           rotate: 50,
           stretch: 0,
@@ -145,12 +138,17 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
+    width: 300px !important;
     height: 300px;
     text-align: center;
     font-weight: bold;
     background-position: center;
     background-size: cover;
+    a{
+      display: block;
+      width:100%;
+      height:100%;
+    }
   }
 }
 </style>

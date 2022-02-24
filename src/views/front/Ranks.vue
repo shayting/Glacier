@@ -1,21 +1,35 @@
 <template>
   <div
-  id="rank"
-    class="instantRank my-12 d-flex flex-column justify-center pb-16 my-container"
+    id="rank"
+    class="my-12 d-flex flex-column justify-center pb-16 my-container"
     style="background-color: #1e1e1e; color:white; position: relative; "
   >
     <ul id="rank-list">
       <li class="py-4 fs-20">即時熱門</li>
       <li v-for="(item, index) in sliceitems" :key="index" class="d-flex align-center">
-        <div class="instantNum">{{ (page-1) * 15 + index + 1  }}</div>
-        <router-link :to="'/track/' + item._id" class="xyCenter">
+        <div class="instantNum">{{ (page - 1) * 15 + index + 1 }}</div>
+        <router-link :to="'/track/' + item._id" class="xyCenter d-none d-sm-flex">
           <img :src="item.cover" />
         </router-link>
+        <!-- 手機版音樂封面 -->
+        <div class="d-block d-sm-none">
+          <v-hover>
+            <template v-slot:default="{ hover }">
+              <v-img width="80" :src="item.cover">
+                <v-fade-transition>
+                  <v-overlay v-if="hover" absolute color="#d7f3f5">
+                    <v-icon x-large @click="play(index)">mdi-play-circle-outline</v-icon>
+                  </v-overlay>
+                </v-fade-transition>
+              </v-img>
+            </template>
+          </v-hover>
+        </div>
         <div class="me-auto">
           <div class="ms-2">{{ item.title }}</div>
           <div class="ms-2 text-body-2">{{ item.artist.userName }}</div>
         </div>
-        <div class="d-flex xyCenter" style="width: 130px;">
+        <div class="d-none d-sm-flex xyCenter" style="width: 130px;">
           <v-btn icon color="white" class="mx-1" @click="play(index)">
             <v-icon medium>mdi-play-circle</v-icon>
           </v-btn>
@@ -32,6 +46,11 @@
           </v-btn>
           <v-btn icon color="white" class="mx-1">
             <v-icon medium @click="getSongId(item._id)">mdi-plus</v-icon>
+          </v-btn>
+        </div>
+        <div class="d-sm-none">
+          <v-btn :to="'/track/' + item._id" icon small color="grey">
+            <v-icon small>mdi-music-box-multiple</v-icon>
           </v-btn>
         </div>
       </li>

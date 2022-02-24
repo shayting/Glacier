@@ -30,15 +30,34 @@
           v-for="(track, index) in sliceitems"
           :key="index"
         >
-          <div class="text-h6 instantNum">{{ (page-1) * 15 + index + 1 }}</div>
-          <router-link :to="'/track/' + track._id" class="xyCenter">
+          <div class="text-h6 instantNum">{{ (page - 1) * 15 + index + 1 }}</div>
+          <router-link :to="'/track/' + track._id" class="xyCenter d-none d-sm-flex">
             <img class="ms-2 discover-cover" :src="track.cover" />
           </router-link>
+          <!-- 手機版音樂封面 -->
+          <div class="d-block d-sm-none">
+            <v-hover>
+              <template v-slot:default="{ hover }">
+                <v-img width="70" :src="track.cover">
+                  <v-fade-transition>
+                    <v-overlay v-if="hover" absolute color="#d7f3f5">
+                      <v-icon x-large @click="play(index)">mdi-play-circle-outline</v-icon>
+                    </v-overlay>
+                  </v-fade-transition>
+                </v-img>
+              </template>
+            </v-hover>
+          </div>
           <div class="me-auto ms-6">
             <div class="text-h6">{{ track.title }}</div>
             <div class="text-body-2">{{ track.artist.userName }}</div>
           </div>
-          <div class="d-flex align-center">
+          <div class="d-sm-none">
+            <v-btn :to="'/track/' + track._id"  icon small color="grey">
+              <v-icon small>mdi-music-box-multiple</v-icon>
+            </v-btn>
+          </div>
+          <div class="d-none d-sm-flex align-center">
             <v-btn icon color="white" class="mx-1" @click="play(index)">
               <v-icon medium>mdi-play-circle</v-icon>
             </v-btn>
@@ -141,6 +160,8 @@ export default {
     BackToTop
   },
   data: () => ({
+    // ---- 播放overlay
+    overlay: false,
     page: 1,
     publicTracks: [],
     filter: '',
