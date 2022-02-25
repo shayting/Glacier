@@ -33,7 +33,7 @@
             v-if="!user.isLogin"
             to="/login"
             elevation="1"
-            class="ms-md-4 theme-bg loginBtn"
+            class="ms-2 ms-md-4 theme-bg loginBtn"
           >Log in</v-btn>
           <!-- 一般會員已登入 -->
           <div v-if="user.isLogin && user.role === 0">
@@ -45,11 +45,11 @@
               :to="'/back/user/' + user._id"
               color="amber"
               elevation="1"
-              class="ms-4"
+              class="ms-2 ms-md-4"
             >
               <v-icon color="black">mdi-account-circle</v-icon>
             </v-btn>
-            <v-btn dark color="secondary" v-else elevation="1" class="ms-4" disabled>
+            <v-btn dark color="secondary" v-else elevation="1" class="ms-2 ms-md-4" disabled>
               <v-icon>mdi-account-circle</v-icon>
             </v-btn>
           </div>
@@ -58,7 +58,7 @@
             <v-btn elevation="1" class="ms-md-4 theme-bg loginBtn" @click="logout">
               <v-icon color="black">mdi-logout-variant</v-icon>
             </v-btn>
-            <v-btn to="/back/admin" elevation="1" class="ms-md-4" color="teal">
+            <v-btn to="/back/admin" elevation="1" class="ms-2 ms-md-4" color="teal">
               <v-icon>mdi-head-minus</v-icon>
             </v-btn>
           </div>

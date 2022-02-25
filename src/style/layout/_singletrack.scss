@@ -7,6 +7,8 @@
   }
   .singleTrack-intro,.singleTrack-messages{
     min-height: 500px;
-    margin-bottom: 100px;
+    @include md {
+      margin-bottom: 100px;
+    }
   }
 }

@@ -1,4 +1,5 @@
 <template>
+<div id="bannerCarousel">
   <swiper ref="mySwiper" :options="swiperOptions" :breakpoints="swiperOptions.breakpoints">
     <swiper-slide v-for="banner in banners" :key="banner._id">
       <img :src="banner.bannerImage" />
@@ -7,6 +8,7 @@
     <div class="swiper-button-next" slot="button-next"></div>
     <div class="swiper-button-prev" slot="button-prev"></div>
   </swiper>
+</div>
 </template>
 
 <script>

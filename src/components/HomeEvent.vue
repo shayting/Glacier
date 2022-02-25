@@ -1,9 +1,9 @@
 <template>
-  <div id="homeEvent" class="my-12">
-    <div class="fs-24 text-center white--text">近期活動</div>
-    <swiper class="swiper" :options="swiperOption" style="width: 100%;">
+  <div id="homeEvent">
+    <div class="fs-24 text-center white--text my-10">近期活動</div>
+    <swiper class="swiper" :options="swiperOption" style="width: 100%;height: 500px;">
       <swiper-slide v-for="(item,index) in events" :key="index" class="xyCenter">
-        <v-card class="mx-auto event-card" width="500" style="position: relative;" to="/events">
+        <v-card class="mx-auto event-card" width="800" style="position: relative;" to="/events" color="transparent">
         <div>
           <v-img
             class="align-end"
@@ -14,10 +14,10 @@
             <v-card-text><v-chip label color="#d7f3f5">{{item.performer}}</v-chip></v-card-text>
           </v-img>
         </div>
-          <v-card-title>{{item.title}}</v-card-title>
-          <v-card-subtitle class="pb-0">{{ item.date }}</v-card-subtitle>
+          <v-card-title class="white--text">{{item.title}}</v-card-title>
+          <v-card-subtitle class="pb-0 grey--text">{{ item.date }}</v-card-subtitle>
 
-          <v-card-text class="text--primary">
+          <v-card-text class="white--text">
             <div>{{ item.place }}</div>
           </v-card-text>
 
@@ -28,6 +28,18 @@
     </swiper>
   </div>
 </template>
+
+<style lang="scss">
+  #homeEvent{
+    margin-bottom: 100px;
+    .swiper-button-next{
+      transform: rotate(90deg) !important;
+    }
+    .swiper-button-prev{
+      transform: rotate(90deg) !important;
+    }
+  }
+</style>
 
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
@@ -44,28 +56,13 @@ export default {
     return {
       events: [],
       swiperOption: {
-        freeMode: true,
+        direction: 'vertical',
         autoplay: true,
+        slidesPerView: 1,
+        allowTouchMove: false,
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev'
-        },
-        breakpoints: {
-          // when window width is >= 320px
-          320: {
-            slidesPerView: 1,
-            spaceBetween: 10
-          },
-          // when window width is >= 480px
-          480: {
-            slidesPerView: 1,
-            spaceBetween: 20
-          },
-          // when window width is >= 640px
-          920: {
-            slidesPerView: 2,
-            spaceBetween: 30
-          }
         }
       }
     }

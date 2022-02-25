@@ -2,10 +2,10 @@
   <div id="singleTrack" class="my-container white--text">
     <v-row>
       <!-- 音樂封面 -->
-      <v-col cols="4" class="py-4">
+      <v-col cols="12" sm="6" md="4" class="py-4">
         <v-hover>
           <template v-slot:default="{ hover }">
-            <v-img width="400" :src="track.cover">
+            <v-img width="100%" :src="track.cover">
               <v-fade-transition>
                 <v-overlay v-if="hover" absolute color="#d7f3f5">
                   <v-icon x-large @click="play(track._id)">mdi-play-circle-outline</v-icon>
@@ -40,7 +40,7 @@
         </div>
       </v-col>
       <!-- 音樂資訊 -->
-      <v-col cols="8" style="position: relative;">
+      <v-col cols="12" sm="6" md="8" style="position: relative;">
         <div class="text-h4 mb-5">{{ track.title }}</div>
         <v-divider color="grey"></v-divider>
         <v-chip x-small class="mt-4">{{ track.type }}</v-chip>
@@ -79,7 +79,7 @@
     </v-row>
     <v-row class="mt-10">
       <!-- 歌詞與介紹 -->
-      <v-col cols="4">
+      <v-col cols="12" md="4">
         <v-card>
           <v-tabs fixed-tabs v-model="tab" dark>
             <v-tab href="#intro">介紹</v-tab>
@@ -96,7 +96,7 @@
         </v-card>
       </v-col>
       <!-- 留言區 -->
-      <v-col cols="8">
+      <v-col cols="12" md="8">
         <v-sheet dark min-height="548px" class="white--text pa-6 singleTrack-messages" rounded>
           <div class="text-h6">留言</div>
           <v-sheet

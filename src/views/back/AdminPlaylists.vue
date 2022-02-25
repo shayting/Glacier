@@ -1,7 +1,7 @@
 <template>
   <div class="white--text">
     <template>
-      <v-card style="position: relative;">
+      <v-card style="position: relative;" elevation="3">
         <!-- 新增/編輯表單 -->
         <v-dialog max-width="500" v-model="dialog" persistent>
           <template v-slot:activator="{ on, attrs }">

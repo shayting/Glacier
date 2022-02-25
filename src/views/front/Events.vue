@@ -1,12 +1,10 @@
 <template>
-  <div class="my-container mt-100 mb-100">
+  <div id="event" class="my-container mt-100 mb-100">
     <v-row>
-      <v-col cols="6" v-for="(event, index) in events" :key="index">
-        <v-card class="mx-auto" max-width="600">
+      <v-col cols="12" md="6" v-for="(event, index) in events" :key="index">
+        <v-card class="mx-auto" max-width="800">
           <v-img :src="event.cover" height="200px"></v-img>
-
           <v-card-title>{{event.title}}</v-card-title>
-
           <v-card-subtitle>演出者：{{event.performer}}</v-card-subtitle>
           <div class="px-4">日期：{{new Date(event.date).toLocaleDateString().replace(/\//g, '／')}}</div>
           <div class="px-4">地點：{{event.place}}</div>

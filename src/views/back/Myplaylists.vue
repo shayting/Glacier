@@ -51,8 +51,8 @@
           <v-card class="pa-4" color="#111314">
             <v-hover>
               <template v-slot:default="{ hover }">
-                <v-img
-                  src="https://res.cloudinary.com/dbn5orfpi/image/upload/v1645150180/d7bwvppu5rnp5e8opmqq.jpg"
+                <v-img v-if="playlist.songs.length !== 0"
+                  :src="playlist.songs[0].song.cover"
                 >
                   <v-fade-transition>
                     <v-overlay v-if="hover" absolute color="#d7f3f5">
@@ -61,6 +61,7 @@
                     </v-overlay>
                   </v-fade-transition>
                 </v-img>
+                <v-img v-else src="https://source.boringavatars.com/marble/120/Maria%20Mitchell?square"></v-img>
               </template>
             </v-hover>
               <div class="white--text text-h6 mt-2">{{ playlist.title }}</div>
@@ -150,12 +151,11 @@ export default {
         })
       }
     },
-    // 找此頁面使用者的歌乾
+    // 找此頁面使用者的歌單
     async getUserPlaylists () {
       try {
         const { data } = await this.api.get('/playlists?owner=' + this.$route.params.id)
         this.playlists = data.result
-        console.log(this.playlists)
       } catch (error) {
         this.$swal({
           icon: 'error',

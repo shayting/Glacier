@@ -1,16 +1,12 @@
 <template>
-  <div id="playlists">
-    <div id="festival-playlist" class="py-16">
-      <div class="text-center text-h4 mt-10">特別企劃</div>
-      <div class="example-3d xyCenter">
+  <div id="playlists" class>
+    <div id="festival-playlist" class="d-flex flex-column justify-center">
+      <div class="text-center text-h4">特別企劃</div>
+      <div class="example-3d">
         <swiper class="swiper" :options="swiperOption" style="width: 80%;">
           <swiper-slide v-for="(item, index) in festivalPlaylists" :key="index">
             <router-link :to="'/playlist/' + item._id">
-              <v-img
-                class="align-end"
-                :src="item.cover"
-                style="border-radius: 4px 4px 0 0 ;"
-              ></v-img>
+              <v-img :src="item.cover" style="border-radius: 4px 4px 0 0 ;"></v-img>
             </router-link>
           </swiper-slide>
           <div class="swiper-button-next" slot="button-next"></div>
@@ -18,17 +14,13 @@
         </swiper>
       </div>
     </div>
-    <div id="vibe-playlist" class="py-16">
+    <div id="vibe-playlist" class="d-flex flex-column justify-center">
       <div class="white--text text-center text-h4">情境歌單</div>
-      <div class="example-3d xyCenter">
+      <div class="example-3d">
         <swiper class="swiper" :options="swiperOption" style="width: 80%;">
           <swiper-slide v-for="(item, index) in vibePlaylists" :key="index">
             <router-link :to="'/playlist/' + item._id">
-              <v-img
-                class="align-end"
-                :src="item.cover"
-                style="border-radius: 4px 4px 0 0 ;"
-              ></v-img>
+              <v-img :src="item.cover" style="border-radius: 4px 4px 0 0 ;"></v-img>
             </router-link>
           </swiper-slide>
           <div class="swiper-button-next" slot="button-next"></div>
@@ -68,27 +60,13 @@ export default {
           modifier: 1,
           slideShadows: true
         },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
-        },
         autoplay: {
           delay: 3000,
           disableOnInteraction: false
         },
-        breakpoints: {
-          320: {
-            slidesPerView: 2,
-            spaceBetween: 10
-          },
-          480: {
-            slidesPerView: 3,
-            spaceBetween: 20
-          },
-          920: {
-            slidesPerView: 3,
-            spaceBetween: 30
-          }
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
         }
       }
     }
@@ -125,9 +103,9 @@ export default {
 <style lang="scss" scoped>
 .example-3d {
   width: 100%;
-  height: 600px;
-  padding-top: 120px !important;
-  padding-bottom: 150px !important;
+  height: 400px;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .swiper {
@@ -142,12 +120,21 @@ export default {
     height: 300px;
     text-align: center;
     font-weight: bold;
+    border-radius: 4px;
+    background-color: #000;
     background-position: center;
     background-size: cover;
-    a{
+    color: white;
+    a {
       display: block;
-      width:100%;
-      height:100%;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .swiper-pagination {
+    .swiper-pagination-bullet.swiper-pagination-bullet-active {
+      background-color: white;
     }
   }
 }

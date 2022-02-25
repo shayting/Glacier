@@ -264,7 +264,6 @@ export default {
             return !item.tracks.private
           })
         }
-        console.log(this.userLikes)
       } catch (error) {
         this.$swal({
           icon: 'error',

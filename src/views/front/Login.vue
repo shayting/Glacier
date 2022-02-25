@@ -2,12 +2,12 @@
   <div class="log-container xyCenter my-container">
     <v-row class="xyCenter">
       <v-col cols="12" lg="8">
-        <v-card outlined>
+        <v-card outlined max-width="800" class="mx-auto">
           <v-window v-model="step">
           <!-- 登入 -->
             <v-window-item :value="1">
-              <v-row class="center flex-column-reverse flex-sm-row">
-                <v-col cols="12" sm="6" class="pa-10 theme-btn xyCenter change-form">
+              <v-row class="center flex-sm-row">
+                <v-col cols="12" sm="6" class="pa-10 theme-btn xyCenter change-form d-none d-sm-flex">
                   <div class="xyCenter flex-column">
                     <h3 class="text-center my-8">還沒有註冊嗎？</h3>
                     <v-card-actions class="xyCenter">
@@ -42,7 +42,8 @@
                       @input="$v.loginForm.password.$touch()"
                       @blur="$v.loginForm.password.$touch()"
                     ></v-text-field>
-                    <v-btn class="mr-4 mt-8 white--text" type="submit" rounded width="100" color="#66BB6A">登入</v-btn>
+                      <v-btn class="mr-4 mt-8 white--text" type="submit" rounded width="100" color="#66BB6A">登入</v-btn>
+                      <v-btn class="mt-8 d-sm-none" outlined rounded width="100" color="blue-gray" @click="step++">註冊</v-btn>
                   </v-form>
                 </v-col>
               </v-row>
@@ -98,9 +99,10 @@
                       @blur="$v.registerForm.confirmPassword.$touch()"
                     ></v-text-field>
                     <v-btn class="mr-4 white--text" type="submit" rounded width="100" color="#66BB6A">註冊</v-btn>
+                    <v-btn class="d-sm-none" outlined rounded width="100" color="blue-gray" @click="step--">登入</v-btn>
                   </v-form>
                 </v-col>
-                <v-col cols="12" sm="6" class="pa-16 theme-btn xyCenter change-form">
+                <v-col cols="12" sm="6" class="pa-16 theme-btn xyCenter change-form d-none d-sm-flex">
                   <div class="xyCenter flex-column">
                     <h3 class="text-center my-10">已經註冊過了？</h3>
                     <v-card-actions class="xyCenter">
@@ -261,6 +263,13 @@ export default {
       // } catch (error) {
       //   console.log(error)
       // }
+    }
+  },
+  created () {
+    if (this.$route.params.action === 'login') {
+      this.step = 1
+    } else if (this.$route.params.action === 'register') {
+      this.step = 2
     }
   }
 }
