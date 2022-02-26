@@ -1,16 +1,16 @@
 <template>
-  <div class="my-10 my-container">
+  <div class="my-5 my-sm-10 my-container">
     <v-sheet
       color="secondary"
       min-height="500"
-      class="myPlaylists mb-100 py-10"
+      class="myPlaylists mb-100 py-5 py-sm-10"
       rounded
       style="position: relative;"
     >
       <!-- 建立歌單 -->
-      <v-dialog width="500" v-model="dialog" persistent>
+      <v-dialog v-if="user._id === $route.params.id" width="500" v-model="dialog" persistent>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn absolute top right large v-on="on" v-bind="attrs">
+          <v-btn absolute top right large v-on="on" v-bind="attrs" class="d-none d-sm-block">
             <v-icon left>mdi-plus</v-icon>建立歌單
           </v-btn>
         </template>
@@ -45,33 +45,43 @@
         </v-card>
       </v-dialog>
       <!-- 我的歌單 -->
-      <div class="white--text text-h4 px-16 mb-10">Playlists</div>
-      <v-row class="px-16">
-        <v-col cols="3" v-for="(playlist, index) in playlists" :key="index">
+      <div class="white--text text-h4 px-8 px-sm-16 mb-10">Playlists</div>
+      <v-row class="px-8 px-sm-16">
+        <v-col cols="12" sm="6" md="4" lg="3" v-for="(playlist, index) in playlists" :key="index">
           <v-card class="pa-4" color="#111314">
             <v-hover>
               <template v-slot:default="{ hover }">
-                <v-img v-if="playlist.songs.length !== 0"
-                  :src="playlist.songs[0].song.cover"
-                >
+                <v-img v-if="playlist.songs.length !== 0" :src="playlist.songs[0].song.cover">
                   <v-fade-transition>
                     <v-overlay v-if="hover" absolute color="#d7f3f5">
-                    <v-btn icon :to="'/playlist/' + playlist._id">
-                      <v-icon x-large>mdi-format-list-bulleted-square</v-icon></v-btn>
+                      <v-btn icon :to="'/playlist/' + playlist._id">
+                        <v-icon x-large>mdi-format-list-bulleted-square</v-icon>
+                      </v-btn>
                     </v-overlay>
                   </v-fade-transition>
                 </v-img>
-                <v-img v-else src="https://source.boringavatars.com/marble/120/Maria%20Mitchell?square"></v-img>
+                <v-img
+                  v-else
+                  src="https://source.boringavatars.com/marble/120/Maria%20Mitchell?square"
+                >
+                  <v-fade-transition>
+                    <v-overlay v-if="hover" absolute color="#d7f3f5">
+                      <v-btn icon :to="'/playlist/' + playlist._id">
+                        <v-icon x-large>mdi-format-list-bulleted-square</v-icon>
+                      </v-btn>
+                    </v-overlay>
+                  </v-fade-transition>
+                </v-img>
               </template>
             </v-hover>
-              <div class="white--text text-h6 mt-2">{{ playlist.title }}</div>
-              <span class="grey--text text-body-2">{{ playlist.songs.length }}首歌</span>
+            <div class="white--text text-h6 mt-2">{{ playlist.title }}</div>
+            <span class="grey--text text-body-2">{{ playlist.songs.length }}首歌</span>
             <div class="d-flex justify-end">
               <v-btn v-if="user._id === $route.params.id" small icon color="white">
                 <v-icon small @click="openEditForm(index)">mdi-pencil</v-icon>
               </v-btn>
               <v-btn v-if="user._id === $route.params.id" small icon color="white">
-                <v-icon small @click="deletePlaylist(playlist._id)" >mdi-trash-can</v-icon>
+                <v-icon small @click="deletePlaylist(playlist._id)">mdi-trash-can</v-icon>
               </v-btn>
             </div>
           </v-card>

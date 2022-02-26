@@ -1,26 +1,30 @@
 <template>
   <div>
     <Header></Header>
-    <loading :active.sync="isLoading" color="#d7f3f5"></loading>
+    <!-- <loading :active.sync="isLoading" color="#d7f3f5"></loading> -->
     <div v-if="user.role !== 1" id="back" class="my-container white--text">
       <div>
         <v-row>
-          <v-col cols="3">
-            <v-avatar v-if="userPage.avatar" size="200" class="ma-10">
-              <img :src="userPage.avatar" />
+          <v-col cols="3" sm="4" lg="3">
+            <v-avatar v-if="userPage.avatar" class="my-10 me-2 back-avatar">
+              <img class :src="userPage.avatar" />
             </v-avatar>
-            <v-avatar v-else size="200" class="ma-10">
-              <img :src="randomAvatar" />
+            <v-avatar v-else class="my-10 back-avatar">
+              <img class :src="randomAvatar" />
             </v-avatar>
           </v-col>
 
-          <v-col cols="9" class="d-flex justify-space-between">
-            <div style="position: relative;width:570px;">
-              <!-- 編輯個人資料button/modal -->
+          <v-col cols="9" sm="8" lg="9" class="d-md-flex justify-md-space-between">
+            <div style="position: relative;" class="ms-10 ms-sm-0">
+              <div class="d-sm-flex align-center">
+                <!-- 用戶名 -->
+                <div v-if="userPage.userName" class="mt-10 mx-2 mx-sm-4 back-title">{{ userPage.userName }}</div>
+                <div v-else class="mt-10 mx-2 mx-sm-4 back-title">{{ userPage.account }}</div>
+                <!-- 編輯個人資料button/modal -->
               <v-dialog width="500" v-model="dialog2" v-if="user._id === userPage._id">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn class="theme-btn ma-8" absolute top right small v-on="on" v-bind="attrs">
-                    <v-icon small left>mdi-pencil</v-icon>編輯個人資料
+                  <v-btn class="theme-btn mt-sm-10 mx-2 my-2 m-sm-0" small v-on="on" v-bind="attrs">
+                    <v-icon small left>mdi-pencil</v-icon>編輯
                   </v-btn>
                 </template>
                 <v-card>
@@ -63,17 +67,17 @@
                   </div>
                   <v-card-text class="my-5">
                     <v-form>
-                      <v-row class="px-10 text-body-1">
+                      <v-row class="px-sm-10 text-body-1">
                         <v-col cols="4">用戶帳號</v-col>
                         <v-col cpls="8">{{ user.account }}</v-col>
                       </v-row>
-                      <v-row class="px-10 text-body-1 align-center">
+                      <v-row class="px-sm-10 text-body-1 align-center">
                         <v-col cols="4">用戶名稱</v-col>
                         <v-col cols="8">
                           <v-text-field v-model="form.userName" clearable></v-text-field>
                         </v-col>
                       </v-row>
-                      <v-row class="px-10 text-body-1">
+                      <v-row class="px-sm-10 text-body-1">
                         <v-col cols="4">用戶簡介</v-col>
                         <v-col cols="8">
                           <v-textarea v-model="form.description" outlined></v-textarea>
@@ -98,42 +102,37 @@
               <v-btn
                 v-if="user._id !== $route.params.id && !followState"
                 @click="follow"
-                class="theme-btn ma-8"
-                absolute
-                top
-                right
-                medium
+                class="theme-btn mt-sm-10 mx-2 my-2 m-sm-0"
+                small
               >+ 追蹤</v-btn>
               <v-btn
                 v-if="user._id !== $route.params.id && followState"
                 @click="follow"
-                class="ma-8"
+                class="theme-btn mt-sm-10 mx-2 my-2 m-sm-0"
                 outlined
                 color="teal"
                 absolute
                 top
                 right
-                medium
+                small
               >已追蹤</v-btn>
-              <!-- 用戶名 -->
-              <div v-if="userPage.userName" class="ma-10 text-h3">{{ userPage.userName }}</div>
-              <div v-else class="ma-10 text-h3">{{ userPage.account }}</div>
-              <div v-if="userPage.description" class="mx-10 text-wrapper">{{ splitText }}</div>
+              </div>
+              <div v-if="userPage.description" class="mx-2 mx-sm-4 mt-sm-5 text-wrapper">{{ splitText }}</div>
             </div>
-            <div class="d-flex my-10">
+            <div class="d-flex mx-10 mx-sm-0 my-6 my-sm-10">
               <!-- 追蹤modal -->
               <v-dialog v-model="dialog" width="500" class="ma-10">
                 <template v-slot:activator="{ on, attrs }" @click="renderNew">
-                  <div class="text-center ms-8">
-                    <div class="fs-20">音樂</div>
+                  <div class="text-center mx-2 ms-sm-4">
+                    <div class="followModal">音樂</div>
                     <div>{{ tracksCount }}</div>
                   </div>
-                  <div class="text-center ms-8" v-on="on" v-bind="attrs">
-                    <div class="fs-20">粉絲</div>
+                  <div class="text-center mx-2 ms-sm-8" v-on="on" v-bind="attrs">
+                    <div class="followModal">粉絲</div>
                     <div>{{ userPage.followers.length }}</div>
                   </div>
-                  <div class="text-center ms-8" v-on="on" v-bind="attrs">
-                    <div class="fs-20">追蹤中</div>
+                  <div class="text-center mx-2 ms-sm-8" v-on="on" v-bind="attrs">
+                    <div class="followModal">追蹤中</div>
                     <div>{{ userPage.following.length }}</div>
                   </div>
                 </template>
@@ -160,11 +159,13 @@
                                   :src="`https://source.boringavatars.com/beam/${follower.users.account}`"
                                 />
                               </v-avatar>
-                              <div
-                                v-if="follower.users.userName"
-                                class="fs-20 mx-5"
-                              >{{ follower.users.userName }}</div>
-                              <div v-else class="fs-20 mx-5">{{ follower.users.account }}</div>
+                              <router-link :to="'/back/user/' + follower.users._id">
+                                <div
+                                  v-if="follower.users.userName"
+                                  class="fs-20 mx-5 black--text"
+                                >{{ follower.users.userName }}</div>
+                                <div v-else class="fs-20 mx-5 black--text">{{ follower.users.account }}</div>
+                              </router-link>
                             </div>
                             <v-btn
                               width="80"
@@ -202,11 +203,13 @@
                                   :src="`https://source.boringavatars.com/beam/${following.users.account}`"
                                 />
                               </v-avatar>
-                              <div
-                                v-if="following.users.userName"
-                                class="fs-24 mx-5"
-                              >{{ following.users.userName }}</div>
-                              <div v-else class="fs-24 mx-5">{{ following.users.account }}</div>
+                              <router-link :to="'/back/user/' + following.users._id">
+                                <div
+                                  v-if="following.users.userName"
+                                  class="fs-20 mx-5 black--text"
+                                >{{ following.users.userName }}</div>
+                                <div v-else class="fs-20 mx-5 black--text">{{ following.users.account }}</div>
+                              </router-link>
                             </div>
                             <v-btn
                               width="80"
@@ -241,16 +244,16 @@
         </v-row>
       </div>
       <v-app-bar color="secondary" elevation="2" class="d-flex justify-center" rounded>
-        <div class="px-10 fs-20 back-item">
+        <div class="px-4 px-sm-6 px-md-10 back-item">
           <router-link :to="'/back/user/' + this.$route.params.id">ABOUT</router-link>
         </div>
-        <div class="px-10 fs-20 back-item">
+        <div class="px-4 px-sm-6 px-md-10 back-item">
           <router-link :to="'/back/user/' + this.$route.params.id + '/tracks'">MUSIC</router-link>
         </div>
-        <div class="px-10 fs-20 back-item">
+        <div class="px-4 px-sm-6 px-md-10 back-item">
           <router-link :to="'/back/user/' + this.$route.params.id + '/playlists'">PLAYLIST</router-link>
         </div>
-        <div class="px-10 fs-20 back-item">
+        <div class="px-4 px-sm-6 px-md-10 back-item">
           <router-link :to="'/back/user/' + this.$route.params.id + '/likes'">LIKE</router-link>
         </div>
       </v-app-bar>
@@ -427,6 +430,7 @@ export default {
         // 重新抓使用者資料
         await this.$store.dispatch('user/getUserInfo')
         await this.getOtherUser()
+        await this.getUserFollow()
         this.$swal({
           icon: 'success',
           title: '成功',
@@ -434,8 +438,8 @@ export default {
         })
       } catch (error) {
         this.$swal({
-          icon: 'error',
-          title: '錯誤',
+          icon: 'info',
+          title: '請先登入',
           text: error.response.data.message
         })
       }
@@ -454,8 +458,8 @@ export default {
         await this.getMyFollow()
       } catch (error) {
         this.$swal({
-          icon: 'error',
-          title: '錯誤',
+          icon: 'info',
+          title: '請先登入',
           text: error.response.data.message
         })
       }

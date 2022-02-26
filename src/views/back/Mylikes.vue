@@ -1,65 +1,46 @@
 <template>
-  <div class="my-10 my-container">
-    <v-sheet color="secondary" min-height="500" class="myPlaylists mb-100 px-16 py-10" rounded>
+  <div class="my-5 my-sm-10 my-container">
+    <v-sheet color="secondary" min-height="500" class="myPlaylists mb-100 px-8 px-sm-16 py-sm-10 py-5" rounded>
       <div class="white--text text-h4 mb-10">Like</div>
       <v-row v-if="userLikes">
-        <v-col cols="6" md="4" v-for="(item,index) in userLikes" :key="index">
-          <v-card
-            color="#111314"
-            dark
-          >
-            <div class="d-flex flex-no-wrap justify-space-between">
-              <div>
-                <v-card-title
-                  class="text-h6"
-                >{{item.tracks.title}}</v-card-title>
-
-                <v-card-subtitle v-if="item.tracks.artist.userName">{{item.tracks.artist.userName}}</v-card-subtitle>
-                <v-card-subtitle v-else>{{item.tracks.artist.account}}</v-card-subtitle>
-
-                <v-card-actions>
-                  <v-btn
-                    class="ml-2 mt-3"
-                    fab
-                    icon
-                    height="20px"
-                    right
-                    width="20px"
-                  >
-                    <v-icon small @click="play(index)">mdi-play</v-icon>
-                  </v-btn>
-                  <v-btn
-                    class="ml-2 mt-3"
-                    fab
-                    icon
-                    height="20px"
-                    right
-                    width="20px"
-                    @click="likes(item.tracks._id)"
-
-                  >
-                    <v-icon small v-if="!myLikes.includes(item.tracks._id)">mdi-heart-outline</v-icon>
-                    <v-icon small v-else>mdi-heart</v-icon>
-                  </v-btn>
-                  <v-btn
-                    class="ml-2 mt-3"
-                    fab
-                    icon
-                    height="20px"
-                    right
-                    width="20px"
-                  >
-                    <v-icon small @click="getSongId(item.tracks._id)">mdi-plus</v-icon>
-                  </v-btn>
-                </v-card-actions>
-              </div>
-              <router-link :to="'/track/' + item.tracks._id">
-                <v-img class="ma-2" max-width="120px" :src="item.tracks.cover"></v-img>
-              </router-link>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
+          <v-col cols="6" sm="4" md="3" v-for="(item, index) in userLikes" :key="index">
+            <v-card class="pb-2 track-card" style="position: relative;" elevation="0">
+              <v-btn
+                small
+                absolute
+                icon
+                :color="myLikes.includes(item.tracks._id) ? 'red' : 'white'"
+                class="myTrack-like"
+                @click="likes(item.tracks._id)"
+              >
+                <v-icon small v-if="!myLikes.includes(item.tracks._id)" medium>mdi-cards-heart-outline</v-icon>
+                <v-icon v-else small>mdi-cards-heart</v-icon>
+              </v-btn>
+                <div class="track-photowrap">
+                  <v-hover>
+                    <template v-slot:default="{ hover }">
+                      <v-img class="track-photo" :src="item.tracks.cover">
+                        <v-fade-transition>
+                          <v-overlay v-if="hover" absolute color="#d7f3f5">
+                            <v-icon @click="play(index)" x-large>mdi-play-circle-outline</v-icon>
+                          </v-overlay>
+                        </v-fade-transition>
+                      </v-img>
+                    </template>
+                  </v-hover>
+                  <div style="position: relative;">
+                    <router-link :to="'/track/' + item.tracks._id">
+                    <div class="text-body-1 mt-2 white--text">{{ item.tracks.title }}</div>
+                    <div class="grey--text">{{item.tracks.artist.userName}}</div>
+                    </router-link>
+                    <v-btn absolute small class="myLike-plus" icon color="white" @click="getSongId (item.tracks._id)">
+                      <v-icon small>mdi-plus</v-icon>
+                    </v-btn>
+                  </div>
+                </div>
+            </v-card>
+          </v-col>
+        </v-row>
     </v-sheet>
     <!-- 加入歌單dialog -->
     <v-dialog v-model="dialogAdd" persistent max-width="500">

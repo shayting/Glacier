@@ -1,16 +1,26 @@
 <template>
   <div id="singlePlaylist" class="my-container white--text mb-100 mt-100">
     <v-row>
-      <v-col cols="3">
+      <v-col cols="12" sm="3" class="d-none d-sm-block">
         <v-img v-if="playlist.cover" width="400" :src="playlist.cover"></v-img>
         <v-img v-else-if="songs.length > 0" :src="songs[0].song.cover"></v-img>
         <v-img v-else width="400" src="https://source.boringavatars.com/marble/1/?square"></v-img>
       </v-col>
-      <v-col cols="9" style="position: relative;">
-        <div class="text-h4 mb-2">{{ playlist.title }}</div>
-        <div v-if="playlist.songs" class="grey--text text-h6">{{ playlist.songs.length }}首歌</div>
-        <span class="grey--text">Published: {{ playlist.createDate }}</span>
-        <div class="mt-10 fs-20">{{ playlist.description }}</div>
+      <v-col cols="12" sm="9" style="position: relative;">
+      <div class="d-flex">
+        <!-- 手機版出現圖片 -->
+        <div class="d-sm-none me-4" style="width:30%;">
+          <v-img v-if="playlist.cover" width="200" :src="playlist.cover"></v-img>
+          <v-img v-else-if="songs.length > 0" width="200" :src="songs[0].song.cover"></v-img>
+          <v-img v-else width="200" src="https://source.boringavatars.com/marble/1/?square"></v-img>
+        </div>
+        <div>
+          <div class="text-h4 mb-2">{{ playlist.title }}</div>
+          <div v-if="playlist.songs" class="grey--text">{{ playlist.songs.length }}首歌</div>
+          <span class="grey--text">Published: {{ playlist.createDate }}</span>
+          <div class="mt-4 fs-20">{{ playlist.description }}</div>
+        </div>
+      </div>
         <!-- 歌單 -->
         <v-sheet color="secondary" min-height="500" class="mt-10 pa-4" rounded>
           <ul class="white--text" v-if="this.songs">

@@ -1,16 +1,16 @@
 
 <template>
-  <div class="my-container my-10">
+  <div class="my-container my-5 my-sm-10">
     <loading :active.sync="isLoading" color="#d7f3f5"></loading>
     <v-card
       elevation="2"
       min-height="500"
       color="secondary"
-      class="white--text py-10 mb-100"
+      class="white--text py-5 py-sm-10 mb-100"
       style="position: relative;"
     >
-      <v-card-title class="px-16 text-h4 py-0">Music</v-card-title>
-      <v-card-text class="white--text px-16 text-body-1">
+      <v-card-title class="px-8 px-sm-16 text-h4 py-0">Music</v-card-title>
+      <v-card-text class="px-8 px-sm-16 text-body-1">
         <div>
           <!-- 上傳音樂 modal -->
           <v-dialog
@@ -20,8 +20,11 @@
             v-if="user._id.length !== 0 && user._id === $route.params.id"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn class="theme-btn mt-6 me-12" absolute top right large v-on="on" v-bind="attrs">
+              <v-btn class="d-none d-sm-block theme-btn mt-sm-6 me-sm-12" absolute top right large v-on="on" v-bind="attrs">
                 <v-icon left>mdi-cloud-upload</v-icon>上傳音樂
+              </v-btn>
+              <v-btn small class="d-sm-none theme-btn mt-sm-6 me-sm-12" absolute top right  v-on="on" v-bind="attrs">
+                <v-icon>mdi-cloud-upload</v-icon>
               </v-btn>
             </template>
             <!-- 新增表單 -->
@@ -29,8 +32,8 @@
               <v-card-title>{{ form._id.length === 0 ? '新增音樂' : '編輯音樂' }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-5">
-                <v-row class="px-10">
-                  <v-col cols="6">
+                <v-row class="px-sm-10">
+                  <v-col cols="12" sm="6">
                     <file-pond
                       ref="pond2"
                       name="cover"
@@ -42,7 +45,7 @@
                     />
                     <v-card-text>*必填欄位，格式須為jpg、jpeg、png</v-card-text>
                   </v-col>
-                  <v-col cols="6">
+                  <v-col cols="12" sm="6">
                     <file-pond
                       ref="pond"
                       name="track"
@@ -56,9 +59,9 @@
                 </v-row>
               </v-card-text>
               <v-card-text class="my-5">
-                <v-form class="px-10" v-model="valid" ref="form">
+                <v-form class="px-sm-10" v-model="valid" ref="form">
                   <v-row>
-                    <v-col cols="6">
+                    <v-col cols="12" sm='6'>
                       <v-row class="text-body-1 align-center">
                         <v-col cols="3">歌名</v-col>
                         <v-col cols="9">
@@ -72,7 +75,7 @@
                         </v-col>
                       </v-row>
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="12" sm="6">
                       <v-row class="text-body-1 align-center">
                         <v-col cols="3">類型</v-col>
                         <v-col cols="9">
@@ -113,9 +116,9 @@
         </div>
       </v-card-text>
       <!-- 音樂卡片 -->
-      <v-card-text class="px-16">
+      <v-card-text class="px-8 px-sm-16">
         <v-row>
-          <v-col cols="4" sm="4" md="3" v-for="(item, index) in userTracks" :key="index">
+          <v-col cols="6" sm="4" md="3" v-for="(item, index) in userTracks" :key="index">
             <v-card class="pb-2 track-card" style="position: relative;" elevation="0">
               <v-chip
                 v-if="user._id === $route.params.id"
@@ -145,12 +148,12 @@
                       </v-img>
                     </template>
                   </v-hover>
-                  <div class="d-flex align-center justify-space-between">
+                  <div style="position: relative;">
                     <router-link :to="'/track/' + item._id">
                     <div class="text-body-1 mt-2 white--text">{{ item.title }}</div>
                     <div class="grey--text">{{item.artist.userName}}</div>
                     </router-link>
-                    <v-btn small class="myTrack-plus me-8" icon color="white" @click="getSongId (item._id)">
+                    <v-btn absolute small class="myTrack-plus" icon color="white" @click="getSongId (item._id)">
                       <v-icon small>mdi-plus</v-icon>
                     </v-btn>
                   </div>

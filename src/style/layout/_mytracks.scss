@@ -33,7 +33,13 @@
 
 .myTrack-plus{
   z-index: 2;
-  left:30px
+  top:-3px;
+  right:-6px;
+}
+.myLike-plus{
+  z-index: 2;
+  top:-3px;
+  right:-6px;
 }
 .myTrack-del,.myTrack-edit{
   &:hover{

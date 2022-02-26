@@ -131,7 +131,7 @@
                 </v-avatar>
                 <div class="ms-2 text-h6">{{ comment.users.userName }}</div>
               </div>
-              <div class="grey--text">Published on {{ comment.date.slice(0, 10) }}</div>
+              <div class="grey--text">{{ comment.date.slice(0, 10) }}</div>
             </div>
             <div class="ms-14">{{ comment.message }}</div>
           </v-sheet>
@@ -371,23 +371,32 @@ export default {
           message: this.newComment.trim(),
           date: Date.now()
         }
-        await this.api.patch('/tracks/comment/' + this.$route.params.id, data, {
-          headers: {
-            authorization: 'Bearer ' + this.user.token
-          }
-        })
-        // 重新渲染
-        this.getTrackById()
-        this.newComment = ''
-        this.$swal({
-          icon: 'success',
-          title: '成功',
-          text: '留言成功'
-        })
+        if (data.message.length > 0) {
+          console.log(data.message)
+          await this.api.patch('/tracks/comment/' + this.$route.params.id, data, {
+            headers: {
+              authorization: 'Bearer ' + this.user.token
+            }
+          })
+          // 重新渲染
+          this.getTrackById()
+          this.newComment = ''
+          this.$swal({
+            icon: 'success',
+            title: '成功',
+            text: '留言成功'
+          })
+        } else {
+          this.$swal({
+            icon: 'info',
+            title: '錯誤',
+            text: '留言不能空白'
+          })
+        }
       } catch (error) {
         this.$swal({
-          icon: 'error',
-          title: '錯誤',
+          icon: 'info',
+          title: '請先登入',
           text: error.response.data.message
         })
       }

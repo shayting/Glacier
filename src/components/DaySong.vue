@@ -2,7 +2,9 @@
   <div id="daySong">
     <v-card class="mx-auto my-12" dark>
       <v-card-title>Song of the Day</v-card-title>
+      <router-link :to="'/track/'+ renderSongID">
       <v-img max-height="400" max-width="100%" :src="track.cover"></v-img>
+      </router-link>
       <div class="d-flex align-center justify-space-between">
         <v-card-title>{{ track.title }}</v-card-title>
         <v-card-actions v-if="user.isAdmin">
