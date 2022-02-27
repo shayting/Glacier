@@ -129,7 +129,7 @@
                 small
                 absolute
                 icon
-                :color="myLikes.includes(item._id) ? 'red' : 'white'"
+                color="white"
                 class="myTrack-like"
                 @click="likes(item._id)"
               >

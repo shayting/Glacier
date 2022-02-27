@@ -140,7 +140,6 @@ export default {
         for (let i = 0; i < this.playlists.length; i++) {
           this.playlists[i].createDate = new Date(this.playlists[i].createDate).toLocaleDateString().replace(/\//g, '.')
         }
-        console.log(this.playlists)
       } catch (error) {
         this.$swal({
           icon: 'error',

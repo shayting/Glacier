@@ -10,15 +10,18 @@
       <!-- 建立歌單 -->
       <v-dialog v-if="user._id === $route.params.id" width="500" v-model="dialog" persistent>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn absolute top right large v-on="on" v-bind="attrs" class="d-none d-sm-block">
+          <v-btn absolute top right large v-on="on" v-bind="attrs" class="d-none d-sm-block theme-btn mt-sm-6 me-sm-12">
             <v-icon left>mdi-plus</v-icon>建立歌單
+          </v-btn>
+          <v-btn absolute top right small v-on="on" v-bind="attrs" class="d-sm-none theme-btn mt-sm-6 me-sm-12">
+            <v-icon left>mdi-plus</v-icon>歌單
           </v-btn>
         </template>
         <v-card>
           <v-card-title>{{ form._id.length === 0 ? '新增歌單' : '編輯歌單' }}</v-card-title>
           <v-divider></v-divider>
           <v-card-text class="my-5">
-            <v-form class="px-10" ref="form">
+            <v-form class="px-5 px-sm-10" ref="form">
               <v-row>
                 <v-col cols="12">
                   <v-row class="text-body-1 align-center">
@@ -39,8 +42,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="create" type="submit">Save</v-btn>
-            <v-btn color="secondary" text @click="resetForm()">Cancel</v-btn>
+            <v-btn color="secondary" text @click="resetForm()">取消</v-btn>
+            <v-btn color="primary" text @click="create" type="submit">確定</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -111,7 +114,6 @@ export default {
   },
   methods: {
     openEditForm (index) {
-      console.log(index)
       this.dialog = true
       this.form = {
         title: this.playlists[index].title,
@@ -127,7 +129,6 @@ export default {
         description: '',
         _id: ''
       }
-      console.log(this.form)
     },
     // 新增歌單/修改歌單
     async create () {
@@ -176,7 +177,6 @@ export default {
     },
     // 刪除歌單
     async deletePlaylist (id) {
-      console.log(id)
       this.$swal({
         icon: 'warning',
         title: '刪除確認',

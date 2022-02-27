@@ -44,7 +44,7 @@
                 </v-btn>
                 <v-btn
                   icon
-                  :color="myLikes.includes(song.song._id) ? 'red' : 'white'"
+                  color="white"
                   @click="likes(song.song._id)"
                 >
                   <v-icon v-if="!myLikes.includes(song.song._id)" medium>mdi-cards-heart-outline</v-icon>

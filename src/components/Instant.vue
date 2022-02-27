@@ -203,7 +203,6 @@ export default {
         file: this.sortItems[index].file,
         cover: this.sortItems[index].cover
       }
-      console.log(this.playingSong)
       this.$store.commit('track/play', this.playingSong)
     },
     getSongId (id) {
@@ -253,8 +252,6 @@ export default {
     async addToPlaylist () {
       const idx = this.playlists.findIndex(p => p.title === this.seletedPlaylist)
       const playlistId = this.playlists[idx]._id
-      console.log(playlistId)
-      console.log(this.nowSongId)
       try {
         if (this.user.isLogin) {
           await this.api.patch('/playlists/addsong/' + playlistId, { _id: this.nowSongId }, {

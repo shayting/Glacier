@@ -16,15 +16,18 @@
 
           <v-col cols="9" sm="8" lg="9" class="d-md-flex justify-md-space-between">
             <div style="position: relative;" class="ms-10 ms-sm-0">
-              <div class="d-sm-flex align-center">
+              <div class="d-flex flex-wrap align-center">
                 <!-- 用戶名 -->
                 <div v-if="userPage.userName" class="mt-10 mx-2 mx-sm-4 back-title">{{ userPage.userName }}</div>
                 <div v-else class="mt-10 mx-2 mx-sm-4 back-title">{{ userPage.account }}</div>
                 <!-- 編輯個人資料button/modal -->
               <v-dialog width="500" v-model="dialog2" v-if="user._id === userPage._id">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn class="theme-btn mt-sm-10 mx-2 my-2 m-sm-0" small v-on="on" v-bind="attrs">
+                  <v-btn class="d-none d-sm-block theme-btn mt-10 mx-2 my-2 m-sm-0" small v-on="on" v-bind="attrs">
                     <v-icon small left>mdi-pencil</v-icon>編輯
+                  </v-btn>
+                  <v-btn icon class="d-sm-none mt-10 mx-2" small v-on="on" v-bind="attrs">
+                    <v-icon color="orange" small left>mdi-pencil</v-icon>
                   </v-btn>
                 </template>
                 <v-card>
@@ -87,6 +90,7 @@
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
+                    <v-btn color="secondary" text @click="dialog2 = false, changeAvatar = false">取消</v-btn>
                     <v-btn
                       color="primary"
                       text
@@ -94,7 +98,6 @@
                       type="submit"
                       :disabled="modalSubmitting"
                     >儲存</v-btn>
-                    <v-btn color="secondary" text @click="dialog2 = false, changeAvatar = false">取消</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -102,18 +105,15 @@
               <v-btn
                 v-if="user._id !== $route.params.id && !followState"
                 @click="follow"
-                class="theme-btn mt-sm-10 mx-2 my-2 m-sm-0"
+                class="theme-btn mt-10 mx-2 my-2 m-sm-0"
                 small
               >+ 追蹤</v-btn>
               <v-btn
                 v-if="user._id !== $route.params.id && followState"
                 @click="follow"
-                class="theme-btn mt-sm-10 mx-2 my-2 m-sm-0"
+                class="mt-10 mx-2 my-2 m-sm-0"
                 outlined
                 color="teal"
-                absolute
-                top
-                right
                 small
               >已追蹤</v-btn>
               </div>
@@ -431,11 +431,6 @@ export default {
         await this.$store.dispatch('user/getUserInfo')
         await this.getOtherUser()
         await this.getUserFollow()
-        this.$swal({
-          icon: 'success',
-          title: '成功',
-          text: this.followState ? '成功追蹤' : '取消追蹤'
-        })
       } catch (error) {
         this.$swal({
           icon: 'info',
@@ -505,17 +500,16 @@ export default {
     if (routeName) {
       this.getOtherUser()
       this.getUserFollow()
-    }
-
-    if (this.user._id.length > 0) {
-      this.getUser()
-      if (this.user.role !== 1) {
+      if (this.user._id.length > 0) {
+        this.getUser()
         this.getMyFollow()
         if (this.user._id === this.$route.params.id) {
           this.getPrivate()
         } else {
           this.getUserTracks()
         }
+      } else {
+        this.getUserTracks()
       }
     }
   }

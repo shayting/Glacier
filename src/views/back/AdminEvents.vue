@@ -221,7 +221,6 @@ export default {
             fd.append(key, this.form[key])
           }
         }
-        console.log(fd)
         await this.api.post('/events', fd, {
           headers: {
             authorization: 'Bearer ' + this.user.token

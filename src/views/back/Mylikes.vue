@@ -9,7 +9,7 @@
                 small
                 absolute
                 icon
-                :color="myLikes.includes(item.tracks._id) ? 'red' : 'white'"
+                color="white"
                 class="myTrack-like"
                 @click="likes(item.tracks._id)"
               >
@@ -146,7 +146,6 @@ export default {
         file: this.userLikes[index].tracks.file,
         cover: this.userLikes[index].tracks.cover
       }
-      console.log(this.playingSong)
       this.$store.commit('track/play', this.playingSong)
     },
     getSongId (id) {
@@ -154,7 +153,6 @@ export default {
       if (this.user.isLogin) {
         this.dialogAdd = true
         this.nowSongId = id
-        console.log(this.nowSongId)
       }
     },
     async getUserPlaylist () {
@@ -178,8 +176,6 @@ export default {
       // 找出使用者選擇的playlist Id
       const idx = this.playlists.findIndex(p => p.title === this.seletedPlaylist)
       const playlistId = this.playlists[idx]._id
-      console.log(playlistId)
-      console.log(this.nowSongId)
       try {
         if (this.user.isLogin) {
           await this.api.patch('/playlists/addsong/' + playlistId, { _id: this.nowSongId }, {

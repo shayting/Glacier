@@ -1,15 +1,15 @@
 <template>
   <div id="adminBanner" style="position: relative;">
     <div class="white--text text-h5 mb-10">廣告管理</div>
-    <v-dialog transition="dialog-bottom-transition" max-width="600">
+    <v-dialog v-model="dialog" transition="dialog-bottom-transition" max-width="600" >
       <!-- 開啟dialog按鈕 -->
       <template v-slot:activator="{ on, attrs }">
         <v-btn class="theme-btn" v-bind="attrs" v-on="on" absolute top right>新增廣告</v-btn>
       </template>
-      <template v-slot:default="dialog">
         <v-card class="pa-4">
           <v-card-text>
             <file-pond
+              ref="pond"
               name="cover"
               label-idle="點擊或拖曳上傳封面"
               allow-multiple="false"
@@ -19,11 +19,10 @@
             />
           </v-card-text>
           <v-card-actions class="justify-end">
-            <v-btn text @click="dialog.value = false">Close</v-btn>
-            <v-btn text @click="addBanner">Save</v-btn>
+            <v-btn @click="resetForm">取消</v-btn>
+            <v-btn color="success" @click="addBanner">新增</v-btn>
           </v-card-actions>
         </v-card>
-      </template>
     </v-dialog>
     <!-- banner展示 -->
     <v-row>
@@ -56,11 +55,16 @@ export default {
   methods: {
     reserve () {
       this.loading = true
-
       setTimeout(() => (this.loading = false), 2000)
     },
     getBannerFile (event) {
-      this.banner = event[0].file
+      if (event[0]) {
+        this.banner = event[0].file
+      }
+    },
+    resetForm () {
+      this.$refs.pond.removeFile()
+      this.dialog = false
     },
     // 新增廣告
     async addBanner () {
@@ -68,19 +72,18 @@ export default {
       const fd = new FormData()
       fd.append('cover', this.banner)
       try {
-        const { data } = await this.api.post('/banners', fd, {
+        await this.api.post('/banners', fd, {
           headers: {
             authorization: 'Bearer ' + this.user.token
           }
         })
-        console.log(data.result)
-        this.dialog = false
         this.$swal({
           icon: 'success',
           title: '成功',
           text: '新增成功'
         })
         this.getBanners()
+        this.resetForm()
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -91,7 +94,6 @@ export default {
     },
     // 刪除
     async deleteBanner (id) {
-      console.log(id)
       this.$swal({
         icon: 'warning',
         title: '刪除確認',
@@ -129,7 +131,6 @@ export default {
     async getBanners () {
       try {
         const { data } = await this.api.get('/banners')
-        console.log(data.result)
         this.banners = data.result
       } catch (error) {
         console.log(error.response.data.message)

@@ -31,7 +31,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "front" */ '../views/front/Discover.vue'),
         meta: {
-          title: '發現'
+          title: 'Discover | Glacier'
         }
       },
       {
@@ -43,7 +43,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "front" */ '../views/front/Ranks.vue'),
         meta: {
-          title: '排行榜'
+          title: 'Rank | Glacier'
         }
       },
       {
@@ -55,7 +55,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "front" */ '../views/front/Playlists.vue'),
         meta: {
-          title: '歌單'
+          title: 'Playlists | Glacier'
         }
       },
       {
@@ -67,7 +67,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "front" */ '../views/front/Events.vue'),
         meta: {
-          title: '演出活動'
+          title: 'Events | Glacier'
         }
       },
       {
@@ -79,7 +79,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "front" */ '../views/front/Login.vue'),
         meta: {
-          title: '登入/註冊'
+          title: 'Log in | Glacier'
         }
       },
       {
@@ -91,7 +91,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "front" */ '../views/front/SingleTrack.vue'),
         meta: {
-          title: '音樂'
+          title: 'Music | Glacier'
         }
       },
       {
@@ -103,7 +103,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "front" */ '../views/front/SinglePlaylist.vue'),
         meta: {
-          title: '歌單'
+          title: 'Playlist | Glacier'
         }
       }
     ]
@@ -122,9 +122,9 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "back" */ '../views/back/About.vue'),
+          import(/* webpackChunkName: "member" */ '../views/back/About.vue'),
         meta: {
-          title: '個人檔案'
+          title: 'Profile | Glacier'
         }
       },
       {
@@ -136,7 +136,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "member" */ '../views/back/Mytracks.vue'),
         meta: {
-          title: '我的音樂'
+          title: 'My tracks | Glacier'
         }
       },
       {
@@ -148,7 +148,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "member" */ '../views/back/Mylikes.vue'),
         meta: {
-          title: '我的喜歡'
+          title: 'My Likes | Glacier'
         }
       },
       {
@@ -160,7 +160,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "member" */ '../views/back/Myplaylists.vue'),
         meta: {
-          title: '我的歌單'
+          title: 'My Playlists | Glacier'
         }
       },
       {
@@ -180,7 +180,7 @@ const routes = [
             meta: {
               login: true,
               admin: true,
-              title: '管理員後台'
+              title: 'Admin'
             }
           },
           {
@@ -191,7 +191,7 @@ const routes = [
             meta: {
               login: true,
               admin: true,
-              title: '會員管理'
+              title: 'Account | Admin'
             }
           },
           {
@@ -202,7 +202,7 @@ const routes = [
             meta: {
               login: true,
               admin: true,
-              title: '音樂管理'
+              title: 'Tracks | Admin'
             }
           },
           {
@@ -213,7 +213,7 @@ const routes = [
             meta: {
               login: true,
               admin: true,
-              title: '活動管理'
+              title: 'Events | Admin'
             }
           },
           {
@@ -224,7 +224,7 @@ const routes = [
             meta: {
               login: true,
               admin: true,
-              title: '歌單管理'
+              title: 'Playlists | Admin'
             }
           },
           {
@@ -235,7 +235,7 @@ const routes = [
             meta: {
               login: true,
               admin: true,
-              title: '廣告管理'
+              title: 'Banners | Admin'
             }
           }
         ]
@@ -264,6 +264,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
+  window.scrollTo(0, 0)
   document.title = to.meta.title
 })
 export default router
