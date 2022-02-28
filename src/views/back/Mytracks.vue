@@ -131,6 +131,7 @@
                 icon
                 color="white"
                 class="myTrack-like"
+                v-if="myLikes !== undefined"
                 @click="likes(item._id)"
               >
                 <v-icon small v-if="!myLikes.includes(item._id)" medium>mdi-cards-heart-outline</v-icon>

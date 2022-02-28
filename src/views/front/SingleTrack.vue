@@ -35,8 +35,8 @@
             v-if="user.id !== track.artist._id && followState"
             @click="follow"
             outlined
-            color="teal"
-          >已追蹤</v-btn>
+            color="#d7f3f5"
+          >追蹤中</v-btn>
         </div>
       </v-col>
       <!-- 音樂資訊 -->
@@ -62,7 +62,7 @@
           <template v-slot:activator>
             <v-btn small v-model="fab" color="#d7f3f5" fab>
               <v-icon v-if="fab">mdi-close</v-icon>
-              <v-icon v-else>mdi-music</v-icon>
+              <v-icon v-else>mdi-dots-horizontal</v-icon>
             </v-btn>
           </template>
           <v-btn fab dark x-small color="amber" @click="play(track._id)">
@@ -295,7 +295,6 @@ export default {
         })
         this.track = data.result
         this.track.uploadDate = data.result.uploadDate.slice(0, 10)
-        console.log(this.track)
         // .some 陣列只要有其中一個符合條件就會回傳true
         if (this.user.likes !== undefined && this.user.likes.some(like => like.tracks === this.track._id)) {
           this.likeState = true
@@ -348,11 +347,6 @@ export default {
         await this.$store.dispatch('user/getUserInfo')
         // 重新抓followState
         await this.getTrackById()
-        this.$swal({
-          icon: 'success',
-          title: '成功',
-          text: this.followState ? '成功追蹤' : '取消追蹤'
-        })
         console.log(this.followState)
       } catch (error) {
         this.$swal({
@@ -372,7 +366,6 @@ export default {
           date: Date.now()
         }
         if (data.message.length > 0) {
-          console.log(data.message)
           await this.api.patch('/tracks/comment/' + this.$route.params.id, data, {
             headers: {
               authorization: 'Bearer ' + this.user.token

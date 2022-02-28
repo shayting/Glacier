@@ -310,6 +310,7 @@ export default {
         }
         // 重新渲染喜歡icon
         await this.$store.dispatch('user/getUserInfo')
+        console.log(this.myLikes.includes(id))
         // 重新渲染喜歡數
         await this.getAllPublic()
       } catch (error) {
@@ -332,6 +333,8 @@ export default {
     },
     // 判斷是否按過讚
     myLikes () {
+      // 先抓資料
+      this.$store.dispatch('user/getUserInfo')
       const myLikes = []
       for (let i = 0; i < this.user.likes.length; i++) {
         myLikes.push(this.user.likes[i].tracks)

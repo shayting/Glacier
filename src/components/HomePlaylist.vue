@@ -17,7 +17,7 @@
                 <v-img :src="item.cover"></v-img>
               </div>
               <div class="homeList-title white--text text-h6 text-center mb-2">{{ item.title }}</div>
-              <div class="homeList-descrition grey--text text-center">{{ item.description }}</div>
+              <div class="homeList-descrition white--text text-center">{{ item.description }}</div>
               <div
                 class="homeList-descrition grey--text text-center"
               >published on {{ item.createDate }}</div>

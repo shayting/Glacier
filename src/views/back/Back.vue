@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header></Header>
-    <!-- <loading :active.sync="isLoading" color="#d7f3f5"></loading> -->
+    <loading :active.sync="isLoading" color="#d7f3f5"></loading>
     <div v-if="user.role !== 1" id="back" class="my-container white--text">
       <div>
         <v-row>
@@ -23,10 +23,10 @@
                 <!-- 編輯個人資料button/modal -->
               <v-dialog width="500" v-model="dialog2" v-if="user._id === userPage._id">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn class="d-none d-sm-block theme-btn mt-10 mx-2 my-2 m-sm-0" small v-on="on" v-bind="attrs">
+                  <v-btn @click="updateProfile" class="d-none d-sm-block theme-btn mt-10 mx-2 my-2 m-sm-0" small v-on="on" v-bind="attrs">
                     <v-icon small left>mdi-pencil</v-icon>編輯
                   </v-btn>
-                  <v-btn icon class="d-sm-none mt-10 mx-2" small v-on="on" v-bind="attrs">
+                  <v-btn @click="updateProfile" icon class="d-sm-none mt-10 mx-2" small v-on="on" v-bind="attrs">
                     <v-icon color="orange" small left>mdi-pencil</v-icon>
                   </v-btn>
                 </template>
@@ -113,11 +113,11 @@
                 @click="follow"
                 class="mt-10 mx-2 my-2 m-sm-0"
                 outlined
-                color="teal"
+                color="#d7f3f5"
                 small
-              >已追蹤</v-btn>
+              >追蹤中</v-btn>
               </div>
-              <div v-if="userPage.description" class="mx-2 mx-sm-4 mt-sm-5 text-wrapper">{{ splitText }}</div>
+              <div v-if="userPage.description" class="d-none d-sm-block mx-2 mx-sm-4 mt-sm-5 text-wrapper">{{ splitText }}</div>
             </div>
             <div class="d-flex mx-10 mx-sm-0 my-6 my-sm-10">
               <!-- 追蹤modal -->
@@ -137,7 +137,7 @@
                   </div>
                 </template>
                 <v-card>
-                  <v-tabs fixed-tabs v-model="tab">
+                  <v-tabs fixed-tabs v-model="tab" color="teal">
                     <v-tab href="#followers">粉絲</v-tab>
                     <v-tab href="#following">追蹤中</v-tab>
                   </v-tabs>
@@ -170,16 +170,17 @@
                             <v-btn
                               width="80"
                               v-if="followCheck(follower.users._id)"
-                              color="primary"
+                              color="teal"
                               outlined
-                              elevation="2"
+                              elevation="0"
                               @click="followById(follower.users._id)"
                             >追蹤中</v-btn>
                             <v-btn
                               width="80"
                               v-else
-                              color="primary"
-                              elevation="2"
+                              color="teal"
+                              class="white--text"
+                              elevation="0"
                               @click="followById(follower.users._id)"
                             >追蹤</v-btn>
                           </li>
@@ -214,16 +215,17 @@
                             <v-btn
                               width="80"
                               v-if="followCheck(following.users._id)"
-                              color="primary"
+                              color="teal"
                               outlined
-                              elevation="2"
+                              elevation="0"
                               @click="followById(following.users._id)"
                             >追蹤中</v-btn>
                             <v-btn
                               width="80"
                               v-else
-                              color="primary"
-                              elevation="2"
+                              color="teal"
+                              class="white--text"
+                              elevation="0"
                               @click="followById(following.users._id)"
                             >追蹤</v-btn>
                           </li>
@@ -234,7 +236,7 @@
                   <v-divider></v-divider>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="dialog = false">close</v-btn>
+                    <v-btn color="teal" text @click="dialog = false">關閉</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -335,9 +337,7 @@ export default {
           text: '修改成功'
         })
         this.changeAvatar = false
-        this.updateProfile()
-        this.getUser()
-        this.getOtherUser()
+        await this.getOtherUser()
       } catch (error) {
         console.log(error)
         this.$swal({
@@ -372,7 +372,6 @@ export default {
     },
     // 根據路由參數抓用戶資料
     async getOtherUser () {
-      this.isLoading = true
       const { data } = await this.api.get('/users/' + this.$route.params.id)
       this.userPage.account = data.result.account
       this.userPage.description = data.result.description
@@ -380,7 +379,6 @@ export default {
       this.userPage.userName = data.result.userName
       this.userPage._id = data.result._id
       this.userPage.tracks = data.result.tracks
-      this.isLoading = false
       const nowUserFollowing = this.user.following
       // .some 陣列只要有其中一個符合條件就會回傳true
       if (nowUserFollowing !== undefined && nowUserFollowing.some(following => following.users === this.$route.params.id)) {
@@ -490,11 +488,6 @@ export default {
     }
   },
   async created () {
-    // 表單內原先資料渲染
-    this.form.userName = this.user.userName
-    this.form.description = this.user.description
-    this.form.cover = this.user.avatar
-
     // 讓進入管理頁的時候不要執行以下function
     const routeName = ['About', 'Mytracks', 'Myplaylists', 'Mylikes'].includes(this.$route.name)
     if (routeName) {
