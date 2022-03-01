@@ -11,6 +11,7 @@ import vueFilePond from 'vue-filepond'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import Aplayer from 'vue-aplayer'
+import VueGtag from 'vue-gtag'
 import { KinesisContainer, KinesisElement } from 'vue-kinesis'
 
 import mixin from './mixin.js'
@@ -25,6 +26,9 @@ Vue.config.productionTip = false
 Vue.use(VueAwesomeSwiper)
 Vue.use(Vuelidate)
 Vue.use(VueSweetalert2)
+Vue.use(VueGtag, {
+  config: { id: 'G-WMNYGJSBB2' }
+})
 Vue.mixin(mixin)
 
 Vue.component('Aplayer', Aplayer)
