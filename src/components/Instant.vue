@@ -210,7 +210,6 @@ export default {
       if (this.user.isLogin) {
         this.dialogAdd = true
         this.nowSongId = id
-        console.log(this.nowSongId)
       }
     },
     resetForm () {

@@ -156,7 +156,7 @@
                   </v-hover>
                   <div style="position: relative;">
                     <router-link :to="'/track/' + item._id">
-                    <div class="text-body-1 mt-2 white--text">{{ item.title }}</div>
+                    <div class="text-body-1 mt-2 white--text pe-4">{{ item.title }}</div>
                     <div class="grey--text">{{item.artist.userName}}</div>
                     </router-link>
                     <v-btn absolute small class="myTrack-plus" icon color="white" @click="getSongId (item._id)">
