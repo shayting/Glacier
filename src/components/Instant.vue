@@ -191,7 +191,8 @@ export default {
       file: '',
       cover: '',
       _id: ''
-    }
+    },
+    myLikes: []
   }),
   methods: {
     // 播放音樂
@@ -308,9 +309,6 @@ export default {
             }
           })
         }
-        // 重新渲染喜歡icon
-        await this.$store.dispatch('user/getUserInfo')
-        console.log(this.myLikes.includes(id))
         // 重新渲染喜歡數
         await this.getAllPublic()
       } catch (error) {
@@ -320,6 +318,15 @@ export default {
           text: error.response.data.message
         })
       }
+      this.getMyLikes()
+    },
+    async getMyLikes () {
+      await this.$store.dispatch('user/getUserInfo')
+      this.myLikes = []
+      for (let i = 0; i < this.user.likes.length; i++) {
+        this.myLikes.push(this.user.likes[i].tracks)
+      }
+      return []
     }
   },
   computed: {
@@ -330,19 +337,10 @@ export default {
       return arr.sort((a, b) => {
         return b.likes.length - a.likes.length
       }).slice(0, 10)
-    },
-    // 判斷是否按過讚
-    myLikes () {
-      // 先抓資料
-      this.$store.dispatch('user/getUserInfo')
-      const myLikes = []
-      for (let i = 0; i < this.user.likes.length; i++) {
-        myLikes.push(this.user.likes[i].tracks)
-      }
-      return myLikes
     }
   },
   async created () {
+    this.getMyLikes()
     this.getAllPublic()
     this.getUserPlaylist()
   }

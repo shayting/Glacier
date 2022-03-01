@@ -131,6 +131,7 @@
 export default {
   data () {
     return {
+      myLikes: [],
       playlist: {},
       songs: [],
       dialogAdd: false,
@@ -170,7 +171,6 @@ export default {
         file: this.songs[index].song.file,
         cover: this.songs[index].song.cover
       }
-      console.log(this.playingSong)
       this.$store.commit('track/play', this.playingSong)
     },
     async getPlaylist () {
@@ -192,7 +192,6 @@ export default {
       }
     },
     async deleteSong (id) {
-      console.log(id)
       this.$swal({
         icon: 'warning',
         title: '刪除確認',
@@ -246,13 +245,21 @@ export default {
           text: error.response.data.message
         })
       }
+      this.getMyLikes()
+    },
+    async getMyLikes () {
+      await this.$store.dispatch('user/getUserInfo')
+      this.myLikes = []
+      for (let i = 0; i < this.user.likes.length; i++) {
+        this.myLikes.push(this.user.likes[i].tracks)
+      }
+      return []
     },
     getSongId (id) {
       // 存取使用者所選擇的歌曲id
       if (this.user.isLogin) {
         this.dialogAdd = true
         this.nowSongId = id
-        console.log(this.nowSongId)
       }
     },
     async getUserPlaylist () {
@@ -276,8 +283,6 @@ export default {
       // 找出使用者選擇的playlist Id
       const idx = this.playlists.findIndex(p => p.title === this.seletedPlaylist)
       const playlistId = this.playlists[idx]._id
-      console.log(playlistId)
-      console.log(this.nowSongId)
       try {
         if (this.user.isLogin) {
           await this.api.patch('/playlists/addsong/' + playlistId, { _id: this.nowSongId }, {
@@ -333,16 +338,8 @@ export default {
       }
     }
   },
-  computed: {
-    myLikes () {
-      const myLikes = []
-      for (let i = 0; i < this.user.likes.length; i++) {
-        myLikes.push(this.user.likes[i].tracks)
-      }
-      return myLikes
-    }
-  },
   async created () {
+    this.getMyLikes()
     this.getPlaylist()
     this.getUserPlaylist()
   }

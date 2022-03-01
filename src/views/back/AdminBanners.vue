@@ -1,5 +1,11 @@
 <template>
   <div id="adminBanner" style="position: relative;">
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
     <div class="white--text text-h5 mb-10">廣告管理</div>
     <v-dialog v-model="dialog" transition="dialog-bottom-transition" max-width="600" >
       <!-- 開啟dialog按鈕 -->
@@ -45,6 +51,7 @@
 <script>
 export default {
   data: () => ({
+    isLoading: false,
     loading: false,
     selection: 1,
     banners: [],
@@ -70,6 +77,7 @@ export default {
     async addBanner () {
       // 建立formdata
       const fd = new FormData()
+      this.isLoading = true
       fd.append('cover', this.banner)
       try {
         await this.api.post('/banners', fd, {
@@ -91,6 +99,7 @@ export default {
           text: error.response.data.message
         })
       }
+      this.isLoading = false
     },
     // 刪除
     async deleteBanner (id) {

@@ -160,6 +160,7 @@ export default {
     BackToTop
   },
   data: () => ({
+    myLikes: [],
     // ---- 播放overlay
     overlay: false,
     page: 1,
@@ -201,7 +202,6 @@ export default {
         file: this.filterItems[index].file,
         cover: this.filterItems[index].cover
       }
-      console.log(this.playingSong)
       this.$store.commit('track/play', this.playingSong)
     },
     async getAllPublic () {
@@ -221,7 +221,6 @@ export default {
       if (this.user.isLogin) {
         this.dialogAdd = true
         this.nowSongId = id
-        console.log(this.nowSongId)
       }
     },
     async getUserPlaylist () {
@@ -309,8 +308,6 @@ export default {
             }
           })
         }
-        // 重新渲染喜歡icon
-        await this.$store.dispatch('user/getUserInfo')
         // 重新渲染喜歡數
         await this.getAllPublic()
       } catch (error) {
@@ -320,6 +317,15 @@ export default {
           text: error.response.data.message
         })
       }
+      this.getMyLikes()
+    },
+    async getMyLikes () {
+      await this.$store.dispatch('user/getUserInfo')
+      this.myLikes = []
+      for (let i = 0; i < this.user.likes.length; i++) {
+        this.myLikes.push(this.user.likes[i].tracks)
+      }
+      return []
     },
     // 換頁後到最頂部
     top () {
@@ -339,13 +345,6 @@ export default {
         return item.type === this.filter
       })
     },
-    myLikes () {
-      const myLikes = []
-      for (let i = 0; i < this.user.likes.length; i++) {
-        myLikes.push(this.user.likes[i].tracks)
-      }
-      return myLikes
-    },
     sliceitems () {
       return this.filterItems.slice(
         (this.page - 1) * 15,
@@ -354,6 +353,7 @@ export default {
     }
   },
   async created () {
+    this.getMyLikes()
     this.getAllPublic()
     this.getUserPlaylist()
   }

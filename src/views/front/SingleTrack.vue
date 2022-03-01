@@ -283,7 +283,6 @@ export default {
         file: this.track.file,
         cover: this.track.cover
       }
-      console.log(this.playingSong)
       this.$store.commit('track/play', this.playingSong)
     },
     async getTrackById () {
@@ -326,7 +325,6 @@ export default {
         await this.$store.dispatch('user/getUserInfo')
         // 重新渲染喜歡數
         await this.getTrackById()
-        console.log(this.likeState)
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -347,7 +345,6 @@ export default {
         await this.$store.dispatch('user/getUserInfo')
         // 重新抓followState
         await this.getTrackById()
-        console.log(this.followState)
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -399,7 +396,6 @@ export default {
       if (this.user.isLogin) {
         this.dialogAdd = true
         this.nowSongId = id
-        console.log(this.nowSongId)
       }
     },
     async getUserPlaylist () {
@@ -423,8 +419,6 @@ export default {
       // 找出使用者選擇的playlist Id
       const idx = this.playlists.findIndex(p => p.title === this.seletedPlaylist)
       const playlistId = this.playlists[idx]._id
-      console.log(playlistId)
-      console.log(this.nowSongId)
       try {
         if (this.user.isLogin) {
           await this.api.patch('/playlists/addsong/' + playlistId, { _id: this.nowSongId }, {

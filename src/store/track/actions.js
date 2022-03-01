@@ -6,7 +6,7 @@ export const getLastSong = async ({ commit, state }) => {
     const { data } = await api.get('/tracks/' + state._id)
     const info = {
       title: data.result.title,
-      artist: data.result.artist.userName,
+      artist: data.result.artist?.userName || '',
       file: data.result.file,
       cover: data.result.cover,
       _id: data.result._id

@@ -34,7 +34,7 @@ export const logout = async ({ commit, state }) => {
       }
     })
     commit('logout')
-    router.push('/')
+    router.push('/').catch(() => {})
     swal.fire({
       icon: 'success',
       title: '成功',

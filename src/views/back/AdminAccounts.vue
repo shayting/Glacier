@@ -122,6 +122,9 @@ export default {
       this.form.userName = item.userName
     },
     openCreateForm () {
+      this.form.account = ''
+      this.form.email = ''
+      this.form.userName = ''
       this.editedIndex = -1
     },
     resetForm () {

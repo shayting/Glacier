@@ -138,6 +138,7 @@ export default {
     BackToTop
   },
   data: () => ({
+    myLikes: [],
     page: 1,
     publicTracks: [],
     dialogAdd: false,
@@ -176,7 +177,6 @@ export default {
         file: this.sortItems[index].file,
         cover: this.sortItems[index].cover
       }
-      console.log(this.playingSong)
       this.$store.commit('track/play', this.playingSong)
     },
     getSongId (id) {
@@ -184,7 +184,6 @@ export default {
       if (this.user.isLogin) {
         this.dialogAdd = true
         this.nowSongId = id
-        console.log(this.nowSongId)
       }
     },
     async getUserPlaylist () {
@@ -208,8 +207,6 @@ export default {
       // 找出使用者選擇的playlist Id
       const idx = this.playlists.findIndex(p => p.title === this.seletedPlaylist)
       const playlistId = this.playlists[idx]._id
-      console.log(playlistId)
-      console.log(this.nowSongId)
       try {
         if (this.user.isLogin) {
           await this.api.patch('/playlists/addsong/' + playlistId, { _id: this.nowSongId }, {
@@ -286,8 +283,6 @@ export default {
             }
           })
         }
-        // 重新渲染喜歡icon
-        await this.$store.dispatch('user/getUserInfo')
         // 重新渲染喜歡數
         await this.getAllPublic()
       } catch (error) {
@@ -297,6 +292,15 @@ export default {
           text: error.response.data.message
         })
       }
+      this.getMyLikes()
+    },
+    async getMyLikes () {
+      await this.$store.dispatch('user/getUserInfo')
+      this.myLikes = []
+      for (let i = 0; i < this.user.likes.length; i++) {
+        this.myLikes.push(this.user.likes[i].tracks)
+      }
+      return []
     }
   },
   computed: {
@@ -313,17 +317,10 @@ export default {
         (this.page - 1) * 15,
         (this.page - 1) * 15 + 15
       )
-    },
-    // 判斷是否按過讚
-    myLikes () {
-      const myLikes = []
-      for (let i = 0; i < this.user.likes.length; i++) {
-        myLikes.push(this.user.likes[i].tracks)
-      }
-      return myLikes
     }
   },
   async created () {
+    this.getMyLikes()
     this.getUserPlaylist()
     this.getAllPublic()
   }

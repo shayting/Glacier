@@ -1,5 +1,11 @@
 <template>
   <div class="white--text">
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
     <template>
       <v-card style="position: relative;">
         <!-- 新增/編輯表單 -->
@@ -112,6 +118,7 @@
 export default {
   data () {
     return {
+      isLoading: false,
       dialog: false,
       editedIndex: -1,
       search: '',
@@ -211,6 +218,7 @@ export default {
     // 新增event
     async createEvent () {
       try {
+        this.isLoading = true
         // 停用送出按鈕
         this.modalSubmitting = true
         // 建立formdata物件
@@ -244,10 +252,12 @@ export default {
         })
       }
       this.modalSubmitting = false
+      this.isLoading = false
     },
     // 編輯
     async editEvent () {
       this.modalSubmitting = true
+      this.isLoading = true
       const fd = new FormData()
       for (const key in this.form) {
         if (key !== '_id') {
@@ -276,6 +286,7 @@ export default {
         })
       }
       this.modalSubmitting = false
+      this.isLoading = false
     },
     // 刪除
     async deleteEvent (item) {

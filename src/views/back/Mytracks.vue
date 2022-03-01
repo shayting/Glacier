@@ -1,7 +1,12 @@
 
 <template>
   <div class="my-container my-5 my-sm-10">
-    <loading :active.sync="isLoading" color="#d7f3f5"></loading>
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
     <v-card
       elevation="2"
       min-height="500"
@@ -242,6 +247,7 @@
 export default {
   data () {
     return {
+      myLikes: [],
       isLoading: false,
       valid: true,
       uploadRule: [
@@ -575,8 +581,6 @@ export default {
             }
           })
         }
-        // 重新渲染喜歡icon
-        await this.$store.dispatch('user/getUserInfo')
       } catch (error) {
         this.$swal({
           icon: 'error',
@@ -584,18 +588,19 @@ export default {
           text: error.response.data.message
         })
       }
-    }
-  },
-  computed: {
-    myLikes () {
-      const myLikes = []
+      this.getMyLikes()
+    },
+    async getMyLikes () {
+      await this.$store.dispatch('user/getUserInfo')
+      this.myLikes = []
       for (let i = 0; i < this.user.likes.length; i++) {
-        myLikes.push(this.user.likes[i].tracks)
+        this.myLikes.push(this.user.likes[i].tracks)
       }
-      return myLikes
+      return []
     }
   },
   async created () {
+    this.getMyLikes()
     this.getUserPlaylist()
     if (this.user._id === this.$route.params.id) {
       this.getPrivate()

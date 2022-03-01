@@ -108,6 +108,7 @@
 export default {
   data () {
     return {
+      myLikes: [],
       userLikes: [],
       // 儲存點擊要播放的音樂
       playingSong: {
@@ -235,8 +236,12 @@ export default {
         const { data } = await this.api.get('/users/' + this.$route.params.id)
         // 身份判斷 公開私人
         if (this.user._id === this.$route.params.id) {
-          this.userLikes = data.result.likes
+          this.userLikes = data.result.likes.filter(item => {
+            // 顯示自己所有及他人公開
+            return (item.tracks.artist._id === this.user._id) || (item.tracks.artist._id !== this.user._id && !item.tracks.private)
+          })
         } else {
+          // 顯示所有公開
           this.userLikes = data.result.likes.filter(item => {
             return !item.tracks.private
           })
@@ -270,19 +275,19 @@ export default {
           text: error.response.data.message
         })
       }
-    }
-  },
-  computed: {
-    // 判斷是否按過讚
-    myLikes () {
-      const myLikes = []
+      this.getMyLikes()
+    },
+    async getMyLikes () {
+      await this.$store.dispatch('user/getUserInfo')
+      this.myLikes = []
       for (let i = 0; i < this.user.likes.length; i++) {
-        myLikes.push(this.user.likes[i].tracks)
+        this.myLikes.push(this.user.likes[i].tracks)
       }
-      return myLikes
+      return []
     }
   },
   async created () {
+    this.getMyLikes()
     this.getUserPlaylist()
     this.getUserLike()
   }

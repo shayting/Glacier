@@ -1,7 +1,12 @@
 <template>
   <div>
     <Header></Header>
-    <loading :active.sync="isLoading" color="#d7f3f5"></loading>
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
     <div v-if="user.role !== 1" id="back" class="my-container white--text">
       <div>
         <v-row>
@@ -318,6 +323,7 @@ export default {
     async submitModal () {
       // 停用送出按鈕
       this.modalSubmitting = true
+      this.isLoading = true
       // 建立formdata物件
       const fd = new FormData()
       for (const key in this.form) {
@@ -347,6 +353,7 @@ export default {
         })
       }
       this.modalSubmitting = false
+      this.isLoading = false
     },
     updateProfile () {
       // form表單原先資料渲染
