@@ -175,7 +175,7 @@ export default {
         })
         this.track = data.result
         // .some 陣列只要有其中一個符合條件就會回傳true
-        if (this.user.likes !== undefined && this.user.likes.some(like => like.tracks === this.track._id)) {
+        if (this.user.likes !== '' && this.user.likes.some(like => like.tracks === this.track._id)) {
           this.likeState = true
         } else {
           this.likeState = false
