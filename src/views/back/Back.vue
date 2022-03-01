@@ -379,6 +379,7 @@ export default {
     },
     // 根據路由參數抓用戶資料
     async getOtherUser () {
+      this.isLoading = true
       const { data } = await this.api.get('/users/' + this.$route.params.id)
       this.userPage.account = data.result.account
       this.userPage.description = data.result.description
@@ -393,6 +394,7 @@ export default {
       } else {
         this.followState = false
       }
+      this.isLoading = false
     },
     // 若登入者或未登入者 非當前頁面持有者 顯示此頁面公開音樂
     async getUserTracks () {
