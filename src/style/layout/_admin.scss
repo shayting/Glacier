@@ -1,6 +1,8 @@
 #admin{
   .admin-tabs{
+    position: fixed;
     li{
+      width: 150px;
       height: 50px;
       display: flex;
       align-items: center;

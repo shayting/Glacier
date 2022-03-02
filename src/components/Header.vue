@@ -4,7 +4,8 @@
       <div class="d-flex justify-space-between my-container">
         <div class="logo xyCenter">
           <router-link to="/">
-            <v-img width="35" src="@/assets/image/glacier-logo.png"></v-img>
+            <v-img class="d-none d-md-block" width="90" src="@/assets/image/glacier-logo3.png"></v-img>
+            <v-img class="d-md-none" width="35" src="@/assets/image/glacier-logo.png"></v-img>
           </router-link>
         </div>
         <div class="menu xyCenter d-none d-sm-flex">
@@ -25,7 +26,7 @@
         </div>
         <div class="nav-icon d-flex">
           <div class="d-none d-md-block">
-            <input type="text" placeholder="search" class="input-style" />
+            <input style="width:180px" type="text" placeholder="search" class="input-style" />
           </div>
           <v-icon class="mx-2 d-none d-md-block align-self-center">mdi-magnify</v-icon>
           <!-- 沒有登入 -->

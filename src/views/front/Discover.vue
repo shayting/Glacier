@@ -207,7 +207,7 @@ export default {
     async getAllPublic () {
       try {
         const { data } = await this.api.get('/tracks/public')
-        this.publicTracks = data.result
+        this.publicTracks = data.result.reverse()
       } catch (error) {
         this.$swal({
           icon: 'error',

@@ -44,11 +44,13 @@
                       name="cover"
                       label-idle="點擊或拖曳上傳封面"
                       allow-multiple="false"
+                      allowImageCrop="true"
+                      imageCropAspectRatio="1"
                       accepted-file-types="image/jpeg, image/png"
-                      imageResizeTargetWidth="100"
+                      imageResizeTargetWidth="250"
                       @updatefiles="getCoverFiles($event)"
                     />
-                    <v-card-text>*必填欄位，格式須為jpg、jpeg、png</v-card-text>
+                    <v-card-text>*必填欄位，格式須為jpg、jpeg、png，不得超過5MB，圖片長寬須為1:1</v-card-text>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <file-pond
@@ -59,7 +61,7 @@
                       accepted-file-types="audio/mpeg"
                       @updatefiles="getFileFiles($event)"
                     />
-                    <v-card-text>*必填欄位，格式須為mp3</v-card-text>
+                    <v-card-text>*必填欄位，格式須為mp3，不得超過5MB，</v-card-text>
                   </v-col>
                 </v-row>
               </v-card-text>

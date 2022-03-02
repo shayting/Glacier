@@ -7,20 +7,20 @@
         <v-img v-else width="400" src="https://source.boringavatars.com/marble/1/?square"></v-img>
       </v-col>
       <v-col cols="12" sm="9" style="position: relative;">
-      <div class="d-flex">
-        <!-- 手機版出現圖片 -->
-        <div class="d-sm-none me-4" style="width:30%;">
-          <v-img v-if="playlist.cover" width="200" :src="playlist.cover"></v-img>
-          <v-img v-else-if="songs.length > 0" width="200" :src="songs[0].song.cover"></v-img>
-          <v-img v-else width="200" src="https://source.boringavatars.com/marble/1/?square"></v-img>
+        <div class="d-flex">
+          <!-- 手機版出現圖片 -->
+          <div class="d-sm-none me-4" style="width:30%;">
+            <v-img v-if="playlist.cover" width="200" :src="playlist.cover"></v-img>
+            <v-img v-else-if="songs.length > 0" width="200" :src="songs[0].song.cover"></v-img>
+            <v-img v-else width="200" src="https://source.boringavatars.com/marble/1/?square"></v-img>
+          </div>
+          <div>
+            <div class="text-h4 mb-2">{{ playlist.title }}</div>
+            <div v-if="playlist.songs" class="grey--text">{{ playlist.songs.length }}首歌</div>
+            <span class="grey--text">Published: {{ playlist.createDate }}</span>
+            <div class="mt-4 fs-20">{{ playlist.description }}</div>
+          </div>
         </div>
-        <div>
-          <div class="text-h4 mb-2">{{ playlist.title }}</div>
-          <div v-if="playlist.songs" class="grey--text">{{ playlist.songs.length }}首歌</div>
-          <span class="grey--text">Published: {{ playlist.createDate }}</span>
-          <div class="mt-4 fs-20">{{ playlist.description }}</div>
-        </div>
-      </div>
         <!-- 歌單 -->
         <v-sheet color="secondary" min-height="500" class="mt-10 pa-4" rounded>
           <ul class="white--text" v-if="this.songs">
@@ -30,23 +30,33 @@
               v-for="(song, index) in songs"
               :key="song._id"
             >
-              <div class="text-h6">{{ index + 1 }}</div>
+              <div class="text-h6 instantNum">{{ index + 1 }}</div>
               <router-link :to="'/track/' + song.song._id" class="d-block">
-              <v-img width="80px" class="ms-2" :src="song.song.cover" />
+                <v-img width="80px" class="ms-2 d-none d-sm-flex" :src="song.song.cover" />
               </router-link>
+              <!-- 手機版音樂封面 -->
+              <div class="d-block d-sm-none">
+                <v-hover>
+                  <template v-slot:default="{ hover }">
+                    <v-img width="80" :src="song.song.cover">
+                      <v-fade-transition>
+                        <v-overlay v-if="hover" absolute color="#d7f3f5">
+                          <v-icon x-large @click="play(index)">mdi-play-circle-outline</v-icon>
+                        </v-overlay>
+                      </v-fade-transition>
+                    </v-img>
+                  </template>
+                </v-hover>
+              </div>
               <div class="me-auto ms-6">
                 <div class="text-h6">{{ song.song.title }}</div>
                 <div class="text-body-2">{{ song.song.artist.userName }}</div>
               </div>
-              <div class="d-flex align-center">
+              <div class="d-none d-sm-flex align-center">
                 <v-btn icon color="white" @click="play(index)">
                   <v-icon medium>mdi-play-circle</v-icon>
                 </v-btn>
-                <v-btn
-                  icon
-                  color="white"
-                  @click="likes(song.song._id)"
-                >
+                <v-btn icon color="white" @click="likes(song.song._id)">
                   <v-icon v-if="!myLikes.includes(song.song._id)" medium>mdi-cards-heart-outline</v-icon>
                   <v-icon v-else medium>mdi-cards-heart</v-icon>
                 </v-btn>
@@ -59,6 +69,11 @@
                   <v-icon v-else medium @click="getSongId(song.song._id)">mdi-plus</v-icon>
                 </v-btn>
               </div>
+              <div class="d-sm-none">
+          <v-btn :to="'/track/' + song.song._id" icon small color="grey">
+            <v-icon small>mdi-music-box-multiple</v-icon>
+          </v-btn>
+        </div>
             </li>
           </ul>
           <div v-if="songs.length === 0" class="white--text text-center">此歌單尚無歌曲</div>

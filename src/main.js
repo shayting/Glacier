@@ -10,6 +10,7 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import vueFilePond from 'vue-filepond'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import FilePondPluginImageCrop from 'filepond-plugin-image-crop'
 import Aplayer from 'vue-aplayer'
 import VueGtag from 'vue-gtag'
 import { KinesisContainer, KinesisElement } from 'vue-kinesis'
@@ -34,7 +35,8 @@ Vue.mixin(mixin)
 Vue.component('Aplayer', Aplayer)
 Vue.component('FilePond', vueFilePond(
   FilePondPluginFileValidateType,
-  FilePondPluginImagePreview
+  FilePondPluginImagePreview,
+  FilePondPluginImageCrop
 ))
 Vue.component('kinesis-container', KinesisContainer)
 Vue.component('kinesis-element', KinesisElement)
