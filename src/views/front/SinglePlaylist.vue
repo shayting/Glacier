@@ -196,7 +196,7 @@ export default {
       this.$store.commit('track/play', this.playingSong)
     },
     async getPlaylist () {
-      this.isLoadiing = true
+      this.isLoading = true
       try {
         const { data } = await this.api.get('/playlists/' + this.$route.params.id, {
           headers: {
@@ -213,7 +213,7 @@ export default {
           text: '取得歌單失敗'
         })
       }
-      this.isLoadiing = false
+      this.isLoading = false
     },
     async deleteSong (id) {
       this.$swal({
