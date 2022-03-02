@@ -1,5 +1,8 @@
 <template>
   <div id="playlists" class>
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <div id="festival-playlist" class="d-flex flex-column justify-center">
       <div class="text-center text-h4">特別企劃</div>
       <div class="example-3d">
@@ -42,6 +45,7 @@ export default {
   },
   data () {
     return {
+      isLoading: false,
       admin: '61f80ddc3e24fd41116fc86d',
       events: [],
       playlists: [],
@@ -74,6 +78,7 @@ export default {
   methods: {
     // 取得adminplaylists
     async getAdminPlaylists () {
+      this.isLoading = true
       try {
         const { data } = await this.api.get('/playlists?owner=' + this.admin)
         this.playlists = data.result
@@ -93,6 +98,7 @@ export default {
           text: '取得歌單失敗'
         })
       }
+      this.isLoading = false
     }
   },
   async created () {

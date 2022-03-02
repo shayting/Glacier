@@ -4,6 +4,9 @@
     class="my-12 d-flex flex-column justify-center pb-16 my-container"
     style="background-color: #1e1e1e; color:white; position: relative; "
   >
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <ul id="rank-list">
       <li class="py-4 fs-20">即時熱門</li>
       <li v-for="(item, index) in sliceitems" :key="index" class="d-flex align-center">
@@ -138,6 +141,7 @@ export default {
     BackToTop
   },
   data: () => ({
+    isLoading: false,
     myLikes: [],
     page: 1,
     publicTracks: [],
@@ -219,7 +223,8 @@ export default {
           this.$swal({
             icon: 'success',
             title: '成功',
-            text: '加入成功'
+            text: '加入成功',
+            confirmButtonColor: '#4DB6AC'
           })
         }
       } catch (error) {
@@ -241,7 +246,8 @@ export default {
         this.$swal({
           icon: 'success',
           title: '成功',
-          text: '新增成功'
+          text: '新增成功',
+          confirmButtonColor: '#4DB6AC'
         })
         this.resetForm()
       } catch (error) {
@@ -262,6 +268,7 @@ export default {
       }
     },
     async getAllPublic () {
+      this.isLoading = true
       try {
         const { data } = await this.api.get('/tracks/public')
         this.publicTracks = data.result
@@ -272,6 +279,7 @@ export default {
           text: '取得音樂失敗'
         })
       }
+      this.isLoading = false
     },
     // 加入/取消 喜歡功能
     async likes (id) {

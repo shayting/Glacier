@@ -340,7 +340,8 @@ export default {
         this.$swal({
           icon: 'success',
           title: '成功',
-          text: '修改成功'
+          text: '修改成功',
+          confirmButtonColor: '#4DB6AC'
         })
         this.changeAvatar = false
         await this.getOtherUser()

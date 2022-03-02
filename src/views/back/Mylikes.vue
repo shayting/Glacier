@@ -189,7 +189,8 @@ export default {
           this.$swal({
             icon: 'success',
             title: '成功',
-            text: '加入成功'
+            text: '加入成功',
+            confirmButtonColor: '#4DB6AC'
           })
         }
       } catch (error) {
@@ -211,7 +212,8 @@ export default {
         this.$swal({
           icon: 'success',
           title: '成功',
-          text: '新增成功'
+          text: '新增成功',
+          confirmButtonColor: '#4DB6AC'
         })
         this.resetForm()
       } catch (error) {

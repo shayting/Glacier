@@ -1,5 +1,11 @@
 <template>
   <div id="discover" class="my-container mt-100 mb-100">
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
     <v-sheet class="secondary pa-4 chips-sheet" rounded>
       <div class="text-h5 mb-2 white--text">類別</div>
       <!-- 類別chips -->
@@ -160,6 +166,7 @@ export default {
     BackToTop
   },
   data: () => ({
+    isLoading: false,
     myLikes: [],
     // ---- 播放overlay
     overlay: false,
@@ -205,6 +212,7 @@ export default {
       this.$store.commit('track/play', this.playingSong)
     },
     async getAllPublic () {
+      this.isLoading = true
       try {
         const { data } = await this.api.get('/tracks/public')
         this.publicTracks = data.result.reverse()
@@ -215,6 +223,7 @@ export default {
           text: '取得音樂失敗'
         })
       }
+      this.isLoading = false
     },
     getSongId (id) {
       // 存取使用者所選擇的歌曲id
@@ -256,7 +265,8 @@ export default {
           this.$swal({
             icon: 'success',
             title: '成功',
-            text: '加入成功'
+            text: '加入成功',
+            confirmButtonColor: '#4DB6AC'
           })
         }
       } catch (error) {
@@ -278,7 +288,8 @@ export default {
         this.$swal({
           icon: 'success',
           title: '成功',
-          text: '新增成功'
+          text: '新增成功',
+          confirmButtonColor: '#4DB6AC'
         })
         this.resetForm()
       } catch (error) {

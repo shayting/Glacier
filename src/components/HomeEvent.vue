@@ -26,7 +26,7 @@
       <div class="swiper-button-next" slot="button-next"></div>
       <div class="swiper-button-prev" slot="button-prev"></div>
     </swiper>
-    <div id="copyright">
+    <div id="copyright" class="d-none d-sm-block">
       網站為學習用途，無商業使用。圖片音樂均取自網路(音樂僅為範例音樂不代表歌手作品)
     </div>
   </div>

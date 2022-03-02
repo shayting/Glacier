@@ -1,5 +1,8 @@
 <template>
   <div id="event" class="my-container mt-100 mb-100">
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <v-row>
       <v-col cols="12" md="6" v-for="(event, index) in events" :key="index">
         <v-card class="mx-auto" max-width="800">
@@ -37,12 +40,14 @@
 export default {
   data () {
     return {
+      isLoading: false,
       events: [{}],
       show: false
     }
   },
   methods: {
     async getAllEvents () {
+      this.isLoading = true
       try {
         const { data } = await this.api.get('/events/all')
         this.events = data.result
@@ -53,6 +58,7 @@ export default {
           text: '取得活動資料失敗'
         })
       }
+      this.isLoading = false
     }
   },
   async created () {

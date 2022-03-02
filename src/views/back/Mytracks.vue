@@ -353,7 +353,8 @@ export default {
           this.$swal({
             icon: 'success',
             title: '成功',
-            text: '加入成功'
+            text: '加入成功',
+            confirmButtonColor: '#4DB6AC'
           })
         }
       } catch (error) {
@@ -375,7 +376,8 @@ export default {
         this.$swal({
           icon: 'success',
           title: '成功',
-          text: '新增成功'
+          text: '新增成功',
+          confirmButtonColor: '#4DB6AC'
         })
         this.resetPlaylistForm()
       } catch (error) {
@@ -455,7 +457,8 @@ export default {
         this.$swal({
           icon: 'success',
           title: '成功',
-          text: '新增/修改成功'
+          text: '新增/修改成功',
+          confirmButtonColor: '#4DB6AC'
         })
       } catch (error) {
         console.log(error)
@@ -530,7 +533,8 @@ export default {
             this.$swal({
               icon: 'success',
               title: '成功',
-              text: '刪除成功'
+              text: '刪除成功',
+              confirmButtonColor: '#4DB6AC'
             })
             this.$emit('deleteTrack')
           }).catch((error) => {
