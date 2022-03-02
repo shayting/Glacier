@@ -3,6 +3,12 @@
     class="instantRank my-12 d-flex flex-column justify-center pb-16"
     style="background-color: #1e1e1e; color:white; position: relative; "
   >
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
     <ul>
       <li class="py-4 fs-20">Top 10</li>
       <li v-for="(item, index) in sortItems" :key="index" class="d-flex align-center">
@@ -166,6 +172,7 @@
 
 export default {
   data: () => ({
+    isLoading: false,
     // ---- 播放overlay
     overlay: false,
     publicTracks: [],
@@ -222,6 +229,7 @@ export default {
     },
     async getAllPublic () {
       try {
+        this.isLoading = true
         const { data } = await this.api.get('/tracks/public')
         this.publicTracks = data.result
       } catch (error) {
@@ -231,6 +239,7 @@ export default {
           text: '取得音樂失敗'
         })
       }
+      this.isLoading = false
     },
     async getUserPlaylist () {
       if (this.user._id.length !== 0) {

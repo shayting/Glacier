@@ -1,5 +1,11 @@
 <template>
   <div id="singleTrack" class="my-container white--text">
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
     <v-row>
       <!-- 音樂封面 -->
       <v-col cols="12" sm="6" md="4" class="py-4">
@@ -203,6 +209,7 @@
 <script>
 export default {
   data: () => ({
+    isLoading: false,
     // 存放get到的東西
     track: {
       artist: {
@@ -286,6 +293,7 @@ export default {
       this.$store.commit('track/play', this.playingSong)
     },
     async getTrackById () {
+      this.isLoading = true
       try {
         const { data } = await this.api.get('/tracks/' + this.$route.params.id, {
           headers: {
@@ -310,6 +318,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.isLoading = false
     },
     // 加入/取消 喜歡功能
     async likes () {

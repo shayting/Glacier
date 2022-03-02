@@ -1,5 +1,11 @@
 <template>
   <div id="singlePlaylist" class="my-container white--text mb-100 mt-100">
+    <v-overlay :value="isLoading" style="z-index:999">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
     <v-row>
       <v-col cols="12" sm="3" class="d-none d-sm-block">
         <v-img v-if="playlist.cover" width="400" :src="playlist.cover"></v-img>
@@ -146,6 +152,7 @@
 export default {
   data () {
     return {
+      isLoading: false,
       myLikes: [],
       playlist: {},
       songs: [],
@@ -189,6 +196,7 @@ export default {
       this.$store.commit('track/play', this.playingSong)
     },
     async getPlaylist () {
+      this.isLoadiing = true
       try {
         const { data } = await this.api.get('/playlists/' + this.$route.params.id, {
           headers: {
@@ -205,6 +213,7 @@ export default {
           text: '取得歌單失敗'
         })
       }
+      this.isLoadiing = false
     },
     async deleteSong (id) {
       this.$swal({
